@@ -64,6 +64,7 @@ export default function Admin() {
   const [editProject, setEditProject] = useState<Project>(emptyProject);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
 
   const handleLogin = () => {
     if (password === ADMIN_PASSWORD) {
@@ -176,8 +177,6 @@ export default function Admin() {
   }
 
   // ===== Admin Dashboard =====
-  const [darkMode, setDarkMode] = useState(true);
-
   const tabs: { key: Tab; label: string; icon: any; count: number }[] = [
     { key: "projects", label: "المشاريع", icon: FolderOpen, count: projects.length },
     { key: "clients", label: "العملاء", icon: Users, count: clients.length },
