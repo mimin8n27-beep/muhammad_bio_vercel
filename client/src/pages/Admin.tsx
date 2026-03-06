@@ -315,24 +315,46 @@ export default function Admin() {
                     <label className="block text-sm text-white/50 mb-1.5">صورة المشروع</label>
                     <div className="flex flex-col gap-3">
 
-                      {/* URL input */}
+                      {/* Upload from device - converts to base64 */}
                       <div className="flex items-center gap-2">
                         <input
                           type="text"
                           value={editProject.image_url}
                           onChange={(e) => setEditProject((p) => ({ ...p, image_url: e.target.value }))}
-                          placeholder="https://i.imgur.com/xxxxx.jpg"
+                          placeholder="https://... أو ارفع من الجهاز"
                           className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/25 outline-none focus:border-[#0066ff] transition-colors text-sm"
                         />
-                      </div>
-
-                      {/* Imgur instructions */}
-                      <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-3 text-xs text-blue-300 leading-relaxed">
-                        <p className="font-semibold mb-1">📸 إزاي تجيب رابط الصورة:</p>
-                        <p>١. روح <a href="https://imgur.com/upload" target="_blank" rel="noopener noreferrer" className="underline text-blue-400">imgur.com/upload</a></p>
-                        <p>٢. ارفع الصورة</p>
-                        <p>٣. كليك يمين على الصورة → <strong>Copy image address</strong></p>
-                        <p>٤. الرابط لازم ينتهي بـ <strong>.jpg</strong> أو <strong>.png</strong></p>
+                        <span className="text-white/30 text-xs flex-shrink-0">أو</span>
+                        <label className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 cursor-pointer text-sm hover:border-[#0066ff] hover:text-white text-white/50 transition-colors whitespace-nowrap flex-shrink-0">
+                          {imageUploading ? (
+                            <><Loader2 className="w-4 h-4 animate-spin" /> جاري التحميل...</>
+                          ) : (
+                            <><Upload className="w-4 h-4" /> رفع من الجهاز</>
+                          )}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            disabled={imageUploading}
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              // Check size - max 500KB
+                              if (file.size > 500 * 1024) {
+                                alert("الصورة كبيرة! استخدم صورة أقل من 500KB أو قلل حجمها");
+                                return;
+                              }
+                              setImageUploading(true);
+                              const reader = new FileReader();
+                              reader.onload = (ev) => {
+                                const base64 = ev.target?.result as string;
+                                setEditProject((p) => ({ ...p, image_url: base64 }));
+                                setImageUploading(false);
+                              };
+                              reader.readAsDataURL(file);
+                            }}
+                          />
+                        </label>
                       </div>
 
                       {/* Preview */}
@@ -340,15 +362,16 @@ export default function Admin() {
                         <div className="flex items-center gap-3">
                           <img
                             src={editProject.image_url}
-                            className="w-20 h-20 rounded-lg object-cover border border-white/10"
-                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                            className="w-24 h-16 rounded-lg object-cover border border-white/10"
+                            onError={(e) => { (e.target as HTMLImageElement).src = ""; }}
                           />
                           <div>
-                            <p className="text-xs text-white/40 mb-1">معاينة الصورة</p>
+                            <p className="text-xs text-green-400 mb-1">✅ الصورة جاهزة</p>
                             <button
+                              type="button"
                               onClick={() => setEditProject((p) => ({ ...p, image_url: "" }))}
                               className="text-xs text-red-400 hover:text-red-300"
-                            >حذف الصورة</button>
+                            >حذف</button>
                           </div>
                         </div>
                       )}
