@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase";
 import {
   LogOut, Plus, Trash2, Edit2, Save, X, Loader2,
   MessageSquare, Users, FolderOpen, Eye, EyeOff,
-  Sun, Moon, ExternalLink
+  Sun, Moon, ExternalLink, Upload
 } from "lucide-react";
 
 // ===== تغيير الباسورد هنا =====
@@ -64,6 +64,19 @@ export default function Admin() {
   const [editProject, setEditProject] = useState<Project>(emptyProject);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
+
+  const uploadImage = async (file: File): Promise<string> => {
+    setImageUploading(true);
+    const fileName = `project-${Date.now()}-${file.name.replace(/\s/g, "_")}`;
+    const { data, error } = await supabase.storage
+      .from("project-images")
+      .upload(fileName, file, { upsert: true });
+    setImageUploading(false);
+    if (error) { alert("خطأ في رفع الصورة: " + error.message); return ""; }
+    const { data: urlData } = supabase.storage.from("project-images").getPublicUrl(fileName);
+    return urlData.publicUrl;
+  };
   const [darkMode, setDarkMode] = useState(true);
 
   const handleLogin = () => {
@@ -284,8 +297,7 @@ export default function Admin() {
                     { key: "title", label: "عنوان المشروع *", placeholder: "مثال: أتمتة إرسال الإيميل" },
                     { key: "client_name", label: "اسم العميل", placeholder: "مثال: شركة X" },
                     { key: "tools", label: "الأدوات (افصل بفاصلة)", placeholder: "n8n, Gmail, Sheets" },
-                    { key: "image_url", label: "رابط الصورة", placeholder: "https://..." },
-                    { key: "link_url", label: "رابط المشروع", placeholder: "https://..." },
+                    { key: "link_url", label: "رابط المشروع (للمعاينة المحمية)", placeholder: "https://..." },
                   ].map(({ key, label, placeholder }) => (
                     <div key={key}>
                       <label className="block text-sm text-white/50 mb-1.5">{label}</label>
@@ -297,6 +309,42 @@ export default function Admin() {
                       />
                     </div>
                   ))}
+
+                  {/* Image Upload */}
+                  <div className="md:col-span-2">
+                    <label className="block text-sm text-white/50 mb-1.5">صورة المشروع</label>
+                    <div className="flex items-center gap-3">
+                      <label className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 cursor-pointer text-sm transition-colors
+                        ${imageUploading ? "opacity-50 cursor-not-allowed" : "hover:border-[#0066ff] hover:text-white text-white/50"}`}>
+                        {imageUploading ? (
+                          <><Loader2 className="w-4 h-4 animate-spin" /> جاري الرفع...</>
+                        ) : (
+                          <><Upload className="w-4 h-4" /> اختر صورة من الجهاز</>
+                        )}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          disabled={imageUploading}
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            const url = await uploadImage(file);
+                            if (url) setEditProject((p) => ({ ...p, image_url: url }));
+                          }}
+                        />
+                      </label>
+                      {editProject.image_url && (
+                        <div className="flex items-center gap-2">
+                          <img src={editProject.image_url} className="w-12 h-12 rounded-lg object-cover border border-white/10" />
+                          <button
+                            onClick={() => setEditProject((p) => ({ ...p, image_url: "" }))}
+                            className="text-xs text-red-400 hover:text-red-300"
+                          >حذف</button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
 
                   <div>
                     <label className="block text-sm text-white/50 mb-1.5">الحالة</label>
