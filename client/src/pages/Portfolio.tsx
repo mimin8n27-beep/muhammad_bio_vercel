@@ -200,9 +200,9 @@ export default function Portfolio() {
         </div>
       )}
 
-      {/* ===== Protected iframe Preview Modal ===== */}
+      {/* ===== Protected Image Preview Modal ===== */}
       {previewProject && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex flex-col" dir="ltr">
+        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex flex-col select-none" dir="ltr">
           {/* Top Bar */}
           <div className="flex items-center justify-between px-5 py-3 bg-[#111] border-b border-white/10 flex-shrink-0" dir="rtl">
             <div className="flex items-center gap-3">
@@ -215,13 +215,12 @@ export default function Portfolio() {
               </span>
             </div>
             <div className="flex items-center gap-2">
-              {/* Zoom controls */}
-              <button onClick={() => setZoom(z => Math.max(0.3, z - 0.2))}
+              <button onClick={() => setZoom(z => Math.max(0.5, z - 0.25))}
                 className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-white">
                 <ZoomOut className="w-4 h-4" />
               </button>
               <span className="text-white/60 text-xs w-12 text-center">{Math.round(zoom * 100)}%</span>
-              <button onClick={() => setZoom(z => Math.min(3, z + 0.2))}
+              <button onClick={() => setZoom(z => Math.min(4, z + 0.25))}
                 className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-white">
                 <ZoomIn className="w-4 h-4" />
               </button>
@@ -237,51 +236,54 @@ export default function Portfolio() {
             </div>
           </div>
 
-          {/* iframe Container */}
+          {/* Image Container */}
           <div
-            className="flex-1 overflow-hidden relative bg-[#1a1a1a] cursor-grab active:cursor-grabbing select-none"
+            className="flex-1 overflow-hidden relative bg-[#0d0d0d] cursor-grab active:cursor-grabbing"
             onMouseDown={(e) => { setDragging(true); setDragStart({ x: e.clientX - offset.x, y: e.clientY - offset.y }); }}
             onMouseMove={(e) => { if (dragging) setOffset({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y }); }}
             onMouseUp={() => setDragging(false)}
             onMouseLeave={() => setDragging(false)}
-            onWheel={(e) => { e.preventDefault(); setZoom(z => Math.min(3, Math.max(0.3, z - e.deltaY * 0.001))); }}
+            onWheel={(e) => { e.preventDefault(); setZoom(z => Math.min(4, Math.max(0.5, z - e.deltaY * 0.001))); }}
+            onContextMenu={(e) => e.preventDefault()}
           >
-            {/* Watermark overlay — blocks right-click and selection */}
-            <div
-              className="absolute inset-0 z-10 pointer-events-none"
-              style={{ background: "repeating-linear-gradient(45deg, transparent, transparent 200px, rgba(0,102,255,0.03) 200px, rgba(0,102,255,0.03) 201px)" }}
-            />
-            <div
-              className="absolute inset-0 z-10"
-              onContextMenu={(e) => e.preventDefault()}
-              style={{ pointerEvents: "none" }}
-            />
+            {/* Transparent overlay — blocks right-click save */}
+            <div className="absolute inset-0 z-10" onContextMenu={(e) => e.preventDefault()} />
 
-            <div
-              style={{
-                transform: `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px)) scale(${zoom})`,
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transformOrigin: "center",
-                transition: dragging ? "none" : "transform 0.1s ease",
-                width: "1200px",
-                height: "700px",
-              }}
-            >
-              <iframe
-                src={previewProject.link_url}
-                title={previewProject.title}
-                sandbox="allow-scripts allow-same-origin"
-                className="w-full h-full rounded-xl border border-white/10"
-                style={{ pointerEvents: "none" }}
-              />
-            </div>
+            {previewProject.image_url ? (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px)) scale(${zoom})`,
+                  transformOrigin: "center",
+                  transition: dragging ? "none" : "transform 0.1s ease",
+                  userSelect: "none",
+                  WebkitUserSelect: "none",
+                }}
+              >
+                <img
+                  src={previewProject.image_url}
+                  alt={previewProject.title}
+                  draggable={false}
+                  style={{ maxWidth: "80vw", maxHeight: "75vh", borderRadius: "12px", boxShadow: "0 25px 60px rgba(0,0,0,0.7)", display: "block", userSelect: "none", WebkitUserDrag: "none" } as any}
+                  onContextMenu={(e) => e.preventDefault()}
+                  onDragStart={(e) => e.preventDefault()}
+                />
+              </div>
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center text-white/30 text-center">
+                <div>
+                  <div className="text-5xl mb-3">🖼️</div>
+                  <p>لا توجد صورة لهذا المشروع</p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Bottom Bar */}
           <div className="px-5 py-2.5 bg-[#111] border-t border-white/10 flex items-center justify-between flex-shrink-0" dir="rtl">
-            <p className="text-white/30 text-xs">🖱️ اسحب للتحريك | 🖱️ Scroll للزوم</p>
+            <p className="text-white/30 text-xs">🖱️ اسحب للتحريك &nbsp;|&nbsp; Scroll للزوم</p>
             <p className="text-white/30 text-xs">هذا المشروع محمي — للعرض فقط</p>
           </div>
         </div>
