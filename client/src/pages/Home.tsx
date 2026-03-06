@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import ContactForm from "@/components/ContactForm";
-import { ArrowRight, Zap, BarChart3, Workflow, MessageSquare, Database, Smartphone, Github } from "lucide-react";
-import { useState } from "react";
+import { supabase } from "@/lib/supabase";
+import { ArrowRight, Zap, BarChart3, Workflow, MessageSquare, Database, Smartphone, Github, X, ExternalLink, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
 
 /**
  * Design Philosophy: Modern Tech Aesthetic
@@ -17,9 +18,40 @@ const EMAIL = "mimi.n8n27@gmail.com";
 const GITHUB_URL = "https://github.com/mimin8n27-beep";
 const PROFILE_IMAGE = "https://private-us-east-1.manuscdn.com/user_upload_by_module/session_file/310519663184092711/chMVOfHjJrgiCnQs.jpg?Expires=1804200577&Signature=sN3sPs37BpgdweMsjeL-Z8AzrW2vUPHHX-WBZd~G46ra1UMc8g1SZBMOqq~Mgeip4Fa9vqHw833HnXfkoVKesbyy6~jE8OKps6EF5khCHuxQx50s1XCjzEQwcEQjNS~oQ6dNeC6B2BWYdhKM1wx4LAMB5SanMIE3jWyTnLD-nDdTREulWizkkKrbQJfUkKSu4UwJYZiZ--GlWKoORqhfDU0ORGuR-x2WDzApRZvT0f9WL1hjmnGcE-q3AKfOSBLIKE32R7bwAzzvsYwQup~-BUwRdNodsbXKF7FecmdTUft8J0RC102BmlS584KtPxdCHPBMlotCtCN7Pdbf08Y15A__&Key-Pair-Id=K2HSFNDJXOU9YS";
 
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  client_name: string;
+  tools: string;
+  status: string;
+  image_url: string;
+  link_url: string;
+  created_at: string;
+}
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState("expertise");
-  const [scrollToContact, setScrollToContact] = useState(false);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [projectsLoading, setProjectsLoading] = useState(true);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*")
+      .eq("status", "active")
+      .order("created_at", { ascending: false });
+    if (!error && data) setProjects(data);
+    setProjectsLoading(false);
+  };
+
+  const toolsList = (tools: string) =>
+    tools ? tools.split(",").map((t) => t.trim()).filter(Boolean) : [];
 
   const expertise = [
     {
@@ -73,11 +105,9 @@ export default function Home() {
     { name: "Customer Support", icon: <Workflow className="w-5 h-5" /> },
   ];
 
-  const handleContactClick = () => {
-    const contactSection = document.getElementById("contact-section");
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: "smooth" });
-    }
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleWhatsApp = () => {
@@ -97,34 +127,23 @@ export default function Home() {
           </div>
           <nav className="hidden md:flex gap-8 items-center">
             <button
-              onClick={() => setActiveTab("expertise")}
-              className={`text-sm transition-colors ${
-                activeTab === "expertise"
-                  ? "text-primary font-semibold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+              onClick={() => scrollTo("portfolio-section")}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              
+              معرض الأعمال
             </button>
             <button
-              onClick={() => setActiveTab("solutions")}
-              className={`text-sm transition-colors ${
-                activeTab === "solutions"
-                  ? "text-primary font-semibold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+              disabled
+              className="text-sm text-muted-foreground/40 cursor-not-allowed"
+              title="قريباً"
             >
-              
+              خطط التسعير
             </button>
             <button
-              onClick={() => setActiveTab("niches")}
-              className={`text-sm transition-colors ${
-                activeTab === "niches"
-                  ? "text-primary font-semibold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+              onClick={() => scrollTo("contact-section")}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              
+              تواصل معي
             </button>
           </nav>
           <a
@@ -148,7 +167,6 @@ export default function Home() {
 
         <div className="container relative z-10">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
             <div className="animate-slideInLeft">
               <div className="inline-block mb-4 px-4 py-2 bg-blue-100 rounded-lg">
                 <span className="text-sm font-semibold text-primary">
@@ -166,14 +184,14 @@ export default function Home() {
               </p>
 
               <div className="flex gap-4">
-                <Button 
-                  onClick={handleContactClick}
+                <Button
+                  onClick={() => scrollTo("contact-section")}
                   className="bg-primary hover:bg-primary/90 text-white gap-2"
                 >
                   تواصل معي
                   <ArrowRight className="w-4 h-4" />
                 </Button>
-                <Button 
+                <Button
                   onClick={handleWhatsApp}
                   className="bg-green-500 hover:bg-green-600 text-white gap-2"
                 >
@@ -198,7 +216,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Visual - Profile Image */}
             <div className="animate-slideInRight relative">
               <div className="relative h-96 md:h-full min-h-96 rounded-2xl overflow-hidden shadow-2xl border-4 border-primary/10">
                 <img
@@ -214,7 +231,7 @@ export default function Home() {
       </section>
 
       {/* Expertise Section */}
-      <section className="py-20 md:py-32 bg-white border-t border-border">
+      <section id="expertise-section" className="py-20 md:py-32 bg-white border-t border-border">
         <div className="container">
           <div className="mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -233,12 +250,8 @@ export default function Home() {
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="text-4xl mb-4">{item.icon}</div>
-                <h3 className="text-xl font-bold text-foreground mb-3">
-                  {item.title}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {item.description}
-                </p>
+                <h3 className="text-xl font-bold text-foreground mb-3">{item.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">{item.description}</p>
               </div>
             ))}
           </div>
@@ -260,15 +273,12 @@ export default function Home() {
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="text-5xl mb-4">{tool.icon}</div>
-                <h3 className="text-2xl font-bold text-foreground mb-2">
-                  {tool.name}
-                </h3>
+                <h3 className="text-2xl font-bold text-foreground mb-2">{tool.name}</h3>
                 <p className="text-muted-foreground">{tool.description}</p>
               </div>
             ))}
           </div>
 
-          {/* Tools Visual */}
           <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl">
             <img
               src="https://d2xsxph8kpxj0f.cloudfront.net/310519663184092711/5MnDUtM4VGYpdQp79PzkMf/automation-tools-visual-aci4HV4cLntViBzNTquURM.webp"
@@ -279,8 +289,92 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ===== PORTFOLIO SECTION ===== */}
+      <section id="portfolio-section" className="py-20 md:py-32 bg-white border-t border-border">
+        <div className="container">
+          <div className="mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              معرض الأعمال
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              مشاريع حقيقية نفذتها باستخدام تقنيات الأتمتة الحديثة
+            </p>
+          </div>
+
+          {projectsLoading ? (
+            <div className="flex justify-center items-center py-24">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+          ) : projects.length === 0 ? (
+            <div className="text-center py-24 text-muted-foreground">
+              <p className="text-xl">سيتم إضافة المشاريع قريباً</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {projects.map((project, index) => (
+                <div
+                  key={project.id}
+                  onClick={() => setSelectedProject(project)}
+                  className="group cursor-pointer bg-card rounded-xl border border-border hover:border-primary hover:shadow-lg transition-all duration-300 overflow-hidden animate-fadeInUp"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  {/* Image */}
+                  <div className="aspect-video bg-secondary overflow-hidden">
+                    {project.image_url ? (
+                      <img
+                        src={project.image_url}
+                        alt={project.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                        <div className="text-center">
+                          <div className="text-4xl mb-2">⚙️</div>
+                          <p className="text-xs">لا توجد صورة</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-5">
+                    <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                      {project.title}
+                    </h3>
+
+                    {project.description && (
+                      <p className="text-muted-foreground text-sm mb-4 line-clamp-2 leading-relaxed">
+                        {project.description}
+                      </p>
+                    )}
+
+                    {project.tools && (
+                      <div className="flex flex-wrap gap-2">
+                        {toolsList(project.tools).slice(0, 4).map((tool, i) => (
+                          <span
+                            key={i}
+                            className="px-2 py-1 bg-primary/10 rounded-md text-primary text-xs font-medium"
+                          >
+                            {tool}
+                          </span>
+                        ))}
+                        {toolsList(project.tools).length > 4 && (
+                          <span className="px-2 py-1 bg-secondary rounded-md text-muted-foreground text-xs">
+                            +{toolsList(project.tools).length - 4}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Solutions Section */}
-      <section className="py-20 md:py-32 bg-white border-t border-border">
+      <section id="solutions-section" className="py-20 md:py-32 bg-white border-t border-border">
         <div className="container">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-16">
             الحلول التي أقدمها
@@ -298,19 +392,14 @@ export default function Home() {
                     <Zap className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-foreground mb-2">
-                      {solution.title}
-                    </h3>
-                    <p className="text-muted-foreground">
-                      {solution.description}
-                    </p>
+                    <h3 className="text-xl font-bold text-foreground mb-2">{solution.title}</h3>
+                    <p className="text-muted-foreground">{solution.description}</p>
                   </div>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Workflow Visual */}
           <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl">
             <img
               src="https://d2xsxph8kpxj0f.cloudfront.net/310519663184092711/5MnDUtM4VGYpdQp79PzkMf/workflow-process-visual-fQ6qNuSyS9u5e8QcLjyYHh.webp"
@@ -341,9 +430,7 @@ export default function Home() {
                 <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 text-primary">
                   {niche.icon}
                 </div>
-                <h3 className="font-semibold text-foreground">
-                  {niche.name}
-                </h3>
+                <h3 className="font-semibold text-foreground">{niche.name}</h3>
               </div>
             ))}
           </div>
@@ -361,7 +448,6 @@ export default function Home() {
               هل لديك مشروع في الذهن؟ أو تريد معرفة المزيد عن خدماتي؟ تواصل معي عبر النموذج أدناه أو الطرق السريعة.
             </p>
           </div>
-
           <ContactForm whatsappNumber={WHATSAPP_NUMBER} email={EMAIL} />
         </div>
       </section>
@@ -370,16 +456,14 @@ export default function Home() {
       <section className="py-20 md:py-32 bg-gradient-to-br from-primary to-primary/80 text-white border-t border-border">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center animate-fadeInUp">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              رؤيتي
-            </h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">رؤيتي</h2>
             <p className="text-lg md:text-xl leading-relaxed mb-8">
               لا يقتصر عملي على أتمتة خطوة واحدة، بل يمتد إلى بناء نظام بيئي متكامل يهدف إلى تقليل الاعتماد البشري
               لأقصى درجة، مما يوفر للعملاء وقتًا ثمينًا وموارد مالية كبيرة، ويساهم في تحقيق نمو مستدام وفعالية
               تشغيلية لا مثيل لها.
             </p>
-            <Button 
-              onClick={handleContactClick}
+            <Button
+              onClick={() => scrollTo("contact-section")}
               className="bg-white text-primary hover:bg-white/90 gap-2"
             >
               ابدأ مشروعك الآن
@@ -393,13 +477,11 @@ export default function Home() {
       <footer className="py-12 bg-white border-t border-border">
         <div className="container">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div>
-              <p className="text-muted-foreground">
-                © 2026 محمد - متخصص في أتمتة الأعمال الرقمية
-              </p>
-            </div>
+            <p className="text-muted-foreground">
+              © 2026 محمد - متخصص في أتمتة الأعمال الرقمية
+            </p>
             <div className="flex gap-6">
-              <a 
+              <a
                 href={`https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -407,7 +489,7 @@ export default function Home() {
               >
                 WhatsApp
               </a>
-              <a 
+              <a
                 href={`mailto:${EMAIL}`}
                 className="text-muted-foreground hover:text-primary transition-colors"
               >
@@ -417,6 +499,86 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* ===== PROJECT MODAL ===== */}
+      {selectedProject && (
+        <div
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setSelectedProject(null)}
+        >
+          <div
+            className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {selectedProject.image_url && (
+              <div className="aspect-video overflow-hidden rounded-t-2xl">
+                <img
+                  src={selectedProject.image_url}
+                  alt={selectedProject.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+
+            <div className="p-6" dir="rtl">
+              <div className="flex items-start justify-between mb-4">
+                <h2 className="text-2xl font-bold text-foreground leading-tight flex-1 ml-4">
+                  {selectedProject.title}
+                </h2>
+                <button
+                  onClick={() => setSelectedProject(null)}
+                  className="p-2 hover:bg-secondary rounded-lg transition-colors flex-shrink-0"
+                >
+                  <X className="w-5 h-5 text-muted-foreground" />
+                </button>
+              </div>
+
+              {selectedProject.client_name && (
+                <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
+                  <span>👤</span>
+                  <span>العميل: <span className="text-foreground font-medium">{selectedProject.client_name}</span></span>
+                </div>
+              )}
+
+              {selectedProject.description && (
+                <p className="text-muted-foreground leading-relaxed mb-6">
+                  {selectedProject.description}
+                </p>
+              )}
+
+              {selectedProject.tools && (
+                <div className="mb-6">
+                  <p className="text-sm text-muted-foreground mb-3 font-semibold">
+                    الأدوات المستخدمة
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {toolsList(selectedProject.tools).map((tool, i) => (
+                      <span
+                        key={i}
+                        className="px-3 py-1.5 bg-primary/10 rounded-lg text-primary text-sm font-medium"
+                      >
+                        {tool}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {selectedProject.link_url && (
+                <a
+                  href={selectedProject.link_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 w-full justify-center py-3 bg-primary hover:bg-primary/90 rounded-xl font-semibold text-white transition-colors"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  عرض المشروع
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
