@@ -153,12 +153,12 @@ export default function Home() {
             >
               معرض الأعمال
             </a>
-            <button
-              onClick={() => scrollTo("pricing-section")}
+            <a
+              href="/pricing"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               خطط التسعير
-            </button>
+            </a>
             <button
               onClick={() => scrollTo("contact-section")}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -584,13 +584,13 @@ export default function Home() {
 
           <div className="text-center">
             <p className="text-muted-foreground mb-4">Need a custom solution? Let's discuss your specific requirements.</p>
-            <button
-              onClick={() => scrollTo("contact-section")}
+            <a
+              href="/pricing"
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5"
             >
               View Full Pricing Details
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </a>
           </div>
         </div>
       </section>
