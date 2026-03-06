@@ -1,13 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Mail, MessageCircle, Phone, CheckCircle } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { Mail, MessageCircle, CheckCircle } from "lucide-react";
 import { useState } from "react";
-
-/**
- * Design Philosophy: Modern Tech Aesthetic
- * - Clean form with minimal visual clutter
- * - Blue accent color for interactive elements
- * - Smooth transitions and feedback
- */
 
 interface ContactFormProps {
   whatsappNumber: string;
@@ -23,29 +17,40 @@ export default function ContactForm({ whatsappNumber, email }: ContactFormProps)
   });
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError("");
 
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      const { error: supabaseError } = await supabase.from("messages").insert([
+        {
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          message: formData.message,
+        },
+      ]);
+
+      if (supabaseError) throw supabaseError;
+
       setSubmitted(true);
-      setIsSubmitting(false);
-      // Reset form after 3 seconds
       setTimeout(() => {
         setFormData({ name: "", email: "", company: "", message: "" });
         setSubmitted(false);
       }, 3000);
-    }, 1000);
+    } catch (err) {
+      setError("حدث خطأ أثناء الإرسال، حاول مرة أخرى.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const whatsappLink = `https://wa.me/${whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent(
@@ -69,7 +74,6 @@ export default function ContactForm({ whatsappNumber, email }: ContactFormProps)
   return (
     <div className="max-w-2xl mx-auto">
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Name Field */}
         <div>
           <label htmlFor="name" className="block text-sm font-semibold text-foreground mb-2">
             اسمك الكامل
@@ -86,7 +90,6 @@ export default function ContactForm({ whatsappNumber, email }: ContactFormProps)
           />
         </div>
 
-        {/* Email Field */}
         <div>
           <label htmlFor="email" className="block text-sm font-semibold text-foreground mb-2">
             بريدك الإلكتروني
@@ -103,7 +106,6 @@ export default function ContactForm({ whatsappNumber, email }: ContactFormProps)
           />
         </div>
 
-        {/* Company Field */}
         <div>
           <label htmlFor="company" className="block text-sm font-semibold text-foreground mb-2">
             اسم شركتك
@@ -119,7 +121,6 @@ export default function ContactForm({ whatsappNumber, email }: ContactFormProps)
           />
         </div>
 
-        {/* Message Field */}
         <div>
           <label htmlFor="message" className="block text-sm font-semibold text-foreground mb-2">
             رسالتك
@@ -136,7 +137,10 @@ export default function ContactForm({ whatsappNumber, email }: ContactFormProps)
           />
         </div>
 
-        {/* Submit Buttons */}
+        {error && (
+          <p className="text-red-500 text-sm">{error}</p>
+        )}
+
         <div className="flex flex-col sm:flex-row gap-4 pt-4">
           <Button
             type="submit"
@@ -169,7 +173,6 @@ export default function ContactForm({ whatsappNumber, email }: ContactFormProps)
         </div>
       </form>
 
-      {/* Quick Contact Info */}
       <div className="mt-12 pt-8 border-t border-border">
         <h4 className="text-lg font-bold text-foreground mb-6 text-center">طرق التواصل السريعة</h4>
         <div className="grid md:grid-cols-2 gap-4">
