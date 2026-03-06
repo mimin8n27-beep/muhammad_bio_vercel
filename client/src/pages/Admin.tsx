@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import {
   LogOut, Plus, Trash2, Edit2, Save, X, Loader2,
-  MessageSquare, Users, FolderOpen, Eye, EyeOff
+  MessageSquare, Users, FolderOpen, Eye, EyeOff,
+  Sun, Moon, ExternalLink
 } from "lucide-react";
 
 // ===== تغيير الباسورد هنا =====
@@ -181,24 +182,53 @@ export default function Admin() {
     { key: "messages", label: "الرسائل", icon: MessageSquare, count: messages.length },
   ];
 
+  const [darkMode, setDarkMode] = useState(true);
+
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white" dir="rtl">
+    <div className={`min-h-screen ${darkMode ? "bg-[#0a0a0a] text-white" : "bg-gray-50 text-gray-900"}`} dir="rtl">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#0a0a0a]/90 backdrop-blur border-b border-white/10">
+      <header className={`sticky top-0 z-50 backdrop-blur border-b ${darkMode ? "bg-[#0a0a0a]/90 border-white/10" : "bg-white/90 border-gray-200"}`}>
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-[#0066ff] rounded-lg flex items-center justify-center font-bold text-sm">
+            <div className="w-9 h-9 bg-[#0066ff] rounded-lg flex items-center justify-center font-bold text-sm text-white">
               M
             </div>
             <span className="font-bold">لوحة التحكم</span>
           </div>
-          <button
-            onClick={() => setAuthed(false)}
-            className="flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors"
-          >
-            <LogOut className="w-4 h-4" />
-            خروج
-          </button>
+
+          <div className="flex items-center gap-3">
+            {/* زرار الموقع الرئيسي */}
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg border transition-colors
+                ${darkMode ? "border-white/10 text-white/50 hover:text-white hover:border-white/30" : "border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-400"}`}
+            >
+              <ExternalLink className="w-4 h-4" />
+              الموقع
+            </a>
+
+            {/* زرار Dark/Light */}
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg border transition-colors
+                ${darkMode ? "border-white/10 text-white/50 hover:text-white hover:border-white/30" : "border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-400"}`}
+            >
+              {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              {darkMode ? "Light" : "Dark"}
+            </button>
+
+            {/* خروج */}
+            <button
+              onClick={() => setAuthed(false)}
+              className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg border transition-colors
+                ${darkMode ? "border-white/10 text-white/50 hover:text-white hover:border-white/30" : "border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-400"}`}
+            >
+              <LogOut className="w-4 h-4" />
+              خروج
+            </button>
+          </div>
         </div>
       </header>
 
@@ -212,7 +242,9 @@ export default function Admin() {
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                 tab === key
                   ? "bg-[#0066ff] text-white"
-                  : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white border border-white/10"
+                  : darkMode
+                    ? "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white border border-white/10"
+                    : "bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-900 border border-gray-200"
               }`}
             >
               <Icon className="w-4 h-4" />
