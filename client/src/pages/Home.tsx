@@ -147,12 +147,12 @@ export default function Home() {
             <h1 className="text-xl font-bold text-foreground">Muhammad</h1>
           </div>
           <nav className="hidden md:flex gap-8 items-center">
-            <button
-              onClick={() => scrollTo("portfolio-section")}
+            <a
+              href="https://muhammad-bio-vercel.vercel.app/portfolio"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               معرض الأعمال
-            </button>
+            </a>
             <button
               onClick={() => scrollTo("pricing-section")}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
