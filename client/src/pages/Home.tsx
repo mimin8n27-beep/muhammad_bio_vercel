@@ -457,21 +457,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact-section" className="py-20 md:py-32 bg-white border-t border-border">
-        <div className="container">
-          <div className="mb-16 text-center">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              تواصل معي الآن
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              هل لديك مشروع في الذهن؟ أو تريد معرفة المزيد عن خدماتي؟ تواصل معي عبر النموذج أدناه أو الطرق السريعة.
-            </p>
-          </div>
-          <ContactForm whatsappNumber={WHATSAPP_NUMBER} email={EMAIL} />
-        </div>
-      </section>
-
       {/* ===== PRICING SECTION ===== */}
       <section id="pricing-section" className="py-20 md:py-32 bg-[#f8faff] border-t border-border">
         <div className="container">
@@ -764,10 +749,25 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ===== CONTACT SECTION ===== */}
+      <section id="contact-section" className="py-20 md:py-32 bg-white border-t border-border">
+        <div className="container">
+          <div className="mb-16 text-center">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              تواصل معي الآن
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              هل لديك مشروع في الذهن؟ أو تريد معرفة المزيد عن خدماتي؟ تواصل معي عبر النموذج أدناه أو الطرق السريعة.
+            </p>
+          </div>
+          <ContactForm whatsappNumber={WHATSAPP_NUMBER} email={EMAIL} />
+        </div>
+      </section>
+
       {/* ===== NEW FOOTER ===== */}
       <footer className="bg-[#0a0a0a] text-white pt-16 pb-8">
         <div className="container">
-          <div className="grid md:grid-cols-4 gap-12 mb-12">
+          <div className="grid md:grid-cols-3 gap-12 mb-12">
             {/* Brand */}
             <div>
               <div className="flex items-center gap-3 mb-4">
@@ -793,16 +793,6 @@ export default function Home() {
                       {link.label}
                     </button>
                   </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Services */}
-            <div>
-              <h4 className="font-bold mb-4 text-white/80 uppercase text-xs tracking-wider">Services</h4>
-              <ul className="space-y-2.5">
-                {["Lead Generation", "Email Marketing", "CRM Integration"].map((s, i) => (
-                  <li key={i} className="text-white/50 text-sm">{s}</li>
                 ))}
               </ul>
             </div>
