@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { ArrowLeft, ExternalLink, Loader2, X, Github } from "lucide-react";
+import { ArrowLeft, Loader2, X, Github, ZoomIn, ZoomOut, RotateCcw, Maximize2 } from "lucide-react";
 
 const WHATSAPP_NUMBER = "+201064998737";
 const GITHUB_URL = "https://github.com/mimin8n27-beep";
@@ -21,6 +21,11 @@ export default function Portfolio() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Project | null>(null);
+  const [previewProject, setPreviewProject] = useState<Project | null>(null);
+  const [zoom, setZoom] = useState(1);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [dragging, setDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   useEffect(() => { fetchProjects(); }, []);
 
@@ -183,12 +188,101 @@ export default function Portfolio() {
                 </div>
               )}
               {selected.link_url && (
-                <a href={selected.link_url} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-2 w-full justify-center py-3 bg-primary hover:bg-primary/90 rounded-xl font-semibold text-white transition-colors">
-                  <ExternalLink className="w-4 h-4" /> عرض المشروع
-                </a>
+                <button
+                  onClick={() => { setPreviewProject(selected); setSelected(null); setZoom(1); setOffset({ x: 0, y: 0 }); }}
+                  className="flex items-center gap-2 w-full justify-center py-3 bg-primary hover:bg-primary/90 rounded-xl font-semibold text-white transition-colors"
+                >
+                  <Maximize2 className="w-4 h-4" /> عرض المشروع
+                </button>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== Protected iframe Preview Modal ===== */}
+      {previewProject && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex flex-col" dir="ltr">
+          {/* Top Bar */}
+          <div className="flex items-center justify-between px-5 py-3 bg-[#111] border-b border-white/10 flex-shrink-0" dir="rtl">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">M</span>
+              </div>
+              <span className="text-white font-semibold text-sm">{previewProject.title}</span>
+              <span className="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 text-xs rounded-full border border-yellow-500/30">
+                🔒 معاينة محمية — للعرض فقط
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              {/* Zoom controls */}
+              <button onClick={() => setZoom(z => Math.max(0.3, z - 0.2))}
+                className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-white">
+                <ZoomOut className="w-4 h-4" />
+              </button>
+              <span className="text-white/60 text-xs w-12 text-center">{Math.round(zoom * 100)}%</span>
+              <button onClick={() => setZoom(z => Math.min(3, z + 0.2))}
+                className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-white">
+                <ZoomIn className="w-4 h-4" />
+              </button>
+              <button onClick={() => { setZoom(1); setOffset({ x: 0, y: 0 }); }}
+                className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-white">
+                <RotateCcw className="w-4 h-4" />
+              </button>
+              <div className="w-px h-6 bg-white/20 mx-1" />
+              <button onClick={() => setPreviewProject(null)}
+                className="p-2 bg-red-500/20 hover:bg-red-500/40 rounded-lg transition-colors text-red-400">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* iframe Container */}
+          <div
+            className="flex-1 overflow-hidden relative bg-[#1a1a1a] cursor-grab active:cursor-grabbing select-none"
+            onMouseDown={(e) => { setDragging(true); setDragStart({ x: e.clientX - offset.x, y: e.clientY - offset.y }); }}
+            onMouseMove={(e) => { if (dragging) setOffset({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y }); }}
+            onMouseUp={() => setDragging(false)}
+            onMouseLeave={() => setDragging(false)}
+            onWheel={(e) => { e.preventDefault(); setZoom(z => Math.min(3, Math.max(0.3, z - e.deltaY * 0.001))); }}
+          >
+            {/* Watermark overlay — blocks right-click and selection */}
+            <div
+              className="absolute inset-0 z-10 pointer-events-none"
+              style={{ background: "repeating-linear-gradient(45deg, transparent, transparent 200px, rgba(0,102,255,0.03) 200px, rgba(0,102,255,0.03) 201px)" }}
+            />
+            <div
+              className="absolute inset-0 z-10"
+              onContextMenu={(e) => e.preventDefault()}
+              style={{ pointerEvents: "none" }}
+            />
+
+            <div
+              style={{
+                transform: `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px)) scale(${zoom})`,
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transformOrigin: "center",
+                transition: dragging ? "none" : "transform 0.1s ease",
+                width: "1200px",
+                height: "700px",
+              }}
+            >
+              <iframe
+                src={previewProject.link_url}
+                title={previewProject.title}
+                sandbox="allow-scripts allow-same-origin"
+                className="w-full h-full rounded-xl border border-white/10"
+                style={{ pointerEvents: "none" }}
+              />
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="px-5 py-2.5 bg-[#111] border-t border-white/10 flex items-center justify-between flex-shrink-0" dir="rtl">
+            <p className="text-white/30 text-xs">🖱️ اسحب للتحريك | 🖱️ Scroll للزوم</p>
+            <p className="text-white/30 text-xs">هذا المشروع محمي — للعرض فقط</p>
           </div>
         </div>
       )}
