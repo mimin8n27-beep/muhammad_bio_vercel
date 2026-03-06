@@ -176,13 +176,13 @@ export default function Admin() {
   }
 
   // ===== Admin Dashboard =====
+  const [darkMode, setDarkMode] = useState(true);
+
   const tabs: { key: Tab; label: string; icon: any; count: number }[] = [
     { key: "projects", label: "المشاريع", icon: FolderOpen, count: projects.length },
     { key: "clients", label: "العملاء", icon: Users, count: clients.length },
     { key: "messages", label: "الرسائل", icon: MessageSquare, count: messages.length },
   ];
-
-  const [darkMode, setDarkMode] = useState(true);
 
   return (
     <div className={`min-h-screen ${darkMode ? "bg-[#0a0a0a] text-white" : "bg-gray-50 text-gray-900"}`} dir="rtl">
