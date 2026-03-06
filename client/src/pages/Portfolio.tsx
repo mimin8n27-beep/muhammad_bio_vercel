@@ -236,7 +236,7 @@ export default function Portfolio() {
             </div>
           </div>
 
-          {/* Image Container */}
+            {/* iframe Container */}
           <div
             className="flex-1 overflow-hidden relative bg-[#0d0d0d] cursor-grab active:cursor-grabbing"
             onMouseDown={(e) => { setDragging(true); setDragStart({ x: e.clientX - offset.x, y: e.clientY - offset.y }); }}
@@ -246,39 +246,33 @@ export default function Portfolio() {
             onWheel={(e) => { e.preventDefault(); setZoom(z => Math.min(4, Math.max(0.5, z - e.deltaY * 0.001))); }}
             onContextMenu={(e) => e.preventDefault()}
           >
-            {/* Transparent overlay — blocks right-click save */}
-            <div className="absolute inset-0 z-10" onContextMenu={(e) => e.preventDefault()} />
+            {/* Invisible overlay - blocks all clicks and right-click */}
+            <div
+              className="absolute inset-0 z-10"
+              onContextMenu={(e) => e.preventDefault()}
+              style={{ cursor: "grab" }}
+            />
 
-            {previewProject.image_url ? (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px)) scale(${zoom})`,
-                  transformOrigin: "center",
-                  transition: dragging ? "none" : "transform 0.1s ease",
-                  userSelect: "none",
-                  WebkitUserSelect: "none",
-                }}
-              >
-                <img
-                  src={previewProject.image_url}
-                  alt={previewProject.title}
-                  draggable={false}
-                  style={{ maxWidth: "80vw", maxHeight: "75vh", borderRadius: "12px", boxShadow: "0 25px 60px rgba(0,0,0,0.7)", display: "block", userSelect: "none", WebkitUserDrag: "none" } as any}
-                  onContextMenu={(e) => e.preventDefault()}
-                  onDragStart={(e) => e.preventDefault()}
-                />
-              </div>
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center text-white/30 text-center">
-                <div>
-                  <div className="text-5xl mb-3">🖼️</div>
-                  <p>لا توجد صورة لهذا المشروع</p>
-                </div>
-              </div>
-            )}
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px)) scale(${zoom})`,
+                transformOrigin: "center",
+                transition: dragging ? "none" : "transform 0.1s ease",
+                width: "1280px",
+                height: "720px",
+              }}
+            >
+              <iframe
+                src={`/api/proxy?url=${encodeURIComponent(previewProject.link_url)}`}
+                title={previewProject.title}
+                className="w-full h-full rounded-xl border border-white/10"
+                style={{ pointerEvents: "none" }}
+                sandbox="allow-scripts allow-same-origin"
+              />
+            </div>
           </div>
 
           {/* Bottom Bar */}
