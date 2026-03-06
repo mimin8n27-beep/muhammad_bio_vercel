@@ -313,34 +313,48 @@ export default function Admin() {
                   {/* Image Upload */}
                   <div className="md:col-span-2">
                     <label className="block text-sm text-white/50 mb-1.5">صورة المشروع</label>
-                    <div className="flex items-center gap-3">
-                      <label className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 cursor-pointer text-sm transition-colors
-                        ${imageUploading ? "opacity-50 cursor-not-allowed" : "hover:border-[#0066ff] hover:text-white text-white/50"}`}>
-                        {imageUploading ? (
-                          <><Loader2 className="w-4 h-4 animate-spin" /> جاري الرفع...</>
-                        ) : (
-                          <><Upload className="w-4 h-4" /> اختر صورة من الجهاز</>
-                        )}
+                    <div className="flex flex-col gap-3">
+
+                      {/* URL input + Upload button in one row */}
+                      <div className="flex items-center gap-2">
                         <input
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          disabled={imageUploading}
-                          onChange={async (e) => {
-                            const file = e.target.files?.[0];
-                            if (!file) return;
-                            const url = await uploadImage(file);
-                            if (url) setEditProject((p) => ({ ...p, image_url: url }));
-                          }}
+                          type="text"
+                          value={editProject.image_url}
+                          onChange={(e) => setEditProject((p) => ({ ...p, image_url: e.target.value }))}
+                          placeholder="https://... (رابط الصورة)"
+                          className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/25 outline-none focus:border-[#0066ff] transition-colors text-sm"
                         />
-                      </label>
+                        <span className="text-white/30 text-xs">أو</span>
+                        <label className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 cursor-pointer text-sm transition-colors whitespace-nowrap flex-shrink-0
+                          ${imageUploading ? "opacity-50 cursor-not-allowed" : "hover:border-[#0066ff] hover:text-white text-white/50"}`}>
+                          {imageUploading ? (
+                            <><Loader2 className="w-4 h-4 animate-spin" /> جاري الرفع...</>
+                          ) : (
+                            <><Upload className="w-4 h-4" /> رفع من الجهاز</>
+                          )}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            disabled={imageUploading}
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              const url = await uploadImage(file);
+                              if (url) setEditProject((p) => ({ ...p, image_url: url }));
+                            }}
+                          />
+                        </label>
+                      </div>
+
+                      {/* Preview */}
                       {editProject.image_url && (
                         <div className="flex items-center gap-2">
-                          <img src={editProject.image_url} className="w-12 h-12 rounded-lg object-cover border border-white/10" />
+                          <img src={editProject.image_url} className="w-16 h-16 rounded-lg object-cover border border-white/10" />
                           <button
                             onClick={() => setEditProject((p) => ({ ...p, image_url: "" }))}
                             className="text-xs text-red-400 hover:text-red-300"
-                          >حذف</button>
+                          >حذف الصورة</button>
                         </div>
                       )}
                     </div>
