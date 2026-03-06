@@ -30,6 +30,27 @@ interface Project {
   created_at: string;
 }
 
+function FaqItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      className={`border rounded-2xl overflow-hidden transition-all duration-200 cursor-pointer group
+        ${open ? "border-primary shadow-md shadow-primary/10" : "border-border hover:border-primary/50"}`}
+      onClick={() => setOpen(!open)}
+    >
+      <div className="flex items-center justify-between p-5 gap-4">
+        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">{question}</h3>
+        <span className={`text-primary font-bold text-xl flex-shrink-0 transition-transform duration-200 ${open ? "rotate-45" : ""}`}>+</span>
+      </div>
+      {open && (
+        <div className="px-5 pb-5 text-muted-foreground leading-relaxed border-t border-border/50 pt-4">
+          {answer}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState("expertise");
   const [projects, setProjects] = useState<Project[]>([]);
@@ -133,9 +154,8 @@ export default function Home() {
               معرض الأعمال
             </button>
             <button
-              disabled
-              className="text-sm text-muted-foreground/40 cursor-not-allowed"
-              title="قريباً"
+              onClick={() => scrollTo("pricing-section")}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               خطط التسعير
             </button>
@@ -452,50 +472,367 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Vision Section */}
-      <section className="py-20 md:py-32 bg-gradient-to-br from-primary to-primary/80 text-white border-t border-border">
+      {/* ===== PRICING SECTION ===== */}
+      <section id="pricing-section" className="py-20 md:py-32 bg-[#f8faff] border-t border-border">
         <div className="container">
-          <div className="max-w-3xl mx-auto text-center animate-fadeInUp">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">رؤيتي</h2>
-            <p className="text-lg md:text-xl leading-relaxed mb-8">
-              لا يقتصر عملي على أتمتة خطوة واحدة، بل يمتد إلى بناء نظام بيئي متكامل يهدف إلى تقليل الاعتماد البشري
-              لأقصى درجة، مما يوفر للعملاء وقتًا ثمينًا وموارد مالية كبيرة، ويساهم في تحقيق نمو مستدام وفعالية
-              تشغيلية لا مثيل لها.
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              Simple & Transparent Pricing
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Choose the right automation package for your project. All prices include support and documentation.
             </p>
-            <Button
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-6 mb-12">
+            {[
+              {
+                name: "Small",
+                desc: "Basic workflow / trigger + 1–2 nodes",
+                base: "$150–$400",
+                premium: ["PDF Documentation: +$50", "Video Demo: +$100", "1 Week Support: +$50"],
+                final: "$200–$450",
+                hours: "4-8 hours",
+                popular: false,
+              },
+              {
+                name: "Medium",
+                desc: "Logic + Notifications + 3–5 nodes",
+                base: "$400–$900",
+                premium: ["PDF Documentation: +$50–$100", "Video Demo: +$100–$200", "2 Weeks Support: +$80–$150"],
+                final: "$500–$1,050",
+                hours: "8-15 hours",
+                popular: true,
+              },
+              {
+                name: "Large",
+                desc: "Complex workflow + Error Handling + APIs",
+                base: "$900–$2,500+",
+                premium: ["PDF Documentation: +$100–$150", "Video Demo: +$150–$300", "3 Weeks Support: +$100–$200"],
+                final: "$1,050–$2,800+",
+                hours: "15-30 hours",
+                popular: false,
+              },
+              {
+                name: "Enterprise",
+                desc: "Full System + Multi API + Scalable",
+                base: "$2,500+",
+                premium: ["Full Suite (PDF + Video + Support)", "Options: +$250–$600+"],
+                final: "$2,750+",
+                hours: "30+ hours",
+                popular: false,
+              },
+            ].map((plan, i) => (
+              <div
+                key={i}
+                className={`relative rounded-2xl border-2 p-6 flex flex-col transition-all duration-300 group
+                  ${plan.popular
+                    ? "border-primary shadow-xl shadow-primary/20 bg-white scale-105"
+                    : "border-border bg-white hover:border-primary hover:shadow-lg hover:-translate-y-1"
+                  }`}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                    <span className="bg-primary text-white text-xs font-bold px-4 py-1.5 rounded-full flex items-center gap-1">
+                      ⭐ Most Popular
+                    </span>
+                  </div>
+                )}
+
+                <h3 className="text-2xl font-bold text-foreground mb-1">{plan.name}</h3>
+                <p className="text-sm text-muted-foreground mb-5">{plan.desc}</p>
+
+                <div className="bg-blue-50 rounded-xl p-4 mb-5">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1 font-semibold">Base Price</p>
+                  <p className="text-2xl font-bold text-primary">{plan.base}</p>
+                </div>
+
+                <div className="mb-5 flex-1">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3 font-semibold">Premium Options</p>
+                  <ul className="space-y-1.5">
+                    {plan.premium.map((opt, j) => (
+                      <li key={j} className="text-sm text-muted-foreground flex items-start gap-2">
+                        <span className="text-primary mt-0.5">•</span>
+                        {opt}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="bg-gray-50 rounded-xl p-4 mb-5">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1 font-semibold">Final Price</p>
+                  <p className="text-xl font-bold text-foreground">{plan.final}</p>
+                </div>
+
+                <p className="text-xs text-muted-foreground text-center mb-4 flex items-center justify-center gap-1">
+                  <span>🕐</span> {plan.hours}
+                </p>
+
+                <button
+                  onClick={() => scrollTo("contact-section")}
+                  className={`w-full py-3 rounded-xl font-semibold text-sm transition-all duration-200
+                    ${plan.popular
+                      ? "bg-primary text-white hover:bg-primary/90 shadow-md hover:shadow-lg hover:shadow-primary/30"
+                      : "border-2 border-border text-foreground hover:border-primary hover:text-primary"
+                    }`}
+                >
+                  {plan.popular ? "Get Started" : "Learn More"}
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <p className="text-muted-foreground mb-4">Need a custom solution? Let's discuss your specific requirements.</p>
+            <button
               onClick={() => scrollTo("contact-section")}
-              className="bg-white text-primary hover:bg-white/90 gap-2"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5"
             >
-              ابدأ مشروعك الآن
+              View Full Pricing Details
               <ArrowRight className="w-4 h-4" />
-            </Button>
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 bg-white border-t border-border">
-        <div className="container">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <p className="text-muted-foreground">
-              © 2026 محمد - متخصص في أتمتة الأعمال الرقمية
+      {/* ===== HOW I WORK SECTION ===== */}
+      <section className="py-20 md:py-32 bg-white border-t border-border">
+        <div className="container max-w-3xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              How I Work With You
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              A structured, professional approach to building automation systems that actually work.
             </p>
-            <div className="flex gap-6">
-              <a
-                href={`https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                WhatsApp
-              </a>
-              <a
-                href={`mailto:${EMAIL}`}
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                البريد الإلكتروني
-              </a>
+          </div>
+
+          <div className="relative">
+            <div className="absolute right-[28px] top-8 bottom-8 w-0.5 bg-blue-100 hidden md:block" />
+            {[
+              {
+                n: 1,
+                title: "Initial Consultation",
+                desc: "I analyze your problem before thinking about tools. I understand your current process, identify pain points, and determine if automation is the right solution.",
+                deliverable: "Professional proposal with realistic timeline",
+                duration: "1–2 days",
+              },
+              {
+                n: 2,
+                title: "Discovery & Design",
+                desc: "I ask detailed questions about your workflows, data sources, systems, and desired outcomes. Then I create a complete automation blueprint showing entry points, logic, processing, and error handling.",
+                deliverable: "Automation Discovery Notes + Blueprint",
+                duration: "2–3 days",
+              },
+              {
+                n: 3,
+                title: "Implementation",
+                desc: "I build the actual workflow with proper logic, data processing, error handling, and logging. This is where the blueprint becomes a working system.",
+                deliverable: "Working automation system",
+                duration: "Depends on complexity",
+              },
+              {
+                n: 4,
+                title: "Testing & Optimization",
+                desc: "I test every component, integration points, edge cases, and stress scenarios. I ensure the system is stable, reliable, and handles unexpected situations gracefully.",
+                deliverable: "Stable, tested system",
+                duration: "2–3 days",
+              },
+              {
+                n: 5,
+                title: "Premium Delivery",
+                desc: "You get the complete package: the working system, comprehensive PDF documentation, a training session (30–60 min), and a video walkthrough showing how everything works.",
+                deliverable: "System + Docs + Training + Video",
+                duration: "1–2 days",
+              },
+              {
+                n: 6,
+                title: "Post-Delivery Support",
+                desc: "I provide short-term support (7–14 days) to fix any issues. I also identify opportunities for additional automations and improvements to maximize your system's value.",
+                deliverable: "Ongoing support & optimization",
+                duration: "7–14 days",
+              },
+            ].map((step, i) => (
+              <div key={i} className="flex gap-6 mb-10 group">
+                <div className="flex-shrink-0 w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform duration-200 z-10">
+                  {step.n}
+                </div>
+                <div className="flex-1 pb-8 border-b border-border last:border-0 group-hover:translate-x-1 transition-transform duration-200">
+                  <h3 className="text-xl font-bold text-foreground mb-2">{step.title}</h3>
+                  <p className="text-muted-foreground mb-3 leading-relaxed">{step.desc}</p>
+                  <p className="text-sm text-foreground">
+                    <span className="font-semibold">Deliverable:</span> {step.deliverable}
+                  </p>
+                  <p className="text-sm text-foreground mt-1">
+                    <span className="font-semibold">Duration:</span> {step.duration}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Why This Works */}
+          <div className="mt-8 bg-blue-50 rounded-2xl p-8 border border-blue-100">
+            <h3 className="text-xl font-bold text-foreground mb-6 text-center">Why This Approach Works</h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              {[
+                { title: "Professional & Structured", desc: "Every project follows a proven system" },
+                { title: "Reduces Errors", desc: "Thorough testing catches issues early" },
+                { title: "Increases Value", desc: "Complete documentation & training included" },
+                { title: "Long-term Success", desc: "Post-delivery support ensures sustainability" },
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3 group">
+                  <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
+                    <span className="text-white text-xs">✓</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground text-sm">{item.title}</p>
+                    <p className="text-muted-foreground text-sm">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== FAQ SECTION ===== */}
+      <section className="py-20 md:py-32 bg-[#f8faff] border-t border-border">
+        <div className="container max-w-3xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Everything you need to know about working with me on automation projects.
+            </p>
+          </div>
+
+          <div className="space-y-4 mb-12">
+            {[
+              {
+                q: "How do you determine if my project needs automation?",
+                a: "During the initial consultation, I analyze your current process, identify pain points, and assess whether automation will actually solve your problem. Not every process needs automation—sometimes a simple tool or workflow change is better. I'm honest about what will and won't work for your situation.",
+              },
+              {
+                q: "What if my project is more complex than expected?",
+                a: "If your project scope expands during development, I'll discuss it with you before proceeding. I provide realistic estimates based on the discovery phase, but if we discover new requirements, we'll adjust the timeline and cost together—no surprises.",
+              },
+              {
+                q: "Can I upgrade my plan after starting?",
+                a: "Absolutely. If you start with a Small plan and later realize you need more features, we can upgrade to a Medium or Large plan. The additional cost will be calculated fairly based on the extra work required.",
+              },
+              {
+                q: "What tools do you use for automation?",
+                a: "I primarily use n8n, Zapier, and Make. The choice depends on your specific needs, budget, and technical requirements. n8n is powerful and cost-effective for complex workflows, while Zapier is great for simple integrations. I'll recommend the best tool for your project.",
+              },
+              {
+                q: "Do you offer payment plans?",
+                a: "Yes, I can work with you on flexible payment arrangements. For larger projects, we can discuss milestone-based payments or payment plans. Let's discuss what works best for your budget.",
+              },
+              {
+                q: "Will I understand how the system works?",
+                a: "Absolutely. As part of the delivery, I provide comprehensive documentation, a training session, and a video walkthrough. I explain everything in a way that makes sense to you, so you can manage and modify the system if needed.",
+              },
+              {
+                q: "How long does a typical project take?",
+                a: "It depends on complexity. Small projects take 4–8 hours, Medium projects 8–15 hours, and Large projects 15–30+ hours. This includes discovery, design, implementation, testing, and delivery. I provide realistic timelines upfront.",
+              },
+              {
+                q: "Can you integrate with my existing tools?",
+                a: "Most likely, yes. I work with CRMs, email platforms, Google Sheets, Notion, Slack, and hundreds of other tools. If your tool has an API or Zapier integration, I can connect it. During discovery, I'll confirm which tools can be integrated.",
+              },
+              {
+                q: "What if I need ongoing support after the initial project?",
+                a: "I offer ongoing support packages for maintenance, updates, and new feature additions. As your business grows and your automation needs evolve, I can help you scale the system. Think of me as your long-term automation partner.",
+              },
+            ].map((faq, i) => (
+              <FaqItem key={i} question={faq.q} answer={faq.a} />
+            ))}
+          </div>
+
+          <div className="text-center">
+            <p className="text-muted-foreground mb-4">Still have questions? Let's talk!</p>
+            <button
+              onClick={() => scrollTo("contact-section")}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5"
+            >
+              Get in Touch
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== NEW FOOTER ===== */}
+      <footer className="bg-[#0a0a0a] text-white pt-16 pb-8">
+        <div className="container">
+          <div className="grid md:grid-cols-4 gap-12 mb-12">
+            {/* Brand */}
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center font-bold text-sm">M</div>
+                <span className="font-bold text-lg">Muhammad</span>
+              </div>
+              <p className="text-white/50 text-sm leading-relaxed">
+                Building automation systems that scale your business and reduce manual work.
+              </p>
+            </div>
+
+            {/* Quick Links */}
+            <div>
+              <h4 className="font-bold mb-4 text-white/80 uppercase text-xs tracking-wider">Quick Links</h4>
+              <ul className="space-y-2.5">
+                {[
+                  { label: "Home", action: () => window.scrollTo({ top: 0, behavior: "smooth" }) },
+                  { label: "Pricing", action: () => scrollTo("pricing-section") },
+                  { label: "Contact", action: () => scrollTo("contact-section") },
+                ].map((link, i) => (
+                  <li key={i}>
+                    <button onClick={link.action} className="text-white/50 hover:text-white text-sm transition-colors">
+                      {link.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Services */}
+            <div>
+              <h4 className="font-bold mb-4 text-white/80 uppercase text-xs tracking-wider">Services</h4>
+              <ul className="space-y-2.5">
+                {["Lead Generation", "Email Marketing", "CRM Integration"].map((s, i) => (
+                  <li key={i} className="text-white/50 text-sm">{s}</li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Get in Touch */}
+            <div>
+              <h4 className="font-bold mb-4 text-white/80 uppercase text-xs tracking-wider">Get in Touch</h4>
+              <ul className="space-y-3">
+                <li>
+                  <a href={`mailto:${EMAIL}`} className="text-white/50 hover:text-white text-sm transition-colors flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4" /> {EMAIL}
+                  </a>
+                </li>
+                <li>
+                  <a href={`https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white text-sm transition-colors flex items-center gap-2">
+                    <Zap className="w-4 h-4" /> WhatsApp
+                  </a>
+                </li>
+                <li>
+                  <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white text-sm transition-colors flex items-center gap-2">
+                    <Github className="w-4 h-4" /> GitHub
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-white/30 text-sm">© 2026 Muhammad. All rights reserved.</p>
+            <p className="text-white/30 text-sm">Automation Systems Architect | Building scalable solutions for SMBs</p>
           </div>
         </div>
       </footer>
