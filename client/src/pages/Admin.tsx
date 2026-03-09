@@ -21,6 +21,7 @@ interface Project {
   status: string;
   image_url: string;
   link_url: string;
+  svg_url: string;
 }
 
 interface Client {
@@ -45,7 +46,7 @@ interface Message {
 
 const emptyProject: Project = {
   title: "", description: "", client_name: "",
-  tools: "", status: "active", image_url: "", link_url: "",
+  tools: "", status: "active", image_url: "", link_url: "", svg_url: "",
 };
 
 export default function Admin() {
@@ -292,12 +293,11 @@ export default function Admin() {
                   </button>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid md:grid-cols-2 gap-4">
                   {[
                     { key: "title", label: "عنوان المشروع *", placeholder: "مثال: أتمتة إرسال الإيميل" },
                     { key: "client_name", label: "اسم العميل", placeholder: "مثال: شركة X" },
                     { key: "tools", label: "الأدوات (افصل بفاصلة)", placeholder: "n8n, Gmail, Sheets" },
-                    { key: "link_url", label: "رابط المشروع (للمعاينة المحمية)", placeholder: "https://..." },
                   ].map(({ key, label, placeholder }) => (
                     <div key={key}>
                       <label className="block text-sm text-white/50 mb-1.5">{label}</label>
@@ -373,6 +373,48 @@ export default function Admin() {
                               className="text-xs text-red-400 hover:text-red-300"
                             >حذف</button>
                           </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* SVG Workflow Upload */}
+                  <div className="md:col-span-2">
+                    <label className="block text-sm text-white/50 mb-1.5">ملف الـ Workflow بصيغة SVG</label>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center gap-2">
+                        <span className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white/40 text-sm truncate">
+                          {editProject.svg_url ? "✅ ملف SVG محمّل" : "لم يتم رفع ملف SVG بعد"}
+                        </span>
+                        <label className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#0066ff]/40 cursor-pointer text-sm hover:border-[#0066ff] hover:text-white text-[#0066ff] transition-colors whitespace-nowrap flex-shrink-0">
+                          <Upload className="w-4 h-4" /> رفع SVG
+                          <input
+                            type="file"
+                            accept=".svg,image/svg+xml"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              const reader = new FileReader();
+                              reader.onload = (ev) => {
+                                const svgText = ev.target?.result as string;
+                                const encoded = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgText)));
+                                setEditProject((p) => ({ ...p, svg_url: encoded }));
+                              };
+                              reader.readAsText(file);
+                            }}
+                          />
+                        </label>
+                        {editProject.svg_url && (
+                          <button type="button" onClick={() => setEditProject((p) => ({ ...p, svg_url: "" }))}
+                            className="px-3 py-2.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 rounded-xl text-xs text-red-400 transition-colors">
+                            حذف
+                          </button>
+                        )}
+                      </div>
+                      {editProject.svg_url && (
+                        <div className="border border-white/10 rounded-xl overflow-hidden bg-[#0f172a] p-2" style={{ height: 120 }}>
+                          <img src={editProject.svg_url} alt="SVG preview" className="w-full h-full object-contain" />
                         </div>
                       )}
                     </div>
@@ -457,10 +499,10 @@ export default function Admin() {
                         <button onClick={() => deleteProject(p.id)} className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 rounded-lg text-xs text-red-400 transition-colors">
                           <Trash2 className="w-3 h-3" /> حذف
                         </button>
-                        {p.link_url && (
-                          <a href={p.link_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs transition-colors mr-auto">
-                            <Eye className="w-3 h-3" /> عرض
-                          </a>
+                        {p.svg_url && (
+                          <span className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0066ff]/10 border border-[#0066ff]/20 rounded-lg text-xs text-[#0066ff] mr-auto">
+                            ✅ SVG موجود
+                          </span>
                         )}
                       </div>
                     </div>
