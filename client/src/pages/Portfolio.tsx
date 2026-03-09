@@ -189,7 +189,14 @@ export default function Portfolio() {
               )}
               {selected.link_url && (
                 <button
-                  onClick={() => { setPreviewProject(selected); setSelected(null); setZoom(1); setOffset({ x: 0, y: 0 }); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const proj = selected;
+                    setSelected(null);
+                    setZoom(0.7);
+                    setOffset({ x: 0, y: 0 });
+                    setPreviewProject(proj);
+                  }}
                   className="flex items-center gap-2 w-full justify-center py-3 bg-primary hover:bg-primary/90 rounded-xl font-semibold text-white transition-colors"
                 >
                   <Maximize2 className="w-4 h-4" /> عرض المشروع
