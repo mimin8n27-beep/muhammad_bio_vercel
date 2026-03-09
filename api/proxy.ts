@@ -1,56 +1,39 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
-import https from "https";
-import http from "http";
+export const config = { runtime: "edge" };
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const { url } = req.query;
+export default async function handler(req: Request) {
+  const url = new URL(req.url);
+  const target = url.searchParams.get("url");
 
-  if (!url || typeof url !== "string") {
-    return res.status(400).json({ error: "Missing url parameter" });
+  if (!target) {
+    return new Response("Missing url", { status: 400 });
   }
 
-  // Only allow n8n URLs for security
   const allowedDomains = ["n8n.cloud", "n8n.io", "app.n8n.cloud"];
-  const isAllowed = allowedDomains.some((d) => url.includes(d));
+  const isAllowed = allowedDomains.some((d) => target.includes(d));
   if (!isAllowed) {
-    return res.status(403).json({ error: "Domain not allowed" });
+    return new Response("Domain not allowed", { status: 403 });
   }
 
   try {
-    const targetUrl = new URL(url);
-    const protocol = targetUrl.protocol === "https:" ? https : http;
-
-    const proxyReq = protocol.get(
-      {
-        hostname: targetUrl.hostname,
-        path: targetUrl.pathname + targetUrl.search,
-        headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-          Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-          "Accept-Language": "en-US,en;q=0.5",
-        },
+    const response = await fetch(target, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
       },
-      (proxyRes) => {
-        // Remove headers that block iframe embedding
-        const headers = { ...proxyRes.headers };
-        delete headers["x-frame-options"];
-        delete headers["content-security-policy"];
-        delete headers["x-content-type-options"];
-
-        // Set headers to allow iframe
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        res.setHeader("X-Frame-Options", "ALLOWALL");
-        res.writeHead(proxyRes.statusCode || 200, headers);
-        proxyRes.pipe(res);
-      }
-    );
-
-    proxyReq.on("error", (err) => {
-      res.status(500).json({ error: "Proxy error: " + err.message });
     });
 
-    proxyReq.end();
+    const body = await response.text();
+
+    const headers = new Headers(response.headers);
+    headers.delete("x-frame-options");
+    headers.delete("content-security-policy");
+    headers.set("Access-Control-Allow-Origin", "*");
+
+    return new Response(body, {
+      status: response.status,
+      headers,
+    });
   } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    return new Response("Proxy error: " + err.message, { status: 500 });
   }
 }
