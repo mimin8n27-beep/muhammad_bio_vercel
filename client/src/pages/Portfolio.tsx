@@ -222,21 +222,21 @@ export default function Portfolio() {
 // WORKFLOW DATA
 // ============================================================
 const WORKFLOW_NODES = [
-  { id: "64fe44db", name: "Listen for incoming events", type: "telegramTrigger", position: [1168, 496], icon: "📨", color: "#0088cc", label: "Telegram Trigger" },
-  { id: "c639feb1", name: "AllowList", type: "set", position: [1392, 496], icon: "✏️", color: "#FF6B6B", label: "Set" },
-  { id: "93e1d858", name: "If1", type: "if", position: [1616, 496], icon: "⚡", color: "#9B59B6", label: "IF" },
-  { id: "b67a2a93", name: "Voice or Text", type: "set", position: [1840, 496], icon: "✏️", color: "#FF6B6B", label: "Set" },
-  { id: "e791d4f8", name: "If", type: "if", position: [2064, 496], icon: "⚡", color: "#9B59B6", label: "IF" },
-  { id: "8105c39f", name: "Get Voice File", type: "telegram", position: [2288, 416], icon: "📁", color: "#0088cc", label: "Telegram" },
-  { id: "5bd1788a", name: "Speech to Text", type: "openai", position: [2512, 416], icon: "🎙️", color: "#10A37F", label: "OpenAI" },
-  { id: "759b975f", name: "Angie, AI Assistant", type: "agent", position: [2992, 496], icon: "🤖", color: "#FF9500", label: "AI Agent" },
-  { id: "e35c04ff", name: "Telegram", type: "telegram", position: [3584, 496], icon: "📤", color: "#0088cc", label: "Telegram" },
-  { id: "46511f47", name: "OpenAI Chat Model", type: "lmChatOpenAi", position: [2736, 720], icon: "🧠", color: "#10A37F", label: "OpenAI Model" },
-  { id: "d2287bea", name: "Window Buffer Memory", type: "memoryBufferWindow", position: [2864, 720], icon: "💾", color: "#3498DB", label: "Memory" },
-  { id: "40e92679", name: "Tasks", type: "baserowTool", position: [2992, 720], icon: "✅", color: "#E67E22", label: "Baserow" },
-  { id: "570a0647", name: "Contacts", type: "baserowTool", position: [3120, 720], icon: "👥", color: "#E67E22", label: "Baserow" },
-  { id: "fa955731", name: "Get Email", type: "gmailTool", position: [3248, 720], icon: "📧", color: "#EA4335", label: "Gmail" },
-  { id: "c70236ea", name: "Google Calendar", type: "googleCalendarTool", position: [3376, 720], icon: "📅", color: "#4285F4", label: "Calendar" },
+  { id: "64fe44db", name: "Listen for incoming events", type: "telegramTrigger", position: [1168, 496], icon: "TG", color: "#0088cc", label: "Telegram Trigger" },
+  { id: "c639feb1", name: "AllowList", type: "set", position: [1392, 496], icon: "SET", color: "#FF6B6B", label: "Set" },
+  { id: "93e1d858", name: "If1", type: "if", position: [1616, 496], icon: "IF", color: "#9B59B6", label: "IF" },
+  { id: "b67a2a93", name: "Voice or Text", type: "set", position: [1840, 496], icon: "SET", color: "#FF6B6B", label: "Set" },
+  { id: "e791d4f8", name: "If", type: "if", position: [2064, 496], icon: "IF", color: "#9B59B6", label: "IF" },
+  { id: "8105c39f", name: "Get Voice File", type: "telegram", position: [2288, 416], icon: "TG", color: "#0088cc", label: "Telegram" },
+  { id: "5bd1788a", name: "Speech to Text", type: "openai", position: [2512, 416], icon: "AI", color: "#10A37F", label: "OpenAI" },
+  { id: "759b975f", name: "Angie, AI Assistant", type: "agent", position: [2992, 496], icon: "BOT", color: "#FF9500", label: "AI Agent" },
+  { id: "e35c04ff", name: "Telegram", type: "telegram", position: [3584, 496], icon: "TG", color: "#0088cc", label: "Telegram" },
+  { id: "46511f47", name: "OpenAI Chat Model", type: "lmChatOpenAi", position: [2736, 720], icon: "LLM", color: "#10A37F", label: "OpenAI Model" },
+  { id: "d2287bea", name: "Window Buffer Memory", type: "memoryBufferWindow", position: [2864, 720], icon: "MEM", color: "#3498DB", label: "Memory" },
+  { id: "40e92679", name: "Tasks", type: "baserowTool", position: [2992, 720], icon: "DB", color: "#E67E22", label: "Baserow" },
+  { id: "570a0647", name: "Contacts", type: "baserowTool", position: [3120, 720], icon: "DB", color: "#E67E22", label: "Baserow" },
+  { id: "fa955731", name: "Get Email", type: "gmailTool", position: [3248, 720], icon: "MAIL", color: "#EA4335", label: "Gmail" },
+  { id: "c70236ea", name: "Google Calendar", type: "googleCalendarTool", position: [3376, 720], icon: "CAL", color: "#4285F4", label: "Calendar" },
 ];
 
 const WORKFLOW_STICKIES = [
@@ -289,6 +289,7 @@ function WFConnection({ nodes, conn }: { nodes: any[], conn: any }) {
 }
 
 function WFNode({ node, selected, onClick }: { node: any, selected: boolean, onClick: (n: any) => void }) {
+  const iconFontSize = node.icon.length > 2 ? 7 : 9;
   return (
     <g transform={`translate(${node.position[0]}, ${node.position[1]})`} onClick={() => onClick(node)} style={{ cursor: "pointer" }}>
       <rect x={3} y={3} width={NODE_W} height={NODE_H} rx={8} fill="rgba(0,0,0,0.3)" />
@@ -297,16 +298,23 @@ function WFNode({ node, selected, onClick }: { node: any, selected: boolean, onC
         stroke={selected ? node.color : (node.type === "agent" ? node.color : "#334155")}
         strokeWidth={selected ? 2.5 : (node.type === "agent" ? 2 : 1.5)} />
       <rect width={NODE_W} height={4} rx={4} fill={node.color} opacity={0.9} />
-      <circle cx={22} cy={NODE_H / 2 + 2} r={12} fill={node.color} opacity={0.2} />
-      <text x={22} y={NODE_H / 2 + 7} textAnchor="middle" fontSize={14}>{node.icon}</text>
-      <text x={40} y={NODE_H / 2 - 4} fill="#e2e8f0" fontSize={9} fontWeight="600" fontFamily="monospace">
-        {node.name.length > 16 ? node.name.slice(0, 16) + "…" : node.name}
+      {/* Icon circle */}
+      <circle cx={22} cy={NODE_H / 2 + 2} r={13} fill={node.color} opacity={0.25} />
+      <circle cx={22} cy={NODE_H / 2 + 2} r={13} fill="none" stroke={node.color} strokeWidth={1} opacity={0.5} />
+      <text x={22} y={NODE_H / 2 + 2 + iconFontSize * 0.4}
+        textAnchor="middle" fontSize={iconFontSize}
+        fill={node.color} fontWeight="900" fontFamily="monospace">
+        {node.icon}
       </text>
-      <text x={40} y={NODE_H / 2 + 8} fill="#64748b" fontSize={8}>{node.label}</text>
+      {/* Name */}
+      <text x={42} y={NODE_H / 2 - 4} fill="#e2e8f0" fontSize={9} fontWeight="600" fontFamily="monospace">
+        {node.name.length > 15 ? node.name.slice(0, 15) + "…" : node.name}
+      </text>
+      <text x={42} y={NODE_H / 2 + 9} fill="#64748b" fontSize={8} fontFamily="sans-serif">{node.label}</text>
       {node.type === "telegramTrigger" && (
         <g>
-          <rect x={NODE_W - 28} y={4} width={24} height={12} rx={3} fill="#22c55e" opacity={0.9} />
-          <text x={NODE_W - 16} y={13} textAnchor="middle" fill="white" fontSize={7} fontWeight="bold">ON</text>
+          <rect x={NODE_W - 28} y={5} width={24} height={13} rx={3} fill="#22c55e" opacity={0.9} />
+          <text x={NODE_W - 16} y={14} textAnchor="middle" fill="white" fontSize={7} fontWeight="bold" fontFamily="monospace">ON</text>
         </g>
       )}
     </g>
