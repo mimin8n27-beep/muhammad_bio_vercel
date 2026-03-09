@@ -200,59 +200,64 @@ export default function Portfolio() {
         </div>
       )}
 
-      {/* ===== Protected Image Preview Modal ===== */}
+      {/* ===== Protected Workflow Preview Modal ===== */}
       {previewProject && (
-        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex flex-col select-none" dir="ltr">
+        <div className="fixed inset-0 z-50 flex flex-col select-none" dir="ltr"
+          style={{ background: "radial-gradient(ellipse at center, #2a2a3e 0%, #1a1a2e 100%)" }}>
+
           {/* Top Bar */}
-          <div className="flex items-center justify-between px-5 py-3 bg-[#111] border-b border-white/10 flex-shrink-0" dir="rtl">
+          <div className="flex items-center justify-between px-5 py-3 flex-shrink-0"
+            style={{ background: "rgba(0,0,0,0.4)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}
+            dir="rtl">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">M</span>
               </div>
               <span className="text-white font-semibold text-sm">{previewProject.title}</span>
               <span className="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 text-xs rounded-full border border-yellow-500/30">
-                🔒 معاينة محمية — للعرض فقط
+                🔒 للعرض فقط
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <button onClick={() => setZoom(z => Math.max(0.5, z - 0.25))}
-                className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-white">
+              <button onClick={() => setZoom(z => Math.max(0.2, z - 0.15))}
+                className="w-9 h-9 bg-white/10 hover:bg-white/20 rounded-xl transition-colors text-white flex items-center justify-center">
                 <ZoomOut className="w-4 h-4" />
               </button>
-              <span className="text-white/60 text-xs w-12 text-center">{Math.round(zoom * 100)}%</span>
-              <button onClick={() => setZoom(z => Math.min(4, z + 0.25))}
-                className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-white">
+              <span className="text-white/50 text-xs w-10 text-center">{Math.round(zoom * 100)}%</span>
+              <button onClick={() => setZoom(z => Math.min(4, z + 0.15))}
+                className="w-9 h-9 bg-white/10 hover:bg-white/20 rounded-xl transition-colors text-white flex items-center justify-center">
                 <ZoomIn className="w-4 h-4" />
               </button>
-              <button onClick={() => { setZoom(1); setOffset({ x: 0, y: 0 }); }}
-                className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-white">
+              <button onClick={() => { setZoom(0.7); setOffset({ x: 0, y: 0 }); }}
+                className="w-9 h-9 bg-white/10 hover:bg-white/20 rounded-xl transition-colors text-white flex items-center justify-center">
                 <RotateCcw className="w-4 h-4" />
               </button>
               <div className="w-px h-6 bg-white/20 mx-1" />
               <button onClick={() => setPreviewProject(null)}
-                className="p-2 bg-red-500/20 hover:bg-red-500/40 rounded-lg transition-colors text-red-400">
+                className="w-9 h-9 bg-red-500/30 hover:bg-red-500/50 rounded-xl transition-colors text-red-300 flex items-center justify-center">
                 <X className="w-4 h-4" />
               </button>
             </div>
           </div>
 
-            {/* iframe Container */}
+          {/* Main area — dotted background like n8n canvas */}
           <div
-            className="flex-1 overflow-hidden relative bg-[#0d0d0d] cursor-grab active:cursor-grabbing"
+            className="flex-1 overflow-hidden relative cursor-grab active:cursor-grabbing"
+            style={{
+              backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px)",
+              backgroundSize: "28px 28px",
+            }}
             onMouseDown={(e) => { setDragging(true); setDragStart({ x: e.clientX - offset.x, y: e.clientY - offset.y }); }}
             onMouseMove={(e) => { if (dragging) setOffset({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y }); }}
             onMouseUp={() => setDragging(false)}
             onMouseLeave={() => setDragging(false)}
-            onWheel={(e) => { e.preventDefault(); setZoom(z => Math.min(4, Math.max(0.5, z - e.deltaY * 0.001))); }}
+            onWheel={(e) => { e.preventDefault(); setZoom(z => Math.min(4, Math.max(0.2, z - e.deltaY * 0.001))); }}
             onContextMenu={(e) => e.preventDefault()}
           >
-            {/* Invisible overlay - blocks all clicks and right-click */}
-            <div
-              className="absolute inset-0 z-10"
-              onContextMenu={(e) => e.preventDefault()}
-              style={{ cursor: "grab" }}
-            />
+            {/* Overlay — blocks all interaction with iframe */}
+            <div className="absolute inset-0 z-10" style={{ cursor: dragging ? "grabbing" : "grab" }} />
 
+            {/* White window containing the iframe */}
             <div
               style={{
                 position: "absolute",
@@ -260,23 +265,37 @@ export default function Portfolio() {
                 left: "50%",
                 transform: `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px)) scale(${zoom})`,
                 transformOrigin: "center",
-                transition: dragging ? "none" : "transform 0.1s ease",
+                transition: dragging ? "none" : "transform 0.08s ease",
                 width: "1280px",
-                height: "720px",
+                height: "800px",
+                background: "white",
+                borderRadius: "16px",
+                boxShadow: "0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1)",
+                overflow: "hidden",
               }}
             >
+              {/* Fake browser bar */}
+              <div style={{ height: "40px", background: "#f0f0f0", borderBottom: "1px solid #ddd", display: "flex", alignItems: "center", padding: "0 12px", gap: "8px", flexShrink: 0 }}>
+                <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#ff5f57" }} />
+                <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#ffbd2e" }} />
+                <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#28ca41" }} />
+                <div style={{ flex: 1, height: "24px", background: "#e0e0e0", borderRadius: "6px", marginRight: "8px" }} />
+              </div>
+
+              {/* iframe */}
               <iframe
                 src={`/api/proxy?url=${encodeURIComponent(previewProject.link_url)}`}
                 title={previewProject.title}
-                className="w-full h-full rounded-xl border border-white/10"
-                style={{ pointerEvents: "none" }}
+                style={{ width: "100%", height: "calc(100% - 40px)", border: "none", pointerEvents: "none", display: "block" }}
                 sandbox="allow-scripts allow-same-origin"
               />
             </div>
           </div>
 
           {/* Bottom Bar */}
-          <div className="px-5 py-2.5 bg-[#111] border-t border-white/10 flex items-center justify-between flex-shrink-0" dir="rtl">
+          <div className="px-5 py-2 flex-shrink-0 flex items-center justify-between"
+            style={{ background: "rgba(0,0,0,0.4)", borderTop: "1px solid rgba(255,255,255,0.08)" }}
+            dir="rtl">
             <p className="text-white/30 text-xs">🖱️ اسحب للتحريك &nbsp;|&nbsp; Scroll للزوم</p>
             <p className="text-white/30 text-xs">هذا المشروع محمي — للعرض فقط</p>
           </div>
