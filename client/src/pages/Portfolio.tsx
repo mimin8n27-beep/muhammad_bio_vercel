@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { ArrowLeft, Loader2, X, Github, ZoomIn, ZoomOut, RotateCcw, Maximize2 } from "lucide-react";
 
