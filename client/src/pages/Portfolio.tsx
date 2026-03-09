@@ -13,6 +13,7 @@ interface Project {
   tools: string;
   status: string;
   image_url: string;
+  svg_url: string;
   link_url: string;
   created_at: string;
 }
@@ -187,7 +188,7 @@ export default function Portfolio() {
                   </div>
                 </div>
               )}
-              {selected.link_url && (
+              {selected.svg_url && (
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -207,9 +208,10 @@ export default function Portfolio() {
         </div>
       )}
 
-      {/* ===== Workflow Viewer ===== */}
+      {/* ===== SVG Workflow Viewer ===== */}
       {previewProject && (
-        <WorkflowViewer
+        <SVGViewer
+          svgUrl={previewProject.svg_url}
           projectTitle={previewProject.title}
           onClose={() => setPreviewProject(null)}
         />
@@ -219,119 +221,18 @@ export default function Portfolio() {
 }
 
 // ============================================================
-// WORKFLOW DATA
+// SVG VIEWER COMPONENT
 // ============================================================
-const WORKFLOW_NODES = [
-  { id: "64fe44db", name: "Listen for incoming events", type: "telegramTrigger", position: [1168, 496], icon: "TG", color: "#0088cc", label: "Telegram Trigger" },
-  { id: "c639feb1", name: "AllowList", type: "set", position: [1392, 496], icon: "SET", color: "#FF6B6B", label: "Set" },
-  { id: "93e1d858", name: "If1", type: "if", position: [1616, 496], icon: "IF", color: "#9B59B6", label: "IF" },
-  { id: "b67a2a93", name: "Voice or Text", type: "set", position: [1840, 496], icon: "SET", color: "#FF6B6B", label: "Set" },
-  { id: "e791d4f8", name: "If", type: "if", position: [2064, 496], icon: "IF", color: "#9B59B6", label: "IF" },
-  { id: "8105c39f", name: "Get Voice File", type: "telegram", position: [2288, 416], icon: "TG", color: "#0088cc", label: "Telegram" },
-  { id: "5bd1788a", name: "Speech to Text", type: "openai", position: [2512, 416], icon: "AI", color: "#10A37F", label: "OpenAI" },
-  { id: "759b975f", name: "Angie, AI Assistant", type: "agent", position: [2992, 496], icon: "BOT", color: "#FF9500", label: "AI Agent" },
-  { id: "e35c04ff", name: "Telegram", type: "telegram", position: [3584, 496], icon: "TG", color: "#0088cc", label: "Telegram" },
-  { id: "46511f47", name: "OpenAI Chat Model", type: "lmChatOpenAi", position: [2736, 720], icon: "LLM", color: "#10A37F", label: "OpenAI Model" },
-  { id: "d2287bea", name: "Window Buffer Memory", type: "memoryBufferWindow", position: [2864, 720], icon: "MEM", color: "#3498DB", label: "Memory" },
-  { id: "40e92679", name: "Tasks", type: "baserowTool", position: [2992, 720], icon: "DB", color: "#E67E22", label: "Baserow" },
-  { id: "570a0647", name: "Contacts", type: "baserowTool", position: [3120, 720], icon: "DB", color: "#E67E22", label: "Baserow" },
-  { id: "fa955731", name: "Get Email", type: "gmailTool", position: [3248, 720], icon: "MAIL", color: "#EA4335", label: "Gmail" },
-  { id: "c70236ea", name: "Google Calendar", type: "googleCalendarTool", position: [3376, 720], icon: "CAL", color: "#4285F4", label: "Calendar" },
-];
-
-const WORKFLOW_STICKIES = [
-  { id: "s1", content: "Overview", body: "Meet Angie - your personal AI assistant that handles voice & text via Telegram.", position: [368, 352], width: 720, height: 400, color: "#1e3a5f" },
-  { id: "s2", content: "Security: only allow authorized IDs", body: "Please add the ids into the setting node that you want to authorize", position: [1328, 336], width: 448, height: 327, color: "#1e3a5f" },
-  { id: "s3", content: "Process Telegram Request", body: "", position: [1824, 336], width: 800, height: 327, color: "#1e3a5f" },
-];
-
-const WORKFLOW_CONNECTIONS = [
-  { from: "64fe44db", to: "c639feb1" },
-  { from: "c639feb1", to: "93e1d858" },
-  { from: "93e1d858", to: "b67a2a93" },
-  { from: "b67a2a93", to: "e791d4f8" },
-  { from: "e791d4f8", to: "8105c39f" },
-  { from: "e791d4f8", to: "759b975f" },
-  { from: "8105c39f", to: "5bd1788a" },
-  { from: "5bd1788a", to: "759b975f" },
-  { from: "759b975f", to: "e35c04ff" },
-  { from: "46511f47", to: "759b975f", type: "ai" },
-  { from: "d2287bea", to: "759b975f", type: "ai" },
-  { from: "40e92679", to: "759b975f", type: "ai" },
-  { from: "570a0647", to: "759b975f", type: "ai" },
-  { from: "fa955731", to: "759b975f", type: "ai" },
-  { from: "c70236ea", to: "759b975f", type: "ai" },
-];
-
-const NODE_W = 140;
-const NODE_H = 60;
-
-function WFConnection({ nodes, conn }: { nodes: any[], conn: any }) {
-  const nodeMap = Object.fromEntries(nodes.map((n: any) => [n.id, n]));
-  const from = nodeMap[conn.from];
-  const to = nodeMap[conn.to];
-  if (!from || !to) return null;
-  const isAI = conn.type === "ai";
-  const fx = from.position[0] + NODE_W;
-  const fy = from.position[1] + NODE_H / 2;
-  const tx = to.position[0];
-  const ty = to.position[1] + NODE_H / 2;
-  const mx = (fx + tx) / 2;
-  const color = isAI ? "#FF9500" : "#cbd5e1";
-  const d = `M ${fx} ${fy} C ${mx} ${fy}, ${mx} ${ty}, ${tx} ${ty}`;
-  return (
-    <g>
-      <path d={d} fill="none" stroke={color} strokeWidth={isAI ? 1.5 : 2}
-        strokeDasharray={isAI ? "4 3" : "none"} opacity={0.7} />
-      <polygon points={`${tx},${ty} ${tx - 8},${ty - 4} ${tx - 8},${ty + 4}`} fill={color} opacity={0.8} />
-    </g>
-  );
-}
-
-function WFNode({ node, selected, onClick }: { node: any, selected: boolean, onClick: (n: any) => void }) {
-  const iconFontSize = node.icon.length > 2 ? 7 : 9;
-  return (
-    <g transform={`translate(${node.position[0]}, ${node.position[1]})`} onClick={() => onClick(node)} style={{ cursor: "pointer" }}>
-      <rect x={3} y={3} width={NODE_W} height={NODE_H} rx={8} fill="rgba(0,0,0,0.3)" />
-      <rect width={NODE_W} height={NODE_H} rx={8}
-        fill={selected ? "#1e293b" : "#0f172a"}
-        stroke={selected ? node.color : (node.type === "agent" ? node.color : "#334155")}
-        strokeWidth={selected ? 2.5 : (node.type === "agent" ? 2 : 1.5)} />
-      <rect width={NODE_W} height={4} rx={4} fill={node.color} opacity={0.9} />
-      {/* Icon circle */}
-      <circle cx={22} cy={NODE_H / 2 + 2} r={13} fill={node.color} opacity={0.25} />
-      <circle cx={22} cy={NODE_H / 2 + 2} r={13} fill="none" stroke={node.color} strokeWidth={1} opacity={0.5} />
-      <text x={22} y={NODE_H / 2 + 2 + iconFontSize * 0.4}
-        textAnchor="middle" fontSize={iconFontSize}
-        fill={node.color} fontWeight="900" fontFamily="monospace">
-        {node.icon}
-      </text>
-      {/* Name */}
-      <text x={42} y={NODE_H / 2 - 4} fill="#e2e8f0" fontSize={9} fontWeight="600" fontFamily="monospace">
-        {node.name.length > 15 ? node.name.slice(0, 15) + "…" : node.name}
-      </text>
-      <text x={42} y={NODE_H / 2 + 9} fill="#64748b" fontSize={8} fontFamily="sans-serif">{node.label}</text>
-      {node.type === "telegramTrigger" && (
-        <g>
-          <rect x={NODE_W - 28} y={5} width={24} height={13} rx={3} fill="#22c55e" opacity={0.9} />
-          <text x={NODE_W - 16} y={14} textAnchor="middle" fill="white" fontSize={7} fontWeight="bold" fontFamily="monospace">ON</text>
-        </g>
-      )}
-    </g>
-  );
-}
-
-function WorkflowViewer({ onClose, projectTitle }: { onClose: () => void, projectTitle: string }) {
-  const [zoom, setZoom] = useState(0.55);
-  const [offset, setOffset] = useState({ x: -200, y: -80 });
+function SVGViewer({ svgUrl, projectTitle, onClose }: { svgUrl: string, projectTitle: string, onClose: () => void }) {
+  const [zoom, setZoom] = useState(0.7);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const [selectedNode, setSelectedNode] = useState<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleWheel = useCallback((e: WheelEvent) => {
     e.preventDefault();
-    setZoom(z => Math.min(3, Math.max(0.2, z - e.deltaY * 0.001)));
+    setZoom(z => Math.min(5, Math.max(0.1, z - e.deltaY * 0.001)));
   }, []);
 
   useEffect(() => {
@@ -347,12 +248,7 @@ function WorkflowViewer({ onClose, projectTitle }: { onClose: () => void, projec
   };
 
   return (
-    <div style={{
-      position: "fixed", inset: 0, zIndex: 9999,
-      display: "flex", flexDirection: "column",
-      background: "radial-gradient(ellipse at 30% 20%, #1e293b 0%, #0f172a 100%)",
-      userSelect: "none"
-    }}>
+    <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", flexDirection: "column", background: "radial-gradient(ellipse at 30% 20%, #1e293b 0%, #0f172a 100%)", userSelect: "none" }}>
       {/* Top Bar */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 20px", background: "rgba(0,0,0,0.5)", borderBottom: "1px solid rgba(255,255,255,0.08)", flexShrink: 0 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -361,61 +257,41 @@ function WorkflowViewer({ onClose, projectTitle }: { onClose: () => void, projec
           <span style={{ padding: "2px 10px", borderRadius: 20, background: "rgba(234,179,8,0.15)", color: "#fbbf24", fontSize: 11, border: "1px solid rgba(234,179,8,0.3)" }}>🔒 للعرض فقط</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <button onClick={() => setZoom(z => Math.min(3, z + 0.15))} style={btnS}>＋</button>
+          <button onClick={() => setZoom(z => Math.min(5, z + 0.2))} style={btnS}>＋</button>
           <span style={{ color: "#64748b", fontSize: 12, minWidth: 44, textAlign: "center" }}>{Math.round(zoom * 100)}%</span>
-          <button onClick={() => setZoom(z => Math.max(0.2, z - 0.15))} style={btnS}>－</button>
-          <button onClick={() => { setZoom(0.55); setOffset({ x: -200, y: -80 }); }} style={btnS}>↺</button>
+          <button onClick={() => setZoom(z => Math.max(0.1, z - 0.2))} style={btnS}>－</button>
+          <button onClick={() => { setZoom(0.7); setOffset({ x: 0, y: 0 }); }} style={btnS}>↺</button>
           <div style={{ width: 1, height: 24, background: "rgba(255,255,255,0.1)", margin: "0 4px" }} />
           <button onClick={onClose} style={{ ...btnS, background: "rgba(239,68,68,0.2)", color: "#f87171" }}>✕</button>
         </div>
       </div>
 
       {/* Canvas */}
-      <div ref={containerRef}
+      <div
+        ref={containerRef}
         style={{ flex: 1, overflow: "hidden", position: "relative", cursor: dragging ? "grabbing" : "grab", backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)", backgroundSize: "28px 28px" }}
         onMouseDown={(e) => { setDragging(true); setDragStart({ x: e.clientX - offset.x, y: e.clientY - offset.y }); }}
         onMouseMove={(e) => { if (dragging) setOffset({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y }); }}
         onMouseUp={() => setDragging(false)}
         onMouseLeave={() => setDragging(false)}
-        onClick={(e) => { if ((e.target as HTMLElement).tagName === "svg") setSelectedNode(null); }}
       >
-        <svg
-          style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", transform: `translate(${offset.x}px, ${offset.y}px) scale(${zoom})`, transformOrigin: "0 0", transition: dragging ? "none" : "transform 0.05s ease" }}
-          viewBox="200 200 3600 800"
-        >
-          {WORKFLOW_STICKIES.map(s => (
-            <g key={s.id} transform={`translate(${s.position[0]}, ${s.position[1]})`}>
-              <rect width={s.width} height={s.height} rx={6} fill={s.color} opacity={0.5} stroke="#334155" strokeWidth={1} />
-              <text x={16} y={28} fill="#93c5fd" fontSize={11} fontWeight="700">{s.content}</text>
-              {s.body && <text x={16} y={48} fill="#94a3b8" fontSize={9}>{s.body.slice(0, 60)}</text>}
-            </g>
-          ))}
-          {WORKFLOW_CONNECTIONS.map((conn, i) => (
-            <WFConnection key={i} nodes={WORKFLOW_NODES} conn={conn} />
-          ))}
-          {WORKFLOW_NODES.map(node => (
-            <WFNode key={node.id} node={node} selected={selectedNode?.id === node.id} onClick={setSelectedNode} />
-          ))}
-        </svg>
-
-        {selectedNode && (
-          <div style={{ position: "absolute", bottom: 60, right: 20, background: "rgba(15,23,42,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "16px 20px", minWidth: 220, backdropFilter: "blur(10px)" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-              <span style={{ fontSize: 24 }}>{selectedNode.icon}</span>
-              <div>
-                <div style={{ color: "white", fontWeight: 700, fontSize: 13 }}>{selectedNode.name}</div>
-                <div style={{ color: "#64748b", fontSize: 11 }}>{selectedNode.label}</div>
-              </div>
-            </div>
-            <div style={{ height: 2, borderRadius: 1, background: `linear-gradient(to right, ${selectedNode.color}, transparent)` }} />
-          </div>
-        )}
+        <div style={{
+          position: "absolute", top: "50%", left: "50%",
+          transform: `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px)) scale(${zoom})`,
+          transformOrigin: "center",
+          transition: dragging ? "none" : "transform 0.05s ease",
+          borderRadius: 12,
+          boxShadow: "0 30px 60px rgba(0,0,0,0.6)",
+          pointerEvents: "none",
+        }}>
+          <img src={svgUrl} alt={projectTitle} style={{ display: "block", maxWidth: "none" }} draggable={false} />
+        </div>
       </div>
 
       {/* Bottom Bar */}
       <div style={{ padding: "8px 20px", background: "rgba(0,0,0,0.4)", borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
-        <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 11 }}>🖱️ اسحب للتحريك | Scroll للزوم | اضغط على node للتفاصيل</span>
-        <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 11 }}>{WORKFLOW_NODES.length} nodes · محمي للعرض فقط</span>
+        <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 11 }}>🖱️ اسحب للتحريك &nbsp;|&nbsp; Scroll للزوم</span>
+        <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 11 }}>هذا المشروع محمي — للعرض فقط</span>
       </div>
     </div>
   );
