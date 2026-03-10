@@ -117,14 +117,52 @@ export default function Admin() {
   };
 
   const saveProject = async () => {
-    if (!editProject.title) return;
+    if (!editProject.title) return alert("اكتب عنوان المشروع أولاً");
     setSaving(true);
-    if (editingId) {
-      await supabase.from("projects").update(editProject).eq("id", editingId);
-    } else {
-      await supabase.from("projects").insert([editProject]);
+    
+    // Build data object — exclude svg_url if column doesn't exist yet
+    const projectData: any = {
+      title: editProject.title,
+      description: editProject.description,
+      client_name: editProject.client_name,
+      tools: editProject.tools,
+      status: editProject.status,
+      image_url: editProject.image_url,
+      link_url: editProject.link_url,
+    };
+    
+    // Try adding svg_url — if column doesn't exist in DB it will cause error
+    if (editProject.svg_url) {
+      projectData.svg_url = editProject.svg_url;
     }
+
+    let error;
+    if (editingId) {
+      ({ error } = await supabase.from("projects").update(projectData).eq("id", editingId));
+    } else {
+      ({ error } = await supabase.from("projects").insert([projectData]));
+    }
+    
     setSaving(false);
+    
+    if (error) {
+      // Maybe svg_url column doesn't exist — try without it
+      if (error.message?.includes("svg_url")) {
+        delete projectData.svg_url;
+        const { error: error2 } = editingId
+          ? await supabase.from("projects").update(projectData).eq("id", editingId)
+          : await supabase.from("projects").insert([projectData]);
+        if (error2) {
+          alert("خطأ في الحفظ: " + error2.message);
+          return;
+        }
+        alert("⚠️ تم الحفظ بدون svg_url — أضف الـ column في Supabase أولاً");
+      } else {
+        alert("خطأ في الحفظ: " + error.message);
+        return;
+      }
+    }
+    
     setShowForm(false);
     setEditProject(emptyProject);
     setEditingId(null);
