@@ -774,11 +774,6 @@ export default function Home() {
                     <Zap className="w-4 h-4" /> WhatsApp
                   </a>
                 </li>
-                <li>
-                  <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white text-sm transition-colors flex items-center gap-2">
-                    <Github className="w-4 h-4" /> GitHub
-                  </a>
-                </li>
               </ul>
             </div>
           </div>
