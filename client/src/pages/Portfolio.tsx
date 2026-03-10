@@ -204,9 +204,51 @@ export default function Portfolio() {
 }
 
 // ============================================================
-// SVG VIEWER COMPONENT
+// HTML WORKFLOW VIEWER COMPONENT
 // ============================================================
 function SVGViewer({ svgUrl, projectTitle, onClose }: { svgUrl: string, projectTitle: string, onClose: () => void }) {
+  const btnS: React.CSSProperties = {
+    width: 32, height: 32, borderRadius: 8,
+    background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)",
+    color: "white", cursor: "pointer", fontSize: 14, display: "flex",
+    alignItems: "center", justifyContent: "center",
+  };
+
+  // detect if it's HTML content (base64 data URI or raw HTML)
+  const isHTML = svgUrl.startsWith("data:text/html") || svgUrl.includes("<!DOCTYPE") || svgUrl.includes("<html");
+  const iframeSrc = isHTML ? svgUrl : undefined;
+
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", flexDirection: "column", background: "#0f172a", userSelect: "none" }}>
+      {/* Top Bar */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 20px", background: "rgba(0,0,0,0.6)", borderBottom: "1px solid rgba(255,255,255,0.08)", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg,#0066ff,#0044aa)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", color: "white", fontSize: 14 }}>M</div>
+          <span style={{ color: "white", fontWeight: 600, fontSize: 14 }}>{projectTitle}</span>
+          <span style={{ padding: "2px 10px", borderRadius: 20, background: "rgba(234,179,8,0.15)", color: "#fbbf24", fontSize: 11, border: "1px solid rgba(234,179,8,0.3)" }}>🔒 للعرض فقط</span>
+        </div>
+        <button onClick={onClose} style={{ ...btnS, background: "rgba(239,68,68,0.2)", color: "#f87171", width: "auto", padding: "0 14px", gap: 6, fontSize: 13 }}>
+          <span>✕</span><span>إغلاق</span>
+        </button>
+      </div>
+
+      {/* iframe fills remaining space — zoom/pan handled inside the HTML */}
+      {iframeSrc ? (
+        <iframe
+          src={iframeSrc}
+          style={{ flex: 1, border: "none", width: "100%", background: "#1c1c28" }}
+          title={projectTitle}
+          sandbox="allow-scripts"
+        />
+      ) : (
+        // fallback: SVG image viewer with zoom/pan
+        <SVGImageViewer svgUrl={svgUrl} projectTitle={projectTitle} />
+      )}
+    </div>
+  );
+}
+
+function SVGImageViewer({ svgUrl, projectTitle }: { svgUrl: string, projectTitle: string }) {
   const [zoom, setZoom] = useState(0.7);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
@@ -224,57 +266,21 @@ function SVGViewer({ svgUrl, projectTitle, onClose }: { svgUrl: string, projectT
     return () => { if (el) el.removeEventListener("wheel", handleWheel); };
   }, [handleWheel]);
 
-  const btnS: React.CSSProperties = {
-    width: 32, height: 32, borderRadius: 8,
-    background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)",
-    color: "white", cursor: "pointer", fontSize: 14,
-  };
-
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", flexDirection: "column", background: "radial-gradient(ellipse at 30% 20%, #1e293b 0%, #0f172a 100%)", userSelect: "none" }}>
-      {/* Top Bar */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 20px", background: "rgba(0,0,0,0.5)", borderBottom: "1px solid rgba(255,255,255,0.08)", flexShrink: 0 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg,#0066ff,#0044aa)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", color: "white", fontSize: 14 }}>M</div>
-          <span style={{ color: "white", fontWeight: 600, fontSize: 14 }}>{projectTitle}</span>
-          <span style={{ padding: "2px 10px", borderRadius: 20, background: "rgba(234,179,8,0.15)", color: "#fbbf24", fontSize: 11, border: "1px solid rgba(234,179,8,0.3)" }}>🔒 للعرض فقط</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <button onClick={() => setZoom(z => Math.min(5, z + 0.2))} style={btnS}>＋</button>
-          <span style={{ color: "#64748b", fontSize: 12, minWidth: 44, textAlign: "center" }}>{Math.round(zoom * 100)}%</span>
-          <button onClick={() => setZoom(z => Math.max(0.1, z - 0.2))} style={btnS}>－</button>
-          <button onClick={() => { setZoom(0.7); setOffset({ x: 0, y: 0 }); }} style={btnS}>↺</button>
-          <div style={{ width: 1, height: 24, background: "rgba(255,255,255,0.1)", margin: "0 4px" }} />
-          <button onClick={onClose} style={{ ...btnS, background: "rgba(239,68,68,0.2)", color: "#f87171" }}>✕</button>
-        </div>
-      </div>
-
-      {/* Canvas */}
-      <div
-        ref={containerRef}
-        style={{ flex: 1, overflow: "hidden", position: "relative", cursor: dragging ? "grabbing" : "grab", backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)", backgroundSize: "28px 28px" }}
-        onMouseDown={(e) => { setDragging(true); setDragStart({ x: e.clientX - offset.x, y: e.clientY - offset.y }); }}
-        onMouseMove={(e) => { if (dragging) setOffset({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y }); }}
-        onMouseUp={() => setDragging(false)}
-        onMouseLeave={() => setDragging(false)}
-      >
-        <div style={{
-          position: "absolute", top: "50%", left: "50%",
-          transform: `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px)) scale(${zoom})`,
-          transformOrigin: "center",
-          transition: dragging ? "none" : "transform 0.05s ease",
-          borderRadius: 12,
-          boxShadow: "0 30px 60px rgba(0,0,0,0.6)",
-          pointerEvents: "none",
-        }}>
-          <img src={svgUrl} alt={projectTitle} style={{ display: "block", maxWidth: "none" }} draggable={false} />
-        </div>
-      </div>
-
-      {/* Bottom Bar */}
-      <div style={{ padding: "8px 20px", background: "rgba(0,0,0,0.4)", borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
-        <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 11 }}>🖱️ اسحب للتحريك &nbsp;|&nbsp; Scroll للزوم</span>
-        <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 11 }}>هذا المشروع محمي — للعرض فقط</span>
+    <div
+      ref={containerRef}
+      style={{ flex: 1, overflow: "hidden", position: "relative", cursor: dragging ? "grabbing" : "grab", background: "#1c1c28" }}
+      onMouseDown={(e) => { setDragging(true); setDragStart({ x: e.clientX - offset.x, y: e.clientY - offset.y }); }}
+      onMouseMove={(e) => { if (dragging) setOffset({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y }); }}
+      onMouseUp={() => setDragging(false)}
+      onMouseLeave={() => setDragging(false)}
+    >
+      <div style={{
+        position: "absolute", top: "50%", left: "50%",
+        transform: `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px)) scale(${zoom})`,
+        transformOrigin: "center", transition: dragging ? "none" : "transform 0.05s ease",
+      }}>
+        <img src={svgUrl} alt={projectTitle} style={{ display: "block", maxWidth: "none" }} draggable={false} />
       </div>
     </div>
   );
