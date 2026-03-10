@@ -32,6 +32,7 @@ interface Client {
   phone: string;
   status: string;
   notes: string;
+  plan: string;
   created_at: string;
 }
 
@@ -66,6 +67,13 @@ export default function Admin() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
+
+  // Client form state
+  const emptyClient = { name: "", email: "", company: "", phone: "", status: "lead", notes: "", plan: "" };
+  const [showClientForm, setShowClientForm] = useState(false);
+  const [editClient, setEditClient] = useState(emptyClient);
+  const [editingClientId, setEditingClientId] = useState<string | null>(null);
+  const [savingClient, setSavingClient] = useState(false);
 
   const uploadImage = async (file: File): Promise<string> => {
     setImageUploading(true);
@@ -133,6 +141,33 @@ export default function Admin() {
     if (!confirm("هتحذف الرسالة دي؟")) return;
     await supabase.from("messages").delete().eq("id", id);
     fetchAll();
+  };
+
+  const deleteClient = async (id: string) => {
+    if (!confirm("هتحذف العميل ده؟")) return;
+    await supabase.from("clients").delete().eq("id", id);
+    fetchAll();
+  };
+
+  const saveClient = async () => {
+    if (!editClient.name.trim()) return alert("اكتب اسم العميل");
+    setSavingClient(true);
+    if (editingClientId) {
+      await supabase.from("clients").update(editClient).eq("id", editingClientId);
+    } else {
+      await supabase.from("clients").insert([editClient]);
+    }
+    setSavingClient(false);
+    setShowClientForm(false);
+    setEditClient(emptyClient);
+    setEditingClientId(null);
+    fetchAll();
+  };
+
+  const startEditClient = (c: any) => {
+    setEditClient({ name: c.name, email: c.email || "", company: c.company || "", phone: c.phone || "", status: c.status || "lead", notes: c.notes || "", plan: c.plan || "" });
+    setEditingClientId(c.id);
+    setShowClientForm(true);
   };
 
   const startEdit = (p: any) => {
@@ -516,7 +551,91 @@ export default function Admin() {
         {/* ===== CLIENTS TAB ===== */}
         {tab === "clients" && (
           <div>
-            <h2 className="text-xl font-bold mb-6">العملاء</h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold">العملاء</h2>
+              <button onClick={() => { setEditClient(emptyClient); setEditingClientId(null); setShowClientForm(true); }}
+                className="flex items-center gap-2 px-4 py-2 bg-[#0066ff] hover:bg-[#0055dd] rounded-xl text-sm font-semibold transition-colors">
+                <Plus className="w-4 h-4" /> إضافة عميل
+              </button>
+            </div>
+
+            {/* Client Form */}
+            {showClientForm && (
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-6">
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="font-bold text-lg">{editingClientId ? "تعديل عميل" : "إضافة عميل جديد"}</h3>
+                  <button onClick={() => setShowClientForm(false)} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="grid md:grid-cols-2 gap-4 mb-4">
+                  {[
+                    { key: "name", label: "الاسم *", placeholder: "محمد أحمد" },
+                    { key: "email", label: "الإيميل", placeholder: "example@email.com" },
+                    { key: "company", label: "الشركة", placeholder: "شركة X" },
+                    { key: "phone", label: "الهاتف", placeholder: "+201xxxxxxxxx" },
+                  ].map(({ key, label, placeholder }) => (
+                    <div key={key}>
+                      <label className="block text-sm text-white/50 mb-1.5">{label}</label>
+                      <input
+                        value={(editClient as any)[key]}
+                        onChange={(e) => setEditClient(p => ({ ...p, [key]: e.target.value }))}
+                        placeholder={placeholder}
+                        className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/25 outline-none focus:border-[#0066ff] transition-colors text-sm"
+                      />
+                    </div>
+                  ))}
+
+                  {/* Plan Dropdown */}
+                  <div>
+                    <label className="block text-sm text-white/50 mb-1.5">خطة التسعير</label>
+                    <select
+                      value={editClient.plan}
+                      onChange={(e) => setEditClient(p => ({ ...p, plan: e.target.value }))}
+                      className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-[#0066ff] transition-colors text-sm"
+                    >
+                      <option value="">— لم يُحدد بعد —</option>
+                      <option value="small">⚡ صغير — $150 إلى $400</option>
+                      <option value="medium">🚀 متوسط — $400 إلى $900</option>
+                      <option value="large">💎 كبير — $900 إلى $2500</option>
+                      <option value="enterprise">🏢 Enterprise — $2500+</option>
+                    </select>
+                  </div>
+
+                  {/* Status */}
+                  <div>
+                    <label className="block text-sm text-white/50 mb-1.5">الحالة</label>
+                    <select
+                      value={editClient.status}
+                      onChange={(e) => setEditClient(p => ({ ...p, status: e.target.value }))}
+                      className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-[#0066ff] transition-colors text-sm"
+                    >
+                      <option value="lead">عميل محتمل 🔵</option>
+                      <option value="active">عميل نشط ✅</option>
+                      <option value="inactive">غير نشط ⏸️</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Notes */}
+                <div className="mb-4">
+                  <label className="block text-sm text-white/50 mb-1.5">ملاحظات</label>
+                  <textarea
+                    value={editClient.notes}
+                    onChange={(e) => setEditClient(p => ({ ...p, notes: e.target.value }))}
+                    placeholder="أي ملاحظات عن العميل..."
+                    rows={3}
+                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/25 outline-none focus:border-[#0066ff] transition-colors text-sm resize-none"
+                  />
+                </div>
+
+                <button onClick={saveClient} disabled={savingClient}
+                  className="flex items-center gap-2 px-6 py-2.5 bg-[#0066ff] hover:bg-[#0055dd] disabled:opacity-50 rounded-xl font-semibold text-sm transition-colors">
+                  {savingClient ? <><Loader2 className="w-4 h-4 animate-spin" /> جاري الحفظ...</> : <><Save className="w-4 h-4" /> حفظ العميل</>}
+                </button>
+              </div>
+            )}
+
             {loading ? (
               <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 animate-spin text-[#0066ff]" /></div>
             ) : clients.length === 0 ? (
@@ -530,22 +649,43 @@ export default function Admin() {
                         <h3 className="font-bold text-lg">{c.name}</h3>
                         {c.company && <p className="text-white/50 text-sm">{c.company}</p>}
                       </div>
-                      <span className={`text-xs px-2 py-1 rounded-full ${
-                        c.status === "active" ? "bg-green-500/20 text-green-400" :
-                        c.status === "lead" ? "bg-blue-500/20 text-blue-400" :
-                        "bg-white/10 text-white/40"
-                      }`}>
-                        {c.status === "active" ? "عميل نشط" : c.status === "lead" ? "عميل محتمل" : c.status}
-                      </span>
+                      <div className="flex flex-col items-end gap-1.5">
+                        <span className={`text-xs px-2 py-1 rounded-full ${
+                          c.status === "active" ? "bg-green-500/20 text-green-400" :
+                          c.status === "lead" ? "bg-blue-500/20 text-blue-400" :
+                          "bg-white/10 text-white/40"
+                        }`}>
+                          {c.status === "active" ? "عميل نشط" : c.status === "lead" ? "عميل محتمل" : c.status}
+                        </span>
+                        {c.plan && (
+                          <span className={`text-xs px-2 py-1 rounded-full font-semibold ${
+                            c.plan === "enterprise" ? "bg-purple-500/20 text-purple-400 border border-purple-500/30" :
+                            c.plan === "large"      ? "bg-orange-500/20 text-orange-400 border border-orange-500/30" :
+                            c.plan === "medium"     ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" :
+                            c.plan === "small"      ? "bg-green-500/20 text-green-400 border border-green-500/30" :
+                            "bg-white/10 text-white/40"
+                          }`}>
+                            {{ small: "⚡ صغير $150-400", medium: "🚀 متوسط $400-900", large: "💎 كبير $900-2500", enterprise: "🏢 Enterprise $2500+" }[c.plan] || c.plan}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <div className="space-y-1.5 text-sm text-white/50">
                       {c.email && <p>📧 {c.email}</p>}
                       {c.phone && <p>📱 {c.phone}</p>}
-                      {c.notes && <p className="pt-2 border-t border-white/10 text-white/40">{c.notes}</p>}
+                      {c.notes && <p className="pt-2 border-t border-white/10 text-white/40 text-xs">{c.notes}</p>}
                     </div>
-                    <p className="text-xs text-white/25 mt-3">
-                      {new Date(c.created_at).toLocaleDateString("ar-EG")}
-                    </p>
+                    <div className="flex items-center justify-between mt-3">
+                      <p className="text-xs text-white/25">{new Date(c.created_at).toLocaleDateString("ar-EG")}</p>
+                      <div className="flex gap-2">
+                        <button onClick={() => startEditClient(c)} className="flex items-center gap-1 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs transition-colors">
+                          <Edit2 className="w-3 h-3" /> تعديل
+                        </button>
+                        <button onClick={() => deleteClient(c.id)} className="flex items-center gap-1 px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 rounded-lg text-xs text-red-400 transition-colors">
+                          <Trash2 className="w-3 h-3" /> حذف
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
