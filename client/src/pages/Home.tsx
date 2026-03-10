@@ -849,11 +849,9 @@ export default function Home() {
                 </div>
               )}
 
-              {selectedProject.link_url && (
+              {selectedProject.svg_url && (
                 <a
-                  href={selectedProject.link_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={`/portfolio?open=${selectedProject.id}`}
                   className="flex items-center gap-2 w-full justify-center py-3 bg-primary hover:bg-primary/90 rounded-xl font-semibold text-white transition-colors"
                 >
                   <ExternalLink className="w-4 h-4" />
