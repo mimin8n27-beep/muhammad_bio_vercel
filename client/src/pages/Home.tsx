@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import ContactForm from "@/components/ContactForm";
 import SharedHeader from "@/components/SharedHeader";
 import { supabase } from "@/lib/supabase";
-import { ArrowRight, Zap, BarChart3, Workflow, MessageSquare, Database, Smartphone, X, ExternalLink, Loader2 } from "lucide-react";
+import { ArrowRight, Zap, BarChart3, Workflow, MessageSquare, Database, Smartphone, Github, X, ExternalLink, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 
 /**
