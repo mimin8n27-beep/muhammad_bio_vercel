@@ -35,7 +35,20 @@ export default function Portfolio() {
     const { data, error } = await supabase
       .from("projects").select("*").eq("status", "active")
       .order("created_at", { ascending: false });
-    if (!error && data) setProjects(data);
+    if (!error && data) {
+      setProjects(data);
+      // Auto-open project from URL param ?open=ID
+      const params = new URLSearchParams(window.location.search);
+      const openId = params.get("open");
+      if (openId) {
+        const target = data.find((p: Project) => p.id === openId);
+        if (target?.svg_url) {
+          setPreviewProject(target);
+          // Clean URL without reload
+          window.history.replaceState({}, "", "/portfolio");
+        }
+      }
+    }
     setLoading(false);
   };
 
