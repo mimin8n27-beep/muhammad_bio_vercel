@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
-import { ArrowLeft, Loader2, X, Github, ZoomIn, ZoomOut, RotateCcw, Maximize2 } from "lucide-react";
+import SharedHeader from "@/components/SharedHeader";
+import { Loader2, X, ZoomIn, ZoomOut, RotateCcw, Maximize2 } from "lucide-react";
 
 const WHATSAPP_NUMBER = "+201064998737";
 const GITHUB_URL = "https://github.com/mimin8n27-beep";
@@ -45,25 +46,7 @@ export default function Portfolio() {
     <div className="min-h-screen bg-white text-foreground" dir="rtl">
 
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-border">
-        <div className="container py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">M</span>
-            </div>
-            <h1 className="text-xl font-bold text-foreground">Muhammad</h1>
-          </div>
-          <nav className="hidden md:flex gap-8 items-center">
-            <a href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">الرئيسية</a>
-            <span className="text-sm text-primary font-semibold">معرض الأعمال</span>
-          </nav>
-          <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg hover:border-primary hover:shadow-md transition-all">
-            <Github className="w-5 h-5 text-foreground" />
-            <span className="text-sm font-semibold text-foreground">GitHub</span>
-          </a>
-        </div>
-      </header>
+      <SharedHeader />
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-white via-blue-50 to-white py-20 md:py-28">
