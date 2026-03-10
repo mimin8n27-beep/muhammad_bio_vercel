@@ -413,30 +413,43 @@ export default function Admin() {
                     </div>
                   </div>
 
-                  {/* SVG Workflow Upload */}
+                  {/* SVG / HTML Workflow Upload */}
                   <div className="md:col-span-2">
-                    <label className="block text-sm text-white/50 mb-1.5">ملف الـ Workflow بصيغة SVG</label>
+                    <label className="block text-sm text-white/50 mb-1.5">ملف عرض الـ Workflow (SVG أو HTML)</label>
                     <div className="flex flex-col gap-3">
                       <div className="flex items-center gap-2">
                         <span className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white/40 text-sm truncate">
-                          {editProject.svg_url ? "✅ ملف SVG محمّل" : "لم يتم رفع ملف SVG بعد"}
+                          {editProject.svg_url
+                            ? editProject.svg_url.startsWith("data:text/html")
+                              ? "✅ ملف HTML محمّل"
+                              : "✅ ملف SVG محمّل"
+                            : "لم يتم رفع ملف بعد"}
                         </span>
                         <label className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#0066ff]/40 cursor-pointer text-sm hover:border-[#0066ff] hover:text-white text-[#0066ff] transition-colors whitespace-nowrap flex-shrink-0">
-                          <Upload className="w-4 h-4" /> رفع SVG
+                          <Upload className="w-4 h-4" /> رفع SVG أو HTML
                           <input
                             type="file"
-                            accept=".svg,image/svg+xml"
+                            accept=".svg,.html,image/svg+xml,text/html"
                             className="hidden"
                             onChange={(e) => {
                               const file = e.target.files?.[0];
                               if (!file) return;
                               const reader = new FileReader();
-                              reader.onload = (ev) => {
-                                const svgText = ev.target?.result as string;
-                                const encoded = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgText)));
-                                setEditProject((p) => ({ ...p, svg_url: encoded }));
-                              };
-                              reader.readAsText(file);
+                              if (file.name.endsWith(".html") || file.type === "text/html") {
+                                reader.onload = (ev) => {
+                                  const htmlText = ev.target?.result as string;
+                                  const encoded = "data:text/html;base64," + btoa(unescape(encodeURIComponent(htmlText)));
+                                  setEditProject((p) => ({ ...p, svg_url: encoded }));
+                                };
+                                reader.readAsText(file);
+                              } else {
+                                reader.onload = (ev) => {
+                                  const svgText = ev.target?.result as string;
+                                  const encoded = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgText)));
+                                  setEditProject((p) => ({ ...p, svg_url: encoded }));
+                                };
+                                reader.readAsText(file);
+                              }
                             }}
                           />
                         </label>
@@ -447,9 +460,20 @@ export default function Admin() {
                           </button>
                         )}
                       </div>
+                      {/* Preview — HTML shows badge, SVG shows image */}
                       {editProject.svg_url && (
-                        <div className="border border-white/10 rounded-xl overflow-hidden bg-[#0f172a] p-2" style={{ height: 120 }}>
-                          <img src={editProject.svg_url} alt="SVG preview" className="w-full h-full object-contain" />
+                        <div className="border border-white/10 rounded-xl overflow-hidden bg-[#0f172a] p-3" style={{ height: 80 }}>
+                          {editProject.svg_url.startsWith("data:text/html") ? (
+                            <div className="flex items-center gap-3 h-full">
+                              <div className="w-10 h-10 rounded-lg bg-[#0066ff]/20 border border-[#0066ff]/30 flex items-center justify-center text-lg">🌐</div>
+                              <div>
+                                <p className="text-green-400 text-sm font-semibold">✅ HTML Viewer جاهز</p>
+                                <p className="text-white/30 text-xs mt-0.5">سيُعرض تفاعلياً مع zoom وpan</p>
+                              </div>
+                            </div>
+                          ) : (
+                            <img src={editProject.svg_url} alt="SVG preview" className="w-full h-full object-contain" />
+                          )}
                         </div>
                       )}
                     </div>
