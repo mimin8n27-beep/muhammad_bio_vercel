@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import ContactForm from "@/components/ContactForm";
+import SharedHeader from "@/components/SharedHeader";
 import { supabase } from "@/lib/supabase";
-import { ArrowRight, Zap, BarChart3, Workflow, MessageSquare, Database, Smartphone, Github, X, ExternalLink, Loader2 } from "lucide-react";
+import { ArrowRight, Zap, BarChart3, Workflow, MessageSquare, Database, Smartphone, X, ExternalLink, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 
 /**
@@ -138,45 +139,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white text-foreground">
       {/* Header Navigation */}
-      <header className="sticky top-0 z-50 bg-white border-b border-border">
-        <div className="container py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">M</span>
-            </div>
-            <h1 className="text-xl font-bold text-foreground">Muhammad</h1>
-          </div>
-          <nav className="hidden md:flex gap-8 items-center">
-            <a
-              href="https://muhammad-bio-vercel.vercel.app/portfolio"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              معرض الأعمال
-            </a>
-            <a
-              href="/pricing"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              خطط التسعير
-            </a>
-            <button
-              onClick={() => scrollTo("contact-section")}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              تواصل معي
-            </button>
-          </nav>
-          <a
-            href={GITHUB_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg hover:border-primary hover:shadow-md transition-all"
-          >
-            <Github className="w-5 h-5 text-foreground" />
-            <span className="text-sm font-semibold text-foreground">GitHub</span>
-          </a>
-        </div>
-      </header>
+      <SharedHeader />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-white via-blue-50 to-white py-20 md:py-32">
