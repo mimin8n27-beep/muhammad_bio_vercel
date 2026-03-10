@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import SharedHeader from "@/components/SharedHeader";
-import { Loader2, X, ZoomIn, ZoomOut, RotateCcw, Maximize2 } from "lucide-react";
+import { ArrowLeft, Loader2, X, ZoomIn, ZoomOut, RotateCcw, Maximize2 } from "lucide-react";
 
 const WHATSAPP_NUMBER = "+201064998737";
 const GITHUB_URL = "https://github.com/mimin8n27-beep";
