@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { ArrowRight, Github, CheckCircle, Loader2, CheckCircle2, Mail, MessageCircle } from "lucide-react";
+import SharedHeader from "@/components/SharedHeader";
+import { ArrowRight, CheckCircle, Loader2, CheckCircle2, Mail, MessageCircle } from "lucide-react";
 
 const WHATSAPP_NUMBER = "+201064998737";
 const EMAIL = "mimi.n8n27@gmail.com";
@@ -129,26 +130,7 @@ export default function Pricing() {
     <div className="min-h-screen bg-white text-foreground">
 
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-border">
-        <div className="container py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">M</span>
-            </div>
-            <h1 className="text-xl font-bold text-foreground">Muhammad</h1>
-          </div>
-          <nav className="hidden md:flex gap-8 items-center">
-            <a href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">الرئيسية</a>
-            <a href="/portfolio" className="text-sm text-muted-foreground hover:text-foreground transition-colors">معرض الأعمال</a>
-            <span className="text-sm text-primary font-semibold">خطط التسعير</span>
-          </nav>
-          <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg hover:border-primary hover:shadow-md transition-all">
-            <Github className="w-5 h-5 text-foreground" />
-            <span className="text-sm font-semibold text-foreground">GitHub</span>
-          </a>
-        </div>
-      </header>
+      <SharedHeader />
 
       {/* Hero */}
       <section className="bg-gradient-to-b from-blue-50 to-white py-16 md:py-24 text-center border-b border-border">
