@@ -102,8 +102,11 @@ export default function Portfolio() {
   useEffect(() => { fetchProjects(); }, []);
 
   const fetchProjects = async () => {
+    // Don't fetch svg_url (heavy base64) — load it lazily when needed
     const { data, error } = await supabase
-      .from("projects").select("*").eq("status", "active")
+      .from("projects")
+      .select("id, title, description, client_name, tools, status, image_url, link_url, created_at")
+      .eq("status", "active")
       .order("created_at", { ascending: false });
     if (!error && data) {
       setProjects(data);
@@ -112,14 +115,30 @@ export default function Portfolio() {
       const openId = params.get("open");
       if (openId) {
         const target = data.find((p: Project) => p.id === openId);
-        if (target?.svg_url) {
-          setPreviewProject(target);
-          // Clean URL without reload
-          window.history.replaceState({}, "", "/portfolio");
+        if (target) {
+          // Fetch svg_url for this specific project
+          const { data: svgData } = await supabase
+            .from("projects").select("svg_url").eq("id", openId).single();
+          if (svgData?.svg_url) {
+            setPreviewProject({ ...target, svg_url: svgData.svg_url });
+            window.history.replaceState({}, "", "/portfolio");
+          }
         }
       }
     }
     setLoading(false);
+  };
+
+  // Load svg_url on demand when user clicks "عرض المشروع"
+  const openPreview = async (project: Project) => {
+    if (project.svg_url) { setPreviewProject(project); return; }
+    const { data } = await supabase
+      .from("projects").select("svg_url").eq("id", project.id).single();
+    if (data?.svg_url) {
+      const full = { ...project, svg_url: data.svg_url };
+      setProjects(ps => ps.map(p => p.id === project.id ? full : p));
+      setPreviewProject(full);
+    }
   };
 
   const toolsList = (tools: string) =>
@@ -261,8 +280,7 @@ export default function Portfolio() {
             </div>
 
             {/* Sticky button at bottom */}
-            {selected.svg_url && (
-              <div className="p-4 border-t border-border bg-white rounded-b-2xl flex-shrink-0" dir="rtl">
+            <div className="p-4 border-t border-border bg-white rounded-b-2xl flex-shrink-0" dir="rtl">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -270,14 +288,13 @@ export default function Portfolio() {
                     setSelected(null);
                     setZoom(0.7);
                     setOffset({ x: 0, y: 0 });
-                    setPreviewProject(proj);
+                    openPreview(proj);
                   }}
                   className="flex items-center gap-2 w-full justify-center py-3 bg-primary hover:bg-primary/90 rounded-xl font-semibold text-white transition-colors"
                 >
                   <Maximize2 className="w-4 h-4" /> عرض المشروع
                 </button>
               </div>
-            )}
           </div>
         </div>
       )}
