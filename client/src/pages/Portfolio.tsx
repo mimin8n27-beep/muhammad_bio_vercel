@@ -94,7 +94,7 @@ export default function Portfolio() {
   const fetchProjects = async () => {
     const { data, error } = await supabase
       .from("projects")
-      .select("id, title, description, client_name, tools, status, link_url, created_at")
+      .select("id, title, description, client_name, tools, status, image_url, link_url, created_at")
       .eq("status", "active")
       .order("created_at", { ascending: false });
 
@@ -117,16 +117,8 @@ export default function Portfolio() {
     setLoading(false);
   };
 
-  const openModal = async (project: Project) => {
-    if (project.image_url !== undefined) {
-      setSelected(project);
-      return;
-    }
-    const { data } = await supabase
-      .from("projects").select("image_url").eq("id", project.id).single();
-    const full: Project = { ...project, image_url: data?.image_url || "" };
-    setProjects(ps => ps.map(p => p.id === project.id ? full : p));
-    setSelected(full);
+  const openModal = (project: Project) => {
+    setSelected(project);
   };
 
   const openPreview = async (project: Project) => {
@@ -179,10 +171,14 @@ export default function Portfolio() {
                   onClick={() => openModal(project)}
                   className="group bg-white border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
                 >
-                  <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
-                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
-                      <span className="text-3xl">⚡</span>
-                    </div>
+                  <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center overflow-hidden">
+                    {project.image_url ? (
+                      <img src={project.image_url} alt={project.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
+                        <span className="text-3xl">⚡</span>
+                      </div>
+                    )}
                   </div>
                   <div className="p-5">
                     <h3 className="font-bold text-foreground text-lg mb-2 leading-tight line-clamp-2 group-hover:text-primary transition-colors">
