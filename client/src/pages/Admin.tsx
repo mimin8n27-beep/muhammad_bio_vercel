@@ -412,9 +412,9 @@ export default function Admin() {
                             onChange={(e) => {
                               const file = e.target.files?.[0];
                               if (!file) return;
-                              // Check size - max 500KB
-                              if (file.size > 500 * 1024) {
-                                alert("الصورة كبيرة! استخدم صورة أقل من 500KB أو قلل حجمها");
+                              // Check size - max 2MB
+                              if (file.size > 2 * 1024 * 1024) {
+                                alert("الصورة كبيرة! استخدم صورة أقل من 2MB أو قلل حجمها");
                                 return;
                               }
                               setImageUploading(true);
