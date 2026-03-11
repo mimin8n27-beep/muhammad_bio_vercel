@@ -1,10 +1,10 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import SharedHeader from "@/components/SharedHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowLeft, X, Maximize2 } from "lucide-react";
 
-const WHATSAPP_NUMBER = "+201064998737";
+const WHATSAPP_NUMBER = "+201061455162";
 
 function renderMarkdown(rawText: string): string {
   const lines = rawText.split("\n");
@@ -12,7 +12,6 @@ function renderMarkdown(rawText: string): string {
     line.trimStart().startsWith("|") ? line
       : line.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
   ).join("\n");
-
   const tableRegex = /((?:^\|.+\|\n?)+)/gm;
   const withTables = escaped.replace(tableRegex, (tableBlock) => {
     const rows = tableBlock.trim().split("\n").filter(r => r.trim());
@@ -33,7 +32,6 @@ function renderMarkdown(rawText: string): string {
     html += "</table></div>";
     return html;
   });
-
   return withTables
     .replace(/^---$/gm, '<hr style="border:none;border-top:1px solid #e2e8f0;margin:16px 0"/>')
     .replace(/^### (.+)$/gm, '<h3 style="font-size:14px;font-weight:700;color:#1e293b;margin:14px 0 6px">$1</h3>')
@@ -54,6 +52,7 @@ function stripMarkdown(text: string): string {
     .replace(/^#{1,3} /gm, '')
     .replace(/\*\*(.+?)\*\*/g, '$1')
     .replace(/\*(.+?)\*/g, '$1')
+    .replace(/^\|.+\|$/gm, '')
     .replace(/^- /gm, '')
     .replace(/^\d+\. /gm, '')
     .replace(/\n+/g, ' ')
@@ -119,15 +118,12 @@ export default function Portfolio() {
     setLoading(false);
   };
 
-  const openModal = (project: Project) => {
+  const openModal = async (project: Project) => {
     setSelected(project);
   };
 
   const openPreview = async (project: Project) => {
-    if (project.svg_url !== undefined) {
-      setPreviewProject(project);
-      return;
-    }
+    if (project.svg_url) { setPreviewProject(project); return; }
     const { data } = await supabase
       .from("projects").select("svg_url").eq("id", project.id).single();
     const full: Project = { ...project, svg_url: data?.svg_url || "" };
@@ -136,13 +132,14 @@ export default function Portfolio() {
   };
 
   const toolsList = (tools: string) =>
-    tools ? tools.split(/[\s,]+/).map((t) => t.trim()).filter(Boolean) : [];
+    tools ? tools.split(/[\s,]+/).map((tool) => tool.trim()).filter(Boolean) : [];
 
   return (
     <div className="min-h-screen bg-white text-foreground" dir={dir}>
 
       <SharedHeader />
 
+      {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-white via-blue-50 to-white py-20 md:py-28">
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full blur-3xl" />
@@ -150,13 +147,18 @@ export default function Portfolio() {
         </div>
         <div className="container relative z-10 text-center">
           <div className="inline-block mb-4 px-4 py-2 bg-blue-100 rounded-lg">
-            <span className="text-sm font-semibold text-primary"{t("portfolioPage.title")}</span>
+            <span className="text-sm font-semibold text-primary">{t("portfolioPage.title")}</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 leading-tight"{t("portfolioPage.title")}</h1>
-          <p className="text-lg text-muted-foreground max-w-xl mx-auto"{t("portfolioPage.desc")}</p>
+          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 leading-tight">
+            {t("portfolioPage.title")}
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto">
+            {t("portfolioPage.desc")}
+          </p>
         </div>
       </section>
 
+      {/* Projects Grid */}
       <section className="py-20 border-t border-border">
         <div className="container">
           {loading ? (
@@ -164,7 +166,7 @@ export default function Portfolio() {
               <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
             </div>
           ) : projects.length === 0 ? (
-            <div className="text-center py-24 text-muted-foreground"{t("portfolioPage.empty")}</div>
+            <div className="text-center py-24 text-muted-foreground">{t("portfolioPage.empty")}</div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {projects.map((project) => (
@@ -211,30 +213,32 @@ export default function Portfolio() {
         </div>
       </section>
 
+      {/* CTA */}
       <section className="py-20 bg-gradient-to-br from-primary to-primary/80 text-white border-t border-border">
         <div className="container text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">هل يعجبك عملي؟</h2>
-          <p className="text-white/80 mb-8 text-lg">تواصل معي وابدأ مشروعك الآن</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("portfolioPage.contact")}</h2>
           <a
             href={`https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-8 py-3 bg-white text-primary rounded-xl font-bold hover:bg-white/90 transition-all hover:shadow-xl hover:-translate-y-0.5"
           >
-            ابدأ مشروعك الآن
+            {t("hero.cta.start")}
           </a>
         </div>
       </section>
 
+      {/* Footer */}
       <footer className="py-8 bg-white border-t border-border">
         <div className="container flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-muted-foreground text-sm">© 2026 محمد - متخصص في أتمتة الأعمال الرقمية</p>
+          <p className="text-muted-foreground text-sm">© 2026 Muhammad</p>
           <a href="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-            <ArrowLeft className="w-4 h-4" /> العودة للرئيسية
+            <ArrowLeft className="w-4 h-4" /> {t("portfolioPage.back")}
           </a>
         </div>
       </footer>
 
+      {/* Modal */}
       {selected && (
         <div
           className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
@@ -260,7 +264,7 @@ export default function Portfolio() {
                 {selected.client_name && (
                   <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
                     <span>👤</span>
-                    <span>المؤلف: <span className="text-foreground font-medium">{selected.client_name}</span></span>
+                    <span>{t("portfolio.author")}: <span className="text-foreground font-medium">{selected.client_name}</span></span>
                   </div>
                 )}
                 {selected.description && (
@@ -268,7 +272,7 @@ export default function Portfolio() {
                 )}
                 {selected.tools && (
                   <div className="mb-2">
-                    <p className="text-sm text-muted-foreground mb-3 font-semibold">الأدوات المستخدمة</p>
+                    <p className="text-sm text-muted-foreground mb-3 font-semibold">{t("portfolio.toolsUsed")}</p>
                     <div className="flex flex-wrap gap-2">
                       {toolsList(selected.tools).map((tool, i) => (
                         <span key={i} className="px-3 py-1.5 bg-primary/10 rounded-lg text-primary text-sm font-medium">{tool}</span>
@@ -289,7 +293,7 @@ export default function Portfolio() {
                 }}
                 className="flex items-center gap-2 w-full justify-center py-3 bg-primary hover:bg-primary/90 rounded-xl font-semibold text-white transition-colors"
               >
-                <Maximize2 className="w-4 h-4" /> عرض المشروع
+                <Maximize2 className="w-4 h-4" /> {t("portfolioPage.workflow")}
               </button>
             </div>
           </div>
@@ -301,6 +305,7 @@ export default function Portfolio() {
           svgUrl={previewProject.svg_url || ""}
           projectTitle={previewProject.title}
           onClose={() => setPreviewProject(null)}
+          closeLabel={t("portfolioPage.close")}
         />
       )}
     </div>
@@ -311,10 +316,12 @@ function SVGViewer({
   svgUrl,
   projectTitle,
   onClose,
+  closeLabel,
 }: {
   svgUrl: string;
   projectTitle: string;
   onClose: () => void;
+  closeLabel: string;
 }) {
   const isHTML =
     svgUrl.startsWith("data:text/html") ||
@@ -341,10 +348,10 @@ function SVGViewer({
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div style={{ width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg,#0066ff,#0044aa)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", color: "white", fontSize: 14 }}>M</div>
           <span style={{ color: "white", fontWeight: 600, fontSize: 14 }}>{projectTitle}</span>
-          <span style={{ padding: "2px 10px", borderRadius: 20, background: "rgba(234,179,8,0.15)", color: "#fbbf24", fontSize: 11, border: "1px solid rgba(234,179,8,0.3)" }}>🔒 للعرض فقط</span>
+          <span style={{ padding: "2px 10px", borderRadius: 20, background: "rgba(234,179,8,0.15)", color: "#fbbf24", fontSize: 11, border: "1px solid rgba(234,179,8,0.3)" }}>🔒</span>
         </div>
         <button onClick={onClose} style={closeBtnStyle}>
-          <span>✕</span><span>إغلاق</span>
+          <span>✕</span><span>{closeLabel}</span>
         </button>
       </div>
 
@@ -359,7 +366,7 @@ function SVGViewer({
         <SVGImageViewer svgUrl={svgUrl} projectTitle={projectTitle} />
       ) : (
         <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.4)", fontSize: 14 }}>
-          لا يوجد محتوى للعرض
+          —
         </div>
       )}
     </div>
