@@ -531,13 +531,17 @@ export default function Admin() {
                 </div>
 
                 <div className="mt-4">
-                  <label className="block text-sm text-white/50 mb-1.5">الوصف</label>
+                  <label className="block text-sm text-white/50 mb-1.5">
+                    الوصف
+                    <span className="text-white/25 text-xs mr-2">(يدعم Markdown: ## عنوان، **bold**، - قائمة)</span>
+                  </label>
                   <textarea
                     value={editProject.description}
                     onChange={(e) => setEditProject((p) => ({ ...p, description: e.target.value }))}
-                    placeholder="وصف تفصيلي للمشروع..."
-                    rows={3}
-                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/25 outline-none focus:border-[#0066ff] transition-colors text-sm resize-none"
+                    placeholder={"## Project Overview\n\nاكتب وصف المشروع هنا...\n\n## Features\n- ميزة 1\n- ميزة 2"}
+                    rows={10}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/20 outline-none focus:border-[#0066ff] transition-colors text-sm font-mono"
+                    style={{ resize: "vertical", minHeight: 200 }}
                   />
                 </div>
 
