@@ -105,7 +105,7 @@ export default function Portfolio() {
     // Don't fetch svg_url (heavy base64) — load it lazily when needed
     const { data, error } = await supabase
       .from("projects")
-      .select("id, title, description, client_name, tools, status, image_url, link_url, created_at")
+      .select("id, title, description, client_name, tools, status, link_url, created_at")
       .eq("status", "active")
       .order("created_at", { ascending: false });
     if (!error && data) {
@@ -129,8 +129,15 @@ export default function Portfolio() {
     setLoading(false);
   };
 
-  // Load svg_url on demand when user clicks "عرض المشروع"
-  const openPreview = async (project: Project) => {
+  // Load image_url + svg_url on demand when card is clicked
+  const openModal = async (project: Project) => {
+    if (project.image_url) { setSelected(project); return; }
+    const { data } = await supabase
+      .from("projects").select("image_url").eq("id", project.id).single();
+    const full = { ...project, image_url: data?.image_url || "" };
+    setProjects(ps => ps.map(p => p.id === project.id ? full : p));
+    setSelected(full);
+  };
     if (project.svg_url) { setPreviewProject(project); return; }
     const { data } = await supabase
       .from("projects").select("svg_url").eq("id", project.id).single();
@@ -180,7 +187,7 @@ export default function Portfolio() {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {projects.map((project, index) => (
-                <div key={project.id} onClick={() => setSelected(project)}
+                <div key={project.id} onClick={() => openModal(project)}
                   className="group cursor-pointer bg-card rounded-xl border border-border hover:border-primary hover:shadow-lg transition-all duration-300 overflow-hidden hover:-translate-y-1 animate-fadeInUp"
                   style={{ animationDelay: `${index * 80}ms` }}>
                   <div className="aspect-video bg-secondary overflow-hidden">
