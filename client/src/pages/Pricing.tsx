@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import SharedHeader from "@/components/SharedHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
