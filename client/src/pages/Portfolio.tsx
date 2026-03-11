@@ -316,6 +316,8 @@ function SVGViewer({
 }) {
   const isHTML =
     svgUrl.startsWith("data:text/html") ||
+    svgUrl.endsWith(".html") ||
+    svgUrl.includes("project-workflows") ||
     svgUrl.includes("<!DOCTYPE") ||
     svgUrl.includes("<html");
 
@@ -351,7 +353,7 @@ function SVGViewer({
           src={svgUrl}
           style={{ flex: 1, border: "none", width: "100%", background: "#1c1c28" }}
           title={projectTitle}
-          sandbox="allow-scripts"
+          sandbox="allow-scripts allow-same-origin"
         />
       ) : svgUrl ? (
         <SVGImageViewer svgUrl={svgUrl} projectTitle={projectTitle} />
