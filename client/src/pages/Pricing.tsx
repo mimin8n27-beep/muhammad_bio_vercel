@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import SharedHeader from "@/components/SharedHeader";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight, CheckCircle, Loader2, CheckCircle2, Mail, MessageCircle } from "lucide-react";
 
 const WHATSAPP_NUMBER = "+201061455162";
@@ -94,6 +95,7 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
 }
 
 export default function Pricing() {
+  const { t, dir } = useLanguage();
   const [formData, setFormData] = useState({ name: "", email: "", company: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -127,7 +129,7 @@ export default function Pricing() {
   const emailLink = `mailto:${EMAIL}?subject=استفسار عن خطط التسعير`;
 
   return (
-    <div className="min-h-screen bg-white text-foreground">
+    <div className="min-h-screen bg-white text-foreground" dir={dir}>
 
       {/* Header */}
       <SharedHeader />
@@ -226,7 +228,7 @@ export default function Pricing() {
 
       {/* Contact Form */}
       <section id="contact-section" className="py-20 bg-[#f8faff] border-t border-border">
-        <div className="container max-w-2xl mx-auto" dir="rtl">
+        <div className="container max-w-2xl mx-auto" dir={dir}>
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
               Get Started With Your Automation Project
