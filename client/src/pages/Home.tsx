@@ -133,11 +133,20 @@ export default function Home() {
     // Don't fetch svg_url (heavy base64) — load lazily when needed
     const { data, error } = await supabase
       .from("projects")
-      .select("id, title, description, client_name, tools, status, image_url, link_url, created_at")
+      .select("id, title, description, client_name, tools, status, link_url, created_at")
       .eq("status", "active")
       .order("created_at", { ascending: false });
     if (!error && data) setProjects(data);
     setProjectsLoading(false);
+  };
+
+  const openModal = async (project: Project) => {
+    if (project.image_url) { setSelectedProject(project); return; }
+    const { data } = await supabase
+      .from("projects").select("image_url").eq("id", project.id).single();
+    const full = { ...project, image_url: data?.image_url || "" };
+    setProjects(ps => ps.map(p => p.id === project.id ? full : p));
+    setSelectedProject(full);
   };
 
   const toolsList = (tools: string) =>
@@ -365,7 +374,7 @@ export default function Home() {
               {projects.map((project, index) => (
                 <div
                   key={project.id}
-                  onClick={() => setSelectedProject(project)}
+                  onClick={() => openModal(project)}
                   className="group cursor-pointer bg-card rounded-xl border border-border hover:border-primary hover:shadow-lg transition-all duration-300 overflow-hidden animate-fadeInUp"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
