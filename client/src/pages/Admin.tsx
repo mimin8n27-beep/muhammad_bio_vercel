@@ -370,7 +370,6 @@ export default function Admin() {
                   {[
                     { key: "title", label: "عنوان المشروع *", placeholder: "مثال: أتمتة إرسال الإيميل" },
                     { key: "client_name", label: "المؤلف (Author)", placeholder: "مثال: Muhammad Nada" },
-                    { key: "tools", label: "الأدوات (افصل بفاصلة)", placeholder: "n8n, Gmail, Sheets" },
                   ].map(({ key, label, placeholder }) => (
                     <div key={key}>
                       <label className="block text-sm text-white/50 mb-1.5">{label}</label>
@@ -382,8 +381,20 @@ export default function Admin() {
                       />
                     </div>
                   ))}
+                  </div>
 
-                  {/* Image Upload */}
+                  {/* Tools - full width */}
+                  <div className="mt-4">
+                    <label className="block text-sm text-white/50 mb-1.5">الأدوات <span className="text-white/25 text-xs">(افصل بمسافة)</span></label>
+                    <input
+                      value={editProject.tools}
+                      onChange={(e) => setEditProject((p) => ({ ...p, tools: e.target.value }))}
+                      placeholder="n8n Gmail Sheets OpenAI Telegram"
+                      className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/25 outline-none focus:border-[#0066ff] transition-colors text-sm"
+                    />
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-4 mt-4">
                   <div className="md:col-span-2">
                     <label className="block text-sm text-white/50 mb-1.5">صورة المشروع</label>
                     <div className="flex flex-col gap-3">
@@ -588,7 +599,7 @@ export default function Admin() {
                       {p.description && <p className="text-white/50 text-sm mb-3 line-clamp-2">{p.description}</p>}
                       {p.tools && (
                         <div className="flex flex-wrap gap-1.5 mb-3">
-                          {p.tools.split(",").map((t: string, i: number) => (
+                          {p.tools.split(/[\s,]+/).map((t: string, i: number) => (
                             <span key={i} className="px-2 py-0.5 bg-[#0066ff]/15 border border-[#0066ff]/20 rounded text-[#0066ff] text-xs">{t.trim()}</span>
                           ))}
                         </div>
