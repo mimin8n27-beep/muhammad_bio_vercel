@@ -905,17 +905,15 @@ export default function Home() {
             </div>
 
             {/* Sticky button at bottom */}
-            {selectedProject.svg_url && (
-              <div className="p-4 border-t border-border bg-white rounded-b-2xl flex-shrink-0" dir="rtl">
-                <a
-                  href={`/portfolio?open=${selectedProject.id}`}
-                  className="flex items-center gap-2 w-full justify-center py-3 bg-primary hover:bg-primary/90 rounded-xl font-semibold text-white transition-colors"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                  عرض المشروع
-                </a>
-              </div>
-            )}
+            <div className="p-4 border-t border-border bg-white rounded-b-2xl flex-shrink-0" dir="rtl">
+              <a
+                href={`/portfolio?open=${selectedProject.id}`}
+                className="flex items-center gap-2 w-full justify-center py-3 bg-primary hover:bg-primary/90 rounded-xl font-semibold text-white transition-colors"
+              >
+                <ExternalLink className="w-4 h-4" />
+                عرض المشروع
+              </a>
+            </div>
           </div>
         </div>
       )}
