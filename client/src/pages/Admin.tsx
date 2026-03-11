@@ -104,7 +104,10 @@ export default function Admin() {
   const fetchAll = async () => {
     setLoading(true);
     if (tab === "projects") {
-      const { data } = await supabase.from("projects").select("*").order("created_at", { ascending: false });
+      // Exclude heavy base64 fields from list — load them only when editing
+      const { data } = await supabase.from("projects")
+        .select("id, title, description, client_name, tools, status, created_at")
+        .order("created_at", { ascending: false });
       setProjects(data || []);
     } else if (tab === "clients") {
       const { data } = await supabase.from("clients").select("*").order("created_at", { ascending: false });
@@ -208,8 +211,10 @@ export default function Admin() {
     setShowClientForm(true);
   };
 
-  const startEdit = (p: any) => {
-    setEditProject({ ...p });
+  const startEdit = async (p: any) => {
+    // Fetch full project data including heavy fields for editing
+    const { data } = await supabase.from("projects").select("*").eq("id", p.id).single();
+    setEditProject({ ...(data || p) });
     setEditingId(p.id);
     setShowForm(true);
   };
