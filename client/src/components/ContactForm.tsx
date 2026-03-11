@@ -53,9 +53,7 @@ export default function ContactForm({ whatsappNumber, email }: ContactFormProps)
     }
   };
 
-  const whatsappLink = `https://wa.me/${whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent(
-    `مرحباً محمد، أنا ${formData.name || "عميل محتمل"} وأود التحدث معك عن خدمات الأتمتة.`
-  )}`;
+  const whatsappLink = `https://wa.me/${whatsappNumber.replace(/\D/g, "")}`;
 
   const emailLink = `mailto:${email}?subject=استفسار عن خدمات الأتمتة&body=مرحباً محمد،%0A%0Aأنا ${formData.name || "عميل محتمل"} وأود التحدث معك عن خدماتك.%0A%0Aشركتي: ${formData.company || ""}%0A%0Aالرسالة:%0A${formData.message || ""}`;
 
