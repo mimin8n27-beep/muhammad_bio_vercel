@@ -67,6 +67,7 @@ export default function Admin() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
+  const [svgUploading, setSvgUploading] = useState(false);
 
   // Client form state
   const emptyClient = { name: "", email: "", company: "", phone: "", status: "lead", notes: "", plan: "" };
@@ -474,36 +475,44 @@ export default function Admin() {
                       <div className="flex items-center gap-2">
                         <span className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white/40 text-sm truncate">
                           {editProject.svg_url
-                            ? editProject.svg_url.startsWith("data:text/html")
-                              ? "✅ ملف HTML محمّل"
-                              : "✅ ملف SVG محمّل"
+                            ? editProject.svg_url.startsWith("https://")
+                              ? "✅ " + editProject.svg_url.split("/").pop()
+                              : editProject.svg_url.startsWith("data:text/html")
+                                ? "✅ ملف HTML محمّل (قديم)"
+                                : "✅ ملف SVG محمّل"
                             : "لم يتم رفع ملف بعد"}
                         </span>
                         <label className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#0066ff]/40 cursor-pointer text-sm hover:border-[#0066ff] hover:text-white text-[#0066ff] transition-colors whitespace-nowrap flex-shrink-0">
-                          <Upload className="w-4 h-4" /> رفع SVG أو HTML
+                          {svgUploading ? (
+                            <><Loader2 className="w-4 h-4 animate-spin" /> جاري الرفع...</>
+                          ) : (
+                            <><Upload className="w-4 h-4" /> رفع SVG أو HTML</>
+                          )}
                           <input
                             type="file"
                             accept=".svg,.html,image/svg+xml,text/html"
                             className="hidden"
-                            onChange={(e) => {
+                            disabled={svgUploading}
+                            onChange={async (e) => {
                               const file = e.target.files?.[0];
                               if (!file) return;
-                              const reader = new FileReader();
-                              if (file.name.endsWith(".html") || file.type === "text/html") {
-                                reader.onload = (ev) => {
-                                  const htmlText = ev.target?.result as string;
-                                  const encoded = "data:text/html;base64," + btoa(unescape(encodeURIComponent(htmlText)));
-                                  setEditProject((p) => ({ ...p, svg_url: encoded }));
-                                };
-                                reader.readAsText(file);
-                              } else {
-                                reader.onload = (ev) => {
-                                  const svgText = ev.target?.result as string;
-                                  const encoded = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgText)));
-                                  setEditProject((p) => ({ ...p, svg_url: encoded }));
-                                };
-                                reader.readAsText(file);
+                              setSvgUploading(true);
+                              const ext = file.name.endsWith(".html") ? "html" : "svg";
+                              const fileName = `workflow-${Date.now()}.${ext}`;
+                              const contentType = ext === "html" ? "text/html" : "image/svg+xml";
+                              const { error } = await supabase.storage
+                                .from("project-workflows")
+                                .upload(fileName, file, { contentType, upsert: true });
+                              if (error) {
+                                alert("خطأ في الرفع: " + error.message);
+                                setSvgUploading(false);
+                                return;
                               }
+                              const { data: urlData } = supabase.storage
+                                .from("project-workflows")
+                                .getPublicUrl(fileName);
+                              setEditProject((p) => ({ ...p, svg_url: urlData.publicUrl }));
+                              setSvgUploading(false);
                             }}
                           />
                         </label>
@@ -517,7 +526,7 @@ export default function Admin() {
                       {/* Preview — HTML shows badge, SVG shows image */}
                       {editProject.svg_url && (
                         <div className="border border-white/10 rounded-xl overflow-hidden bg-[#0f172a] p-3" style={{ height: 80 }}>
-                          {editProject.svg_url.startsWith("data:text/html") ? (
+                          {editProject.svg_url.includes("project-workflows") || editProject.svg_url.endsWith(".html") || editProject.svg_url.startsWith("data:text/html") ? (
                             <div className="flex items-center gap-3 h-full">
                               <div className="w-10 h-10 rounded-lg bg-[#0066ff]/20 border border-[#0066ff]/30 flex items-center justify-center text-lg">🌐</div>
                               <div>
