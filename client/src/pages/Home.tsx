@@ -93,8 +93,9 @@ interface Project {
   client_name: string;
   tools: string;
   status: string;
-  image_url: string;
-  link_url: string;
+  image_url?: string;
+  svg_url?: string;
+  link_url?: string;
   created_at: string;
 }
 
