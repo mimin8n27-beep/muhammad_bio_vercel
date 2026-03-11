@@ -140,7 +140,7 @@ export default function Home() {
   };
 
   const toolsList = (tools: string) =>
-    tools ? tools.split(",").map((t) => t.trim()).filter(Boolean) : [];
+    tools ? tools.split(/[\s,]+/).map((t) => t.trim()).filter(Boolean) : [];
 
   const expertise = [
     {
