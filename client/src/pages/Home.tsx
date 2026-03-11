@@ -20,26 +20,35 @@ const GITHUB_URL = "https://github.com/mimin8n27-beep";
 const PROFILE_IMAGE = "https://private-us-east-1.manuscdn.com/user_upload_by_module/session_file/310519663184092711/chMVOfHjJrgiCnQs.jpg?Expires=1804200577&Signature=sN3sPs37BpgdweMsjeL-Z8AzrW2vUPHHX-WBZd~G46ra1UMc8g1SZBMOqq~Mgeip4Fa9vqHw833HnXfkoVKesbyy6~jE8OKps6EF5khCHuxQx50s1XCjzEQwcEQjNS~oQ6dNeC6B2BWYdhKM1wx4LAMB5SanMIE3jWyTnLD-nDdTREulWizkkKrbQJfUkKSu4UwJYZiZ--GlWKoORqhfDU0ORGuR-x2WDzApRZvT0f9WL1hjmnGcE-q3AKfOSBLIKE32R7bwAzzvsYwQup~-BUwRdNodsbXKF7FecmdTUft8J0RC102BmlS584KtPxdCHPBMlotCtCN7Pdbf08Y15A__&Key-Pair-Id=K2HSFNDJXOU9YS";
 
 // Simple Markdown renderer
-function renderMarkdown(text: string): string {
+function renderMarkdown(rawText: string): string {
+  const lines = rawText.split("\n");
+  const escaped = lines.map(line =>
+    line.trimStart().startsWith("|") ? line
+      : line.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+  ).join("\n");
+
   const tableRegex = /((?:^\|.+\|\n?)+)/gm;
-  text = text.replace(tableRegex, (tableBlock) => {
+  const withTables = escaped.replace(tableRegex, (tableBlock) => {
     const rows = tableBlock.trim().split("\n").filter(r => r.trim());
     if (rows.length < 2) return tableBlock;
     let html = '<div style="overflow-x:auto;margin:12px 0"><table style="width:100%;border-collapse:collapse;font-size:13px">';
-    rows.forEach((row, i) => {
-      if (/^\|[-| :]+\|$/.test(row.trim())) return;
+    let headerDone = false;
+    rows.forEach((row) => {
+      if (/^\|[-| :]+\|$/.test(row.trim())) { headerDone = true; return; }
       const cells = row.split("|").filter((_, idx, arr) => idx > 0 && idx < arr.length - 1);
-      const tag = i === 0 ? "th" : "td";
-      const style = i === 0
+      const isHeader = !headerDone;
+      const tag = isHeader ? "th" : "td";
+      const style = isHeader
         ? 'style="padding:8px 12px;background:#f1f5f9;font-weight:700;border:1px solid #e2e8f0;text-align:left"'
         : 'style="padding:7px 12px;border:1px solid #e2e8f0;vertical-align:top"';
       html += `<tr>${cells.map(c => `<${tag} ${style}>${c.trim()}</${tag}>`).join("")}</tr>`;
+      if (isHeader) headerDone = true;
     });
     html += "</table></div>";
     return html;
   });
-  return text
-    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+
+  return withTables
     .replace(/^---$/gm, '<hr style="border:none;border-top:1px solid #e2e8f0;margin:16px 0"/>')
     .replace(/^### (.+)$/gm, '<h3 style="font-size:14px;font-weight:700;color:#1e293b;margin:14px 0 6px">$1</h3>')
     .replace(/^## (.+)$/gm, '<h2 style="font-size:16px;font-weight:700;color:#1e293b;margin:16px 0 8px">$1</h2>')
