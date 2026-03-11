@@ -369,7 +369,7 @@ export default function Admin() {
                   <div className="grid md:grid-cols-2 gap-4">
                   {[
                     { key: "title", label: "عنوان المشروع *", placeholder: "مثال: أتمتة إرسال الإيميل" },
-                    { key: "client_name", label: "اسم العميل", placeholder: "مثال: شركة X" },
+                    { key: "client_name", label: "المؤلف (Author)", placeholder: "مثال: Muhammad Nada" },
                     { key: "tools", label: "الأدوات (افصل بفاصلة)", placeholder: "n8n, Gmail, Sheets" },
                   ].map(({ key, label, placeholder }) => (
                     <div key={key}>
