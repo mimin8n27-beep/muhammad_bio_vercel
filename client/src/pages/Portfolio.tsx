@@ -138,6 +138,7 @@ export default function Portfolio() {
 
   return (
     <div className="min-h-screen bg-white text-foreground" dir="rtl">
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
 
       <SharedHeader />
 
@@ -314,12 +315,38 @@ function SVGViewer({
   projectTitle: string;
   onClose: () => void;
 }) {
-  const isHTML =
+  const [blobUrl, setBlobUrl] = useState<string | null>(null);
+  const [fetchError, setFetchError] = useState(false);
+
+  const isRemoteHTML =
+    svgUrl.startsWith("https://") &&
+    (svgUrl.endsWith(".html") || svgUrl.includes("project-workflows"));
+
+  const isBase64HTML =
     svgUrl.startsWith("data:text/html") ||
-    svgUrl.endsWith(".html") ||
-    svgUrl.includes("project-workflows") ||
     svgUrl.includes("<!DOCTYPE") ||
     svgUrl.includes("<html");
+
+  const isHTML = isRemoteHTML || isBase64HTML;
+
+  useEffect(() => {
+    if (!isRemoteHTML) return;
+    // Fetch the HTML file and create a local blob URL so iframe renders it properly
+    fetch(svgUrl)
+      .then(r => r.text())
+      .then(html => {
+        const blob = new Blob([html], { type: "text/html" });
+        setBlobUrl(URL.createObjectURL(blob));
+      })
+      .catch(() => setFetchError(true));
+    return () => { if (blobUrl) URL.revokeObjectURL(blobUrl); };
+  }, [svgUrl]);
+
+  const iframeSrc = isRemoteHTML
+    ? blobUrl || null
+    : isBase64HTML
+    ? svgUrl
+    : null;
 
   const closeBtnStyle: React.CSSProperties = {
     background: "rgba(239,68,68,0.2)",
@@ -349,12 +376,23 @@ function SVGViewer({
       </div>
 
       {isHTML ? (
-        <iframe
-          src={svgUrl}
-          style={{ flex: 1, border: "none", width: "100%", background: "#1c1c28" }}
-          title={projectTitle}
-          sandbox="allow-scripts allow-same-origin"
-        />
+        iframeSrc ? (
+          <iframe
+            src={iframeSrc}
+            style={{ flex: 1, border: "none", width: "100%", background: "#1c1c28" }}
+            title={projectTitle}
+            sandbox="allow-scripts"
+          />
+        ) : fetchError ? (
+          <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "#f87171", fontSize: 14 }}>
+            خطأ في تحميل الملف
+          </div>
+        ) : (
+          <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 12, color: "rgba(255,255,255,0.4)", fontSize: 14 }}>
+            <div style={{ width: 24, height: 24, border: "3px solid rgba(255,255,255,0.1)", borderTopColor: "#0066ff", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+            جاري تحميل العرض...
+          </div>
+        )
       ) : svgUrl ? (
         <SVGImageViewer svgUrl={svgUrl} projectTitle={projectTitle} />
       ) : (
