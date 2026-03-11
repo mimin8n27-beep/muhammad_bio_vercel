@@ -130,9 +130,10 @@ export default function Home() {
   }, []);
 
   const fetchProjects = async () => {
+    // Don't fetch svg_url (heavy base64) — load lazily when needed
     const { data, error } = await supabase
       .from("projects")
-      .select("*")
+      .select("id, title, description, client_name, tools, status, image_url, link_url, created_at")
       .eq("status", "active")
       .order("created_at", { ascending: false });
     if (!error && data) setProjects(data);
