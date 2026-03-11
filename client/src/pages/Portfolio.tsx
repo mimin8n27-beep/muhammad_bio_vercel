@@ -26,8 +26,9 @@ function MarkdownText({ text, className }: { text: string; className?: string })
   return (
     <div
       className={className}
+      dir="auto"
       dangerouslySetInnerHTML={{ __html: renderMarkdown(text) }}
-      style={{ lineHeight: 1.7 }}
+      style={{ lineHeight: 1.7, textAlign: "start" }}
     />
   );
 }
@@ -179,38 +180,46 @@ export default function Portfolio() {
       {selected && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
           onClick={() => setSelected(null)}>
-          <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
+          <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl"
             onClick={(e) => e.stopPropagation()}>
-            {selected.image_url && (
-              <div className="aspect-video overflow-hidden rounded-t-2xl">
-                <img src={selected.image_url} alt={selected.title} className="w-full h-full object-cover" />
-              </div>
-            )}
-            <div className="p-6" dir="rtl">
-              <div className="flex items-start justify-between mb-4">
-                <h2 className="text-2xl font-bold text-foreground leading-tight flex-1 ml-4">{selected.title}</h2>
-                <button onClick={() => setSelected(null)} className="p-2 hover:bg-secondary rounded-lg transition-colors flex-shrink-0">
-                  <X className="w-5 h-5 text-muted-foreground" />
-                </button>
-              </div>
-              {selected.client_name && (
-                <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
-                  <span>👤</span>
-                  <span>المؤلف: <span className="text-foreground font-medium">{selected.client_name}</span></span>
+
+            {/* Scrollable content */}
+            <div className="overflow-y-auto flex-1">
+              {selected.image_url && (
+                <div className="aspect-video overflow-hidden rounded-t-2xl">
+                  <img src={selected.image_url} alt={selected.title} className="w-full h-full object-cover" />
                 </div>
               )}
-              {selected.description && <MarkdownText text={selected.description} className="text-muted-foreground text-sm mb-6" />}
-              {selected.tools && (
-                <div className="mb-6">
-                  <p className="text-sm text-muted-foreground mb-3 font-semibold">الأدوات المستخدمة</p>
-                  <div className="flex flex-wrap gap-2">
-                    {toolsList(selected.tools).map((tool, i) => (
-                      <span key={i} className="px-3 py-1.5 bg-primary/10 rounded-lg text-primary text-sm font-medium">{tool}</span>
-                    ))}
+              <div className="p-6" dir="rtl">
+                <div className="flex items-start justify-between mb-4">
+                  <h2 className="text-2xl font-bold text-foreground leading-tight flex-1 ml-4">{selected.title}</h2>
+                  <button onClick={() => setSelected(null)} className="p-2 hover:bg-secondary rounded-lg transition-colors flex-shrink-0">
+                    <X className="w-5 h-5 text-muted-foreground" />
+                  </button>
+                </div>
+                {selected.client_name && (
+                  <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
+                    <span>👤</span>
+                    <span>المؤلف: <span className="text-foreground font-medium">{selected.client_name}</span></span>
                   </div>
-                </div>
-              )}
-              {selected.svg_url && (
+                )}
+                {selected.description && <MarkdownText text={selected.description} className="text-muted-foreground text-sm mb-6" />}
+                {selected.tools && (
+                  <div className="mb-2">
+                    <p className="text-sm text-muted-foreground mb-3 font-semibold">الأدوات المستخدمة</p>
+                    <div className="flex flex-wrap gap-2">
+                      {toolsList(selected.tools).map((tool, i) => (
+                        <span key={i} className="px-3 py-1.5 bg-primary/10 rounded-lg text-primary text-sm font-medium">{tool}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Sticky button at bottom */}
+            {selected.svg_url && (
+              <div className="p-4 border-t border-border bg-white rounded-b-2xl flex-shrink-0" dir="rtl">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -224,8 +233,8 @@ export default function Portfolio() {
                 >
                   <Maximize2 className="w-4 h-4" /> عرض المشروع
                 </button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       )}
