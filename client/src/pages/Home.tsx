@@ -19,6 +19,32 @@ const EMAIL = "mimi.n8n27@gmail.com";
 const GITHUB_URL = "https://github.com/mimin8n27-beep";
 const PROFILE_IMAGE = "https://private-us-east-1.manuscdn.com/user_upload_by_module/session_file/310519663184092711/chMVOfHjJrgiCnQs.jpg?Expires=1804200577&Signature=sN3sPs37BpgdweMsjeL-Z8AzrW2vUPHHX-WBZd~G46ra1UMc8g1SZBMOqq~Mgeip4Fa9vqHw833HnXfkoVKesbyy6~jE8OKps6EF5khCHuxQx50s1XCjzEQwcEQjNS~oQ6dNeC6B2BWYdhKM1wx4LAMB5SanMIE3jWyTnLD-nDdTREulWizkkKrbQJfUkKSu4UwJYZiZ--GlWKoORqhfDU0ORGuR-x2WDzApRZvT0f9WL1hjmnGcE-q3AKfOSBLIKE32R7bwAzzvsYwQup~-BUwRdNodsbXKF7FecmdTUft8J0RC102BmlS584KtPxdCHPBMlotCtCN7Pdbf08Y15A__&Key-Pair-Id=K2HSFNDJXOU9YS";
 
+// Simple Markdown renderer
+function renderMarkdown(text: string): string {
+  return text
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/^### (.+)$/gm, '<h3 style="font-size:14px;font-weight:700;color:#1e293b;margin:14px 0 6px">$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2 style="font-size:16px;font-weight:700;color:#1e293b;margin:16px 0 8px">$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1 style="font-size:18px;font-weight:800;color:#1e293b;margin:18px 0 10px">$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^- (.+)$/gm, '<li style="margin:3px 0 3px 18px;list-style:disc">$1</li>')
+    .replace(/^(\d+)\. (.+)$/gm, '<li style="margin:3px 0 3px 18px;list-style:decimal">$2</li>')
+    .replace(/(<li.*<\/li>\n?)+/g, (m) => `<ul style="margin:8px 0">${m}</ul>`)
+    .replace(/\n\n/g, '<br/><br/>')
+    .replace(/\n/g, '<br/>');
+}
+
+function MarkdownText({ text, className }: { text: string; className?: string }) {
+  return (
+    <div
+      className={className}
+      dangerouslySetInnerHTML={{ __html: renderMarkdown(text) }}
+      style={{ lineHeight: 1.7 }}
+    />
+  );
+}
+
 interface Project {
   id: string;
   title: string;
@@ -826,9 +852,7 @@ export default function Home() {
               )}
 
               {selectedProject.description && (
-                <p className="text-muted-foreground leading-relaxed mb-6">
-                  {selectedProject.description}
-                </p>
+                <MarkdownText text={selectedProject.description} className="text-muted-foreground text-sm mb-6" />
               )}
 
               {selectedProject.tools && (
