@@ -6,6 +6,32 @@ import { ArrowLeft, Loader2, X, ZoomIn, ZoomOut, RotateCcw, Maximize2 } from "lu
 const WHATSAPP_NUMBER = "+201064998737";
 const GITHUB_URL = "https://github.com/mimin8n27-beep";
 
+// Simple Markdown renderer
+function renderMarkdown(text: string): string {
+  return text
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/^### (.+)$/gm, '<h3 style="font-size:14px;font-weight:700;color:#1e293b;margin:14px 0 6px">$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2 style="font-size:16px;font-weight:700;color:#1e293b;margin:16px 0 8px">$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1 style="font-size:18px;font-weight:800;color:#1e293b;margin:18px 0 10px">$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^- (.+)$/gm, '<li style="margin:3px 0 3px 18px;list-style:disc">$1</li>')
+    .replace(/^(\d+)\. (.+)$/gm, '<li style="margin:3px 0 3px 18px;list-style:decimal">$2</li>')
+    .replace(/(<li.*<\/li>\n?)+/g, (m) => `<ul style="margin:8px 0">${m}</ul>`)
+    .replace(/\n\n/g, '<br/><br/>')
+    .replace(/\n/g, '<br/>');
+}
+
+function MarkdownText({ text, className }: { text: string; className?: string }) {
+  return (
+    <div
+      className={className}
+      dangerouslySetInnerHTML={{ __html: renderMarkdown(text) }}
+      style={{ lineHeight: 1.7 }}
+    />
+  );
+}
+
 interface Project {
   id: string;
   title: string;
@@ -173,7 +199,7 @@ export default function Portfolio() {
                   <span>المؤلف: <span className="text-foreground font-medium">{selected.client_name}</span></span>
                 </div>
               )}
-              {selected.description && <p className="text-muted-foreground leading-relaxed mb-6">{selected.description}</p>}
+              {selected.description && <MarkdownText text={selected.description} className="text-muted-foreground text-sm mb-6" />}
               {selected.tools && (
                 <div className="mb-6">
                   <p className="text-sm text-muted-foreground mb-3 font-semibold">الأدوات المستخدمة</p>
