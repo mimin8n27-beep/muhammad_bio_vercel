@@ -8,8 +8,29 @@ const GITHUB_URL = "https://github.com/mimin8n27-beep";
 
 // Simple Markdown renderer
 function renderMarkdown(text: string): string {
+  // Handle tables first (before line-by-line processing)
+  const tableRegex = /((?:^\|.+\|\n?)+)/gm;
+  text = text.replace(tableRegex, (tableBlock) => {
+    const rows = tableBlock.trim().split("\n").filter(r => r.trim());
+    if (rows.length < 2) return tableBlock;
+    let html = '<div style="overflow-x:auto;margin:12px 0"><table style="width:100%;border-collapse:collapse;font-size:13px">';
+    rows.forEach((row, i) => {
+      // skip separator row (|---|---|)
+      if (/^\|[-| :]+\|$/.test(row.trim())) return;
+      const cells = row.split("|").filter((_, idx, arr) => idx > 0 && idx < arr.length - 1);
+      const tag = i === 0 ? "th" : "td";
+      const style = i === 0
+        ? 'style="padding:8px 12px;background:#f1f5f9;font-weight:700;border:1px solid #e2e8f0;text-align:left"'
+        : 'style="padding:7px 12px;border:1px solid #e2e8f0;vertical-align:top"';
+      html += `<tr>${cells.map(c => `<${tag} ${style}>${c.trim()}</${tag}>`).join("")}</tr>`;
+    });
+    html += "</table></div>";
+    return html;
+  });
+
   return text
-    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/&(?!amp;|lt;|gt;)/g, "&amp;").replace(/(?<!&amp;)<(?!\/?(th|td|tr|table|div|strong|em|li|ul|h[123]|hr|br))/g, "&lt;")
+    .replace(/^---$/gm, '<hr style="border:none;border-top:1px solid #e2e8f0;margin:16px 0"/>')
     .replace(/^### (.+)$/gm, '<h3 style="font-size:14px;font-weight:700;color:#1e293b;margin:14px 0 6px">$1</h3>')
     .replace(/^## (.+)$/gm, '<h2 style="font-size:16px;font-weight:700;color:#1e293b;margin:16px 0 8px">$1</h2>')
     .replace(/^# (.+)$/gm, '<h1 style="font-size:18px;font-weight:800;color:#1e293b;margin:18px 0 10px">$1</h1>')
@@ -20,6 +41,19 @@ function renderMarkdown(text: string): string {
     .replace(/(<li.*<\/li>\n?)+/g, (m) => `<ul style="margin:8px 0">${m}</ul>`)
     .replace(/\n\n/g, '<br/><br/>')
     .replace(/\n/g, '<br/>');
+}
+
+// Strip markdown for plain text preview
+function stripMarkdown(text: string): string {
+  return text
+    .replace(/^---$/gm, '')
+    .replace(/^#{1,3} /gm, '')
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\*(.+?)\*/g, '$1')
+    .replace(/^- /gm, '')
+    .replace(/^\d+\. /gm, '')
+    .replace(/\n+/g, ' ')
+    .trim();
 }
 
 function MarkdownText({ text, className }: { text: string; className?: string }) {
@@ -134,7 +168,7 @@ export default function Portfolio() {
                   <div className="p-5">
                     <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors line-clamp-2">{project.title}</h3>
                     {project.description && (
-                      <p className="text-muted-foreground text-sm mb-4 line-clamp-2 leading-relaxed">{project.description}</p>
+                      <p className="text-muted-foreground text-sm mb-4 line-clamp-2 leading-relaxed">{stripMarkdown(project.description)}</p>
                     )}
                     {project.tools && (
                       <div className="flex flex-wrap gap-2">
