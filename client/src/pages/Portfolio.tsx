@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import SharedHeader from "@/components/SharedHeader";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowLeft, X, Maximize2 } from "lucide-react";
 
 const WHATSAPP_NUMBER = "+201064998737";
@@ -84,6 +85,7 @@ interface Project {
 }
 
 export default function Portfolio() {
+  const { t, dir } = useLanguage();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Project | null>(null);
@@ -137,7 +139,7 @@ export default function Portfolio() {
     tools ? tools.split(/[\s,]+/).map((t) => t.trim()).filter(Boolean) : [];
 
   return (
-    <div className="min-h-screen bg-white text-foreground" dir="rtl">
+    <div className="min-h-screen bg-white text-foreground" dir={dir}>
 
       <SharedHeader />
 
@@ -148,10 +150,10 @@ export default function Portfolio() {
         </div>
         <div className="container relative z-10 text-center">
           <div className="inline-block mb-4 px-4 py-2 bg-blue-100 rounded-lg">
-            <span className="text-sm font-semibold text-primary">مشاريعي</span>
+            <span className="text-sm font-semibold text-primary"{t("portfolioPage.title")}</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 leading-tight">معرض الأعمال</h1>
-          <p className="text-lg text-muted-foreground max-w-xl mx-auto">مشاريع حقيقية بنيتها باستخدام تقنيات الأتمتة الحديثة</p>
+          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 leading-tight"{t("portfolioPage.title")}</h1>
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto"{t("portfolioPage.desc")}</p>
         </div>
       </section>
 
@@ -162,7 +164,7 @@ export default function Portfolio() {
               <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
             </div>
           ) : projects.length === 0 ? (
-            <div className="text-center py-24 text-muted-foreground">لا توجد مشاريع حالياً</div>
+            <div className="text-center py-24 text-muted-foreground"{t("portfolioPage.empty")}</div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {projects.map((project) => (
@@ -248,7 +250,7 @@ export default function Portfolio() {
                   <img src={selected.image_url} alt={selected.title} className="w-full h-full object-cover" />
                 </div>
               )}
-              <div className="p-6" dir="rtl">
+              <div className="p-6" dir={dir}>
                 <div className="flex items-start justify-between mb-4">
                   <h2 className="text-2xl font-bold text-foreground leading-tight flex-1 ml-4">{selected.title}</h2>
                   <button onClick={() => setSelected(null)} className="p-2 hover:bg-secondary rounded-lg transition-colors flex-shrink-0">
@@ -277,7 +279,7 @@ export default function Portfolio() {
               </div>
             </div>
 
-            <div className="p-4 border-t border-border bg-white rounded-b-2xl flex-shrink-0" dir="rtl">
+            <div className="p-4 border-t border-border bg-white rounded-b-2xl flex-shrink-0" dir={dir}>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
