@@ -123,7 +123,7 @@ export default function Pricing() {
     }
   };
 
-  const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}?text=${encodeURIComponent(`مرحباً محمد، أنا ${formData.name || "عميل محتمل"} وأود التحدث معك عن خدمات الأتمتة.`)}`;
+  const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}`;
   const emailLink = `mailto:${EMAIL}?subject=استفسار عن خطط التسعير`;
 
   return (
