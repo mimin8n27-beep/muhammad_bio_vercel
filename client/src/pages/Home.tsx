@@ -821,7 +821,7 @@ export default function Home() {
               {selectedProject.client_name && (
                 <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
                   <span>👤</span>
-                  <span>العميل: <span className="text-foreground font-medium">{selectedProject.client_name}</span></span>
+                  <span>المؤلف: <span className="text-foreground font-medium">{selectedProject.client_name}</span></span>
                 </div>
               )}
 
