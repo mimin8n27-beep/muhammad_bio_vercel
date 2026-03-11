@@ -7,29 +7,38 @@ const WHATSAPP_NUMBER = "+201064998737";
 const GITHUB_URL = "https://github.com/mimin8n27-beep";
 
 // Simple Markdown renderer
-function renderMarkdown(text: string): string {
-  // Handle tables first (before line-by-line processing)
+function renderMarkdown(rawText: string): string {
+  // Step 1: escape HTML in non-table lines
+  const lines = rawText.split("\n");
+  const escaped = lines.map(line =>
+    line.trimStart().startsWith("|") ? line
+      : line.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+  ).join("\n");
+
+  // Step 2: process tables
   const tableRegex = /((?:^\|.+\|\n?)+)/gm;
-  text = text.replace(tableRegex, (tableBlock) => {
+  const withTables = escaped.replace(tableRegex, (tableBlock) => {
     const rows = tableBlock.trim().split("\n").filter(r => r.trim());
     if (rows.length < 2) return tableBlock;
     let html = '<div style="overflow-x:auto;margin:12px 0"><table style="width:100%;border-collapse:collapse;font-size:13px">';
-    rows.forEach((row, i) => {
-      // skip separator row (|---|---|)
-      if (/^\|[-| :]+\|$/.test(row.trim())) return;
+    let headerDone = false;
+    rows.forEach((row) => {
+      if (/^\|[-| :]+\|$/.test(row.trim())) { headerDone = true; return; }
       const cells = row.split("|").filter((_, idx, arr) => idx > 0 && idx < arr.length - 1);
-      const tag = i === 0 ? "th" : "td";
-      const style = i === 0
+      const isHeader = !headerDone;
+      const tag = isHeader ? "th" : "td";
+      const style = isHeader
         ? 'style="padding:8px 12px;background:#f1f5f9;font-weight:700;border:1px solid #e2e8f0;text-align:left"'
         : 'style="padding:7px 12px;border:1px solid #e2e8f0;vertical-align:top"';
       html += `<tr>${cells.map(c => `<${tag} ${style}>${c.trim()}</${tag}>`).join("")}</tr>`;
+      if (isHeader) headerDone = true;
     });
     html += "</table></div>";
     return html;
   });
 
-  return text
-    .replace(/&(?!amp;|lt;|gt;)/g, "&amp;").replace(/(?<!&amp;)<(?!\/?(th|td|tr|table|div|strong|em|li|ul|h[123]|hr|br))/g, "&lt;")
+  // Step 3: rest of markdown
+  return withTables
     .replace(/^---$/gm, '<hr style="border:none;border-top:1px solid #e2e8f0;margin:16px 0"/>')
     .replace(/^### (.+)$/gm, '<h3 style="font-size:14px;font-weight:700;color:#1e293b;margin:14px 0 6px">$1</h3>')
     .replace(/^## (.+)$/gm, '<h2 style="font-size:16px;font-weight:700;color:#1e293b;margin:16px 0 8px">$1</h2>')
@@ -114,7 +123,7 @@ export default function Portfolio() {
   };
 
   const toolsList = (tools: string) =>
-    tools ? tools.split(",").map((t) => t.trim()).filter(Boolean) : [];
+    tools ? tools.split(/[\s,]+/).map((t) => t.trim()).filter(Boolean) : [];
 
   return (
     <div className="min-h-screen bg-white text-foreground" dir="rtl">
