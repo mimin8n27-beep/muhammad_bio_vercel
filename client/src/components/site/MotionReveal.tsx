@@ -1,54 +1,134 @@
-import type { ReactNode } from "react";
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { useRef, type ReactNode } from "react";
+import { motion, useReducedMotion, useScroll, useTransform, type Variants } from "framer-motion";
 
 interface MotionRevealProps {
   children: ReactNode;
   className?: string;
   delay?: number;
   distance?: number;
+  intensity?: "soft" | "medium" | "high";
   once?: boolean;
-  variant?: "fade-up" | "blur-in" | "scale-in" | "stagger";
+  parallaxRange?: number;
+  variant?:
+    | "fade-up"
+    | "blur-in"
+    | "scale-in"
+    | "stagger"
+    | "stagger-group"
+    | "parallax"
+    | "glow-pop"
+    | "beam-sweep"
+    | "dock-slide";
+  viewportMargin?: string;
 }
 
-const revealVariants: Record<NonNullable<MotionRevealProps["variant"]>, Variants> = {
-  "fade-up": {
-    hidden: (distance: number) => ({ opacity: 0, y: distance }),
-    visible: { opacity: 1, y: 0 },
-  },
-  "blur-in": {
-    hidden: (distance: number) => ({
-      opacity: 0,
-      y: distance,
-      filter: "blur(14px)",
-    }),
-    visible: { opacity: 1, y: 0, filter: "blur(0px)" },
-  },
-  "scale-in": {
-    hidden: { opacity: 0, scale: 0.94, y: 18 },
-    visible: { opacity: 1, scale: 1, y: 0 },
-  },
-  stagger: {
-    hidden: { opacity: 0, y: 18 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.04,
-      },
-    },
-  },
-};
+const intensityMap = {
+  soft: { blur: 8, scale: 0.985, duration: 0.58 },
+  medium: { blur: 14, scale: 0.96, duration: 0.82 },
+  high: { blur: 18, scale: 0.92, duration: 1.02 },
+} as const;
+
+function getRevealVariants(
+  variant: NonNullable<MotionRevealProps["variant"]>,
+  intensity: NonNullable<MotionRevealProps["intensity"]>,
+): Variants {
+  const profile = intensityMap[intensity];
+
+  switch (variant) {
+    case "blur-in":
+      return {
+        hidden: (distance: number) => ({
+          opacity: 0,
+          y: distance,
+          filter: `blur(${profile.blur}px)`,
+        }),
+        visible: { opacity: 1, y: 0, filter: "blur(0px)" },
+      };
+    case "scale-in":
+      return {
+        hidden: { opacity: 0, scale: profile.scale, y: 18 },
+        visible: { opacity: 1, scale: 1, y: 0 },
+      };
+    case "stagger":
+    case "stagger-group":
+      return {
+        hidden: { opacity: 0, y: 18 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: {
+            staggerChildren: intensity === "high" ? 0.12 : 0.08,
+            delayChildren: 0.04,
+          },
+        },
+      };
+    case "glow-pop":
+      return {
+        hidden: {
+          opacity: 0,
+          scale: profile.scale,
+          y: 24,
+          filter: `blur(${Math.max(6, profile.blur - 4)}px)`,
+          boxShadow: "0 0 0 rgba(0,0,0,0)",
+        },
+        visible: {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          filter: "blur(0px)",
+          boxShadow: "0 0 36px rgba(73,166,255,0.14)",
+        },
+      };
+    case "beam-sweep":
+      return {
+        hidden: {
+          opacity: 0,
+          y: 20,
+          clipPath: "inset(0 100% 0 0 round 1.5rem)",
+        },
+        visible: {
+          opacity: 1,
+          y: 0,
+          clipPath: "inset(0 0% 0 0 round 1.5rem)",
+        },
+      };
+    case "dock-slide":
+      return {
+        hidden: { opacity: 0, y: 32, scale: 0.98 },
+        visible: { opacity: 1, y: 0, scale: 1 },
+      };
+    case "parallax":
+      return {
+        hidden: { opacity: 0, y: 24, scale: 0.98 },
+        visible: { opacity: 1, y: 0, scale: 1 },
+      };
+    case "fade-up":
+    default:
+      return {
+        hidden: (distance: number) => ({ opacity: 0, y: distance }),
+        visible: { opacity: 1, y: 0 },
+      };
+  }
+}
 
 export function MotionReveal({
   children,
   className,
   delay = 0,
   distance = 28,
+  intensity = "medium",
   once = true,
+  parallaxRange = 22,
   variant = "fade-up",
+  viewportMargin = "-10% 0px",
 }: MotionRevealProps) {
   const reduceMotion = useReducedMotion();
+  const ref = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const parallaxY = useTransform(scrollYProgress, [0, 1], [parallaxRange, -parallaxRange]);
 
   if (reduceMotion) {
     return <div className={className}>{children}</div>;
@@ -56,13 +136,19 @@ export function MotionReveal({
 
   return (
     <motion.div
+      ref={ref}
       className={className}
       custom={distance}
-      variants={revealVariants[variant]}
+      variants={getRevealVariants(variant, intensity)}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once, margin: "-10% 0px" }}
-      transition={{ duration: 0.82, ease: [0.16, 1, 0.3, 1], delay }}
+      viewport={{ once, margin: viewportMargin }}
+      transition={{
+        duration: intensityMap[intensity].duration,
+        ease: [0.16, 1, 0.3, 1],
+        delay,
+      }}
+      style={variant === "parallax" ? { y: parallaxY } : undefined}
     >
       {children}
     </motion.div>

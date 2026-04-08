@@ -51,10 +51,10 @@ export default function SharedHeaderPremium() {
         initial={reduceMotion ? false : { opacity: 0, y: -18 }}
         animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className={`mx-auto max-w-7xl rounded-[1.4rem] border px-4 py-3 transition-all duration-300 md:px-6 ${
+        className={`shared-header-premium mx-auto max-w-7xl rounded-[1.4rem] border px-4 py-3 transition-all duration-300 md:px-6 ${
           scrolled
-            ? "hud-panel border-primary/25 bg-[rgba(4,11,24,0.86)] shadow-[0_24px_80px_rgba(0,0,0,0.44)] backdrop-blur-2xl"
-            : "border-white/10 bg-[rgba(6,14,27,0.56)] shadow-[0_12px_40px_rgba(0,0,0,0.24)] backdrop-blur-xl"
+            ? "hud-panel border-primary/25 bg-[rgba(4,11,24,0.9)] shadow-[0_24px_80px_rgba(0,0,0,0.44)] backdrop-blur-2xl"
+            : "border-primary/15 bg-[linear-gradient(135deg,rgba(8,19,36,0.86),rgba(12,24,47,0.78))] shadow-[0_22px_60px_rgba(2,8,20,0.34)] backdrop-blur-2xl"
         }`}
       >
         <div className="flex items-center justify-between gap-4">

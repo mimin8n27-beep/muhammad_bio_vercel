@@ -7,7 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import HomePremium from "./pages/HomePremium";
 import PortfolioShowcase from "./pages/PortfolioShowcase";
 import Admin from "./pages/Admin";
-import Pricing from "./pages/Pricing";
+import PricingPremium from "./pages/PricingPremium";
 
 
 function Router() {
@@ -16,7 +16,7 @@ function Router() {
       <Route path={"/"} component={HomePremium} />
       <Route path={"/portfolio"} component={PortfolioShowcase} />
       <Route path={"/admin"} component={Admin} />
-      <Route path={"/pricing"} component={Pricing} />
+      <Route path={"/pricing"} component={PricingPremium} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

@@ -2,7 +2,9 @@ import ContactFormPremium from "@/components/ContactFormPremium";
 import SharedHeaderPremium from "@/components/SharedHeaderPremium";
 import { HeroAccent } from "@/components/site/HeroAccent";
 import { MotionReveal } from "@/components/site/MotionReveal";
+import { SceneBackdrop } from "@/components/site/SceneBackdrop";
 import { SectionIntro } from "@/components/site/SectionIntro";
+import { SiteFooter } from "@/components/site/SiteFooter";
 import { SurfaceCard } from "@/components/site/SurfaceCard";
 import { stripMarkdown } from "@/components/site/SafeRichText";
 import { supabase } from "@/lib/supabase";
@@ -11,7 +13,6 @@ import {
   BarChart3,
   Bot,
   Boxes,
-  CheckCircle2,
   Clock3,
   Database,
   MessageSquareText,
@@ -170,11 +171,12 @@ export default function HomePremium() {
 
       <main>
         <section className="relative overflow-hidden px-4 pb-12 pt-8 md:pb-20">
+          <SceneBackdrop intensity="high" />
           <div className="hero-card container relative overflow-hidden px-6 py-10 md:px-10 md:py-14">
             <HeroAccent intensity="high" />
             <div className="relative z-10 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
-              <MotionReveal variant="blur-in" distance={36}>
-                <span className="section-eyebrow">Premium Tech direction</span>
+              <MotionReveal variant="beam-sweep" intensity="high" distance={42}>
+                <span className="section-eyebrow">Cinematic system interface</span>
                 <h1 className="mb-5 max-w-3xl bg-[linear-gradient(135deg,#ffffff_0%,#9ad8ff_48%,#6dffd3_100%)] bg-clip-text text-[clamp(3rem,6vw,5.6rem)] font-bold leading-[0.95] text-transparent drop-shadow-[0_0_28px_rgba(73,166,255,0.22)]">
                   Automation systems with a sci-fi pulse and cinematic precision.
                 </h1>
@@ -200,7 +202,7 @@ export default function HomePremium() {
                   </a>
                 </div>
 
-                <div className="grid gap-3 sm:grid-cols-3">
+                <div className="mb-6 grid gap-3 sm:grid-cols-3">
                   {metrics.map((metric) => (
                     <div key={metric.label} className="metric-card card-tilt relative overflow-hidden">
                       <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(109,255,211,0.9),transparent)]" />
@@ -210,9 +212,28 @@ export default function HomePremium() {
                     </div>
                   ))}
                 </div>
+
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {[
+                    "Reactive interface overlays",
+                    "Layered motion with ambient depth",
+                    "Futuristic polish without hiding content",
+                  ].map((signal, index) => (
+                    <MotionReveal
+                      key={signal}
+                      delay={0.12 + index * 0.06}
+                      intensity="high"
+                      variant="dock-slide"
+                    >
+                      <div className="rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/74 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur">
+                        {signal}
+                      </div>
+                    </MotionReveal>
+                  ))}
+                </div>
               </MotionReveal>
 
-              <MotionReveal delay={0.08} variant="scale-in">
+              <MotionReveal delay={0.08} variant="parallax" intensity="high" parallaxRange={34}>
                 <div className="surface-card-glow overflow-hidden rounded-[2rem] p-3">
                   <div className="relative aspect-[4/4.6] overflow-hidden rounded-[1.6rem] border border-white/20">
                     <img
@@ -223,9 +244,12 @@ export default function HomePremium() {
                     />
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#040912] via-[#040912]/54 to-transparent p-5 text-white">
                       <p className="mb-1 text-sm uppercase tracking-[0.22em] text-[#8fd7ff]">Automation architect</p>
-                      <p className="text-xl font-semibold">Strategy, systems, delivery</p>
+                        <p className="text-xl font-semibold">Strategy, systems, delivery</p>
                     </div>
                     <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(109,255,211,0.14),transparent_38%)]" />
+                    <div className="pointer-events-none absolute left-4 top-4 rounded-full border border-white/14 bg-[#06101f]/75 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#bceeff] backdrop-blur">
+                      Visual command layer
+                    </div>
                   </div>
                 </div>
               </MotionReveal>
@@ -235,52 +259,24 @@ export default function HomePremium() {
 
         <section className="site-section">
           <div className="container">
-            <MotionReveal variant="blur-in">
-              <SectionIntro
-                eyebrow="What I optimize"
-                title="A calmer system underneath the work your team already does"
-                description="The visual layer now feels more intentional, but the real value still comes from strong system design: clear entry points, healthier data flow, and safer execution paths."
-              />
-            </MotionReveal>
-
-            <div className="feature-grid md:grid-cols-3">
-              {expertise.map((item, index) => (
-                <MotionReveal key={item.title} delay={index * 0.08} variant="scale-in">
-                  <SurfaceCard className="card-tilt h-full p-6">
-                    <div className="feature-icon mb-5">
-                      <item.icon className="h-5 w-5" />
-                    </div>
-                    <h3 className="mb-3 text-xl font-semibold">{item.title}</h3>
-                    <p className="leading-7 text-muted-foreground">{item.description}</p>
-                  </SurfaceCard>
-                </MotionReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="site-section">
-          <div className="container">
-            <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-              <MotionReveal variant="blur-in">
+            <div className="section-frame px-5 py-8 md:px-8 md:py-10">
+              <MotionReveal variant="glow-pop" intensity="high">
                 <SectionIntro
-                  eyebrow="Core outcomes"
-                  title="Less manual follow-up. More confidence in what happens next."
-                  description="These are the categories where automation tends to create visible wins quickly without making the operation feel over-engineered."
+                  eyebrow="What I optimize"
+                  title="A calmer system underneath the work your team already does"
+                  description="The visual layer now feels more intentional, but the real value still comes from strong system design: clear entry points, healthier data flow, and safer execution paths."
                 />
               </MotionReveal>
 
-              <div className="feature-grid">
-                {pillars.map((pillar, index) => (
-                  <MotionReveal key={pillar.title} delay={index * 0.08} variant="scale-in">
-                    <SurfaceCard className="card-tilt flex h-full gap-4 p-6">
-                      <div className="feature-icon shrink-0">
-                        <pillar.icon className="h-5 w-5" />
+              <div className="feature-grid md:grid-cols-3">
+                {expertise.map((item, index) => (
+                  <MotionReveal key={item.title} delay={index * 0.08} variant="glow-pop" intensity="high">
+                    <SurfaceCard className="card-tilt h-full p-6">
+                      <div className="feature-icon mb-5">
+                        <item.icon className="h-5 w-5" />
                       </div>
-                      <div>
-                        <h3 className="mb-2 text-lg font-semibold">{pillar.title}</h3>
-                        <p className="leading-7 text-muted-foreground">{pillar.description}</p>
-                      </div>
+                      <h3 className="mb-3 text-xl font-semibold">{item.title}</h3>
+                      <p className="leading-7 text-muted-foreground">{item.description}</p>
                     </SurfaceCard>
                   </MotionReveal>
                 ))}
@@ -291,64 +287,98 @@ export default function HomePremium() {
 
         <section className="site-section">
           <div className="container">
-            <MotionReveal variant="blur-in">
-              <SectionIntro
-                eyebrow="Recent work"
-                title="Selected systems and workflow builds"
-                description="A cleaner teaser view with safer content handling and lighter loading. Each card is decorative-first, then detail-on-demand."
-              />
-            </MotionReveal>
+            <div className="section-frame px-5 py-8 md:px-8 md:py-10">
+              <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+                <MotionReveal variant="beam-sweep" intensity="high">
+                  <SectionIntro
+                    eyebrow="Core outcomes"
+                    title="Less manual follow-up. More confidence in what happens next."
+                    description="These are the categories where automation tends to create visible wins quickly without making the operation feel over-engineered."
+                  />
+                </MotionReveal>
 
-            {loadingProjects ? (
-              <div className="grid gap-5 md:grid-cols-3">
-                {Array.from({ length: 3 }).map((_, index) => (
-                  <div key={index} className="surface-card p-5">
-                    <div className="skeleton-block mb-4 aspect-video w-full" />
-                    <div className="skeleton-block mb-3 h-6 w-3/4" />
-                    <div className="skeleton-block mb-2 h-4 w-full" />
-                    <div className="skeleton-block h-4 w-2/3" />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="grid gap-5 md:grid-cols-3">
-                {projects.map((project, index) => (
-                  <MotionReveal key={project.id} delay={index * 0.08} variant="scale-in">
-                    <a href={`/portfolio?open=${project.id}`} className="block">
-                      <SurfaceCard className="card-tilt h-full p-4">
-                        <div className="light-sweep mb-4 overflow-hidden rounded-[1.3rem] border border-white/15">
-                          {project.image_url ? (
-                            <img
-                              src={project.image_url}
-                              alt={project.title}
-                              loading="lazy"
-                              className="aspect-video w-full object-cover transition-transform duration-500 hover:scale-[1.04]"
-                            />
-                          ) : (
-                            <div className="flex aspect-video items-center justify-center bg-[linear-gradient(135deg,rgba(36,107,255,0.14),rgba(123,241,211,0.14))]">
-                              <Workflow className="h-10 w-10 text-primary" />
-                            </div>
-                          )}
+                <div className="feature-grid">
+                  {pillars.map((pillar, index) => (
+                    <MotionReveal key={pillar.title} delay={index * 0.08} variant="dock-slide" intensity="high">
+                      <SurfaceCard className="card-tilt flex h-full gap-4 p-6">
+                        <div className="feature-icon shrink-0">
+                          <pillar.icon className="h-5 w-5" />
                         </div>
-                        <div className="mb-2 flex items-center justify-between gap-3">
-                          <h3 className="text-lg font-semibold">{project.title}</h3>
-                          <span className="pill-label text-[11px]">Case study</span>
+                        <div>
+                          <h3 className="mb-2 text-lg font-semibold">{pillar.title}</h3>
+                          <p className="leading-7 text-muted-foreground">{pillar.description}</p>
                         </div>
-                        <p className="line-clamp-3 text-sm leading-7 text-muted-foreground">
-                          {stripMarkdown(project.description)}
-                        </p>
                       </SurfaceCard>
-                    </a>
-                  </MotionReveal>
-                ))}
+                    </MotionReveal>
+                  ))}
+                </div>
               </div>
-            )}
+            </div> 
           </div>
         </section>
 
         <section className="site-section">
           <div className="container">
-            <MotionReveal>
+            <div className="section-frame px-5 py-8 md:px-8 md:py-10">
+              <MotionReveal variant="glow-pop" intensity="high">
+                <SectionIntro
+                  eyebrow="Recent work"
+                  title="Selected systems and workflow builds"
+                  description="A cleaner teaser view with safer content handling and lighter loading. Each card is decorative-first, then detail-on-demand."
+                />
+              </MotionReveal>
+
+              {loadingProjects ? (
+                <div className="grid gap-5 md:grid-cols-3">
+                  {Array.from({ length: 3 }).map((_, index) => (
+                    <div key={index} className="surface-card p-5">
+                      <div className="skeleton-block mb-4 aspect-video w-full" />
+                      <div className="skeleton-block mb-3 h-6 w-3/4" />
+                      <div className="skeleton-block mb-2 h-4 w-full" />
+                      <div className="skeleton-block h-4 w-2/3" />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid gap-5 md:grid-cols-3">
+                  {projects.map((project, index) => (
+                    <MotionReveal key={project.id} delay={index * 0.08} variant="glow-pop" intensity="high">
+                      <a href={`/portfolio?open=${project.id}`} className="block">
+                        <SurfaceCard className="card-tilt h-full p-4">
+                          <div className="light-sweep mb-4 overflow-hidden rounded-[1.3rem] border border-white/15">
+                            {project.image_url ? (
+                              <img
+                                src={project.image_url}
+                                alt={project.title}
+                                loading="lazy"
+                                className="aspect-video w-full object-cover transition-transform duration-500 hover:scale-[1.04]"
+                              />
+                            ) : (
+                              <div className="flex aspect-video items-center justify-center bg-[linear-gradient(135deg,rgba(36,107,255,0.14),rgba(123,241,211,0.14))]">
+                                <Workflow className="h-10 w-10 text-primary" />
+                              </div>
+                            )}
+                          </div>
+                          <div className="mb-2 flex items-center justify-between gap-3">
+                            <h3 className="text-lg font-semibold">{project.title}</h3>
+                            <span className="pill-label text-[11px]">Case study</span>
+                          </div>
+                          <p className="line-clamp-3 text-sm leading-7 text-muted-foreground">
+                            {stripMarkdown(project.description)}
+                          </p>
+                        </SurfaceCard>
+                      </a>
+                    </MotionReveal>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section className="site-section">
+          <div className="container">
+            <MotionReveal variant="beam-sweep" intensity="high">
               <div className="cta-band px-6 py-8 md:px-10 md:py-10">
                 <div className="relative z-10 grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
                   <div>
@@ -380,66 +410,54 @@ export default function HomePremium() {
 
         <section className="site-section">
           <div className="container">
-            <MotionReveal variant="blur-in">
-              <SectionIntro
-                eyebrow="FAQ"
-                title="Questions teams usually ask before they automate"
-                description="These answers are now easier to scan and carry clearer visual state changes so the section feels lighter to browse."
-                align="center"
-              />
-            </MotionReveal>
+            <div className="section-frame px-5 py-8 md:px-8 md:py-10">
+              <MotionReveal variant="glow-pop" intensity="high">
+                <SectionIntro
+                  eyebrow="FAQ"
+                  title="Questions teams usually ask before they automate"
+                  description="These answers are now easier to scan and carry clearer visual state changes so the section feels lighter to browse."
+                  align="center"
+                />
+              </MotionReveal>
 
-            <div className="mx-auto grid max-w-3xl gap-4">
-              {faqs.map((faq, index) => (
-                <MotionReveal key={faq.q} delay={index * 0.06} variant="scale-in">
-                  <FaqCard question={faq.q} answer={faq.a} />
-                </MotionReveal>
-              ))}
+              <div className="mx-auto grid max-w-3xl gap-4">
+                {faqs.map((faq, index) => (
+                  <MotionReveal key={faq.q} delay={index * 0.06} variant="dock-slide" intensity="high">
+                    <FaqCard question={faq.q} answer={faq.a} />
+                  </MotionReveal>
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
         <section id="contact-section" className="site-section">
           <div className="container">
-            <MotionReveal variant="blur-in">
-              <SectionIntro
-                eyebrow="Contact"
-                title="Bring the messy workflow. We&apos;ll turn it into something calmer."
-                description="Better visuals help the brand feel stronger. Better systems keep the business moving. The contact flow has been tightened so it feels smoother and safer at the same time."
-                align="center"
-              />
-            </MotionReveal>
-            <MotionReveal delay={0.08} variant="scale-in">
-              <ContactFormPremium
-                whatsappNumber={WHATSAPP_NUMBER}
-                email={EMAIL}
-                source="home"
-              />
-            </MotionReveal>
+            <div className="section-frame px-5 py-8 md:px-8 md:py-10">
+              <MotionReveal variant="beam-sweep" intensity="high">
+                <SectionIntro
+                  eyebrow="Contact"
+                  title="Bring the messy workflow. We&apos;ll turn it into something calmer."
+                  description="Better visuals help the brand feel stronger. Better systems keep the business moving. The contact flow has been tightened so it feels smoother and safer at the same time."
+                  align="center"
+                />
+              </MotionReveal>
+              <MotionReveal delay={0.08} variant="glow-pop" intensity="high">
+                <ContactFormPremium
+                  whatsappNumber={WHATSAPP_NUMBER}
+                  email={EMAIL}
+                  source="home"
+                />
+              </MotionReveal>
+            </div>
           </div>
         </section>
       </main>
-
-      <footer className="px-4 pb-8 pt-2">
-        <div className="container hud-panel rounded-[1.6rem] border-white/12 px-6 py-6 text-white">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="font-[var(--font-family-heading)] text-lg font-bold">Muhammad Bio</p>
-              <p className="text-sm text-white/55">Automation systems that look cinematic and behave safely.</p>
-            </div>
-            <div className="flex flex-wrap gap-3 text-sm text-white/60">
-              <span className="inline-flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-[#7bf1d3]" />
-                Visual polish
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-[#7bf1d3]" />
-                Safer admin flow
-              </span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter
+        homeHref="/"
+        homeLabel="Return to home signal"
+        note="Automation systems that now feel more like a futuristic command deck than a repeated navigation bar."
+      />
     </div>
   );
 }

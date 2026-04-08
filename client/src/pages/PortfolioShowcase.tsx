@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 
 import SharedHeaderPremium from "@/components/SharedHeaderPremium";
+import { MotionReveal } from "@/components/site/MotionReveal";
+import { SceneBackdrop } from "@/components/site/SceneBackdrop";
+import { SiteFooter } from "@/components/site/SiteFooter";
 import { stripMarkdown } from "@/components/site/SafeRichText";
 import { supabase } from "@/lib/supabase";
 import {
@@ -8,16 +11,7 @@ import {
   getProxyPreviewUrl,
   type ProjectViewerMode,
 } from "@/lib/portfolioViewer";
-import {
-  ArrowLeft,
-  ArrowUpRight,
-  ExternalLink,
-  Lock,
-  Maximize2,
-  ShieldCheck,
-  Workflow,
-  X,
-} from "lucide-react";
+import { ArrowUpRight, ExternalLink, Lock, Maximize2, ShieldCheck, Workflow, X } from "lucide-react";
 
 const WHATSAPP_NUMBER = "+201064998737";
 
@@ -114,6 +108,7 @@ export default function PortfolioShowcase() {
 
   return (
     <div className="page-shell dark min-h-screen text-foreground" dir="rtl">
+      <SceneBackdrop intensity="high" />
       <SharedHeaderPremium />
 
       <section className="relative overflow-hidden bg-[linear-gradient(180deg,rgba(4,12,24,0.84),rgba(7,18,34,0.92))] py-20 md:py-28">
@@ -122,14 +117,16 @@ export default function PortfolioShowcase() {
           <div className="absolute bottom-0 left-0 h-96 w-96 rounded-full bg-primary blur-3xl" />
         </div>
         <div className="container relative z-10 text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2">
-            <ShieldCheck className="h-4 w-4 text-primary" />
-            <span className="text-sm font-semibold text-primary">Showcase mode</span>
-          </div>
-          <h1 className="mb-4 text-4xl font-bold leading-tight text-foreground md:text-6xl">معرض الأعمال</h1>
-          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            نوافذ مشاهدة مخصصة لعرض الـ automations بشكل بصري أنيق مع فصل كامل بين المشاهدة وأي صلاحيات تعديل.
-          </p>
+          <MotionReveal variant="beam-sweep" intensity="high">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2">
+              <ShieldCheck className="h-4 w-4 text-primary" />
+              <span className="text-sm font-semibold text-primary">Showcase mode</span>
+            </div>
+            <h1 className="mb-4 text-4xl font-bold leading-tight text-foreground md:text-6xl">معرض الأعمال</h1>
+            <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+              نوافذ مشاهدة مخصصة لعرض الـ automations بشكل بصري أنيق مع فصل كامل بين المشاهدة وأي صلاحيات تعديل.
+            </p>
+          </MotionReveal>
         </div>
       </section>
 
@@ -149,14 +146,14 @@ export default function PortfolioShowcase() {
             <div className="py-24 text-center text-muted-foreground">لا توجد مشاريع حالياً</div>
           ) : (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {projects.map((project) => {
+              {projects.map((project, index) => {
                 const mode = inferViewerMode(project);
                 return (
-                  <div
-                    key={project.id}
-                    onClick={() => setSelected(project)}
-                    className="surface-card card-tilt group cursor-pointer overflow-hidden rounded-2xl transition-all duration-300"
-                  >
+                  <MotionReveal key={project.id} delay={index * 0.06} variant="glow-pop" intensity="high">
+                    <div
+                      onClick={() => setSelected(project)}
+                      className="surface-card card-tilt group cursor-pointer overflow-hidden rounded-2xl transition-all duration-300"
+                    >
                     <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5">
                       {project.image_url ? (
                         <img
@@ -209,7 +206,8 @@ export default function PortfolioShowcase() {
                         {hasDedicatedViewer(project) ? "افتح نافذة المعاينة" : "افتح تفاصيل المشروع"}
                       </div>
                     </div>
-                  </div>
+                    </div>
+                  </MotionReveal>
                 );
               })}
             </div>
@@ -219,27 +217,26 @@ export default function PortfolioShowcase() {
 
       <section className="border-t border-border py-20">
         <div className="container text-center">
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">هل يعجبك أسلوب العرض؟</h2>
-          <p className="mb-8 text-lg text-white/80">دعنا نبني لك automation يبدو فاخرًا ويُعرض بأمان.</p>
-          <a
-            href={`https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-3 font-bold text-primary transition-all hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-xl"
-          >
-            ابدأ مشروعك الآن
-          </a>
+          <MotionReveal variant="dock-slide" intensity="high">
+            <h2 className="mb-4 text-3xl font-bold md:text-4xl">هل يعجبك أسلوب العرض؟</h2>
+            <p className="mb-8 text-lg text-white/80">دعنا نبني لك automation يبدو فاخرًا ويُعرض بأمان.</p>
+            <a
+              href={`https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-3 font-bold text-primary transition-all hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-xl"
+            >
+              ابدأ مشروعك الآن
+            </a>
+          </MotionReveal>
         </div>
       </section>
 
-      <footer className="px-4 pb-8 pt-2">
-        <div className="container hud-panel flex flex-col items-center justify-between gap-4 rounded-[1.6rem] border-white/12 px-6 py-6 md:flex-row">
-          <p className="text-sm text-muted-foreground">© 2026 محمد - متخصص في أتمتة الأعمال الرقمية</p>
-          <a href="/" className="flex items-center gap-2 text-sm text-white/70 transition-colors hover:text-primary">
-            <ArrowLeft className="h-4 w-4" /> العودة للرئيسية
-          </a>
-        </div>
-      </footer>
+      <SiteFooter
+        homeHref="/"
+        homeLabel="العودة للرئيسية"
+        note="واجهة المعرض أصبحت أكثر حيوية وحركة من غير ما تُشبه شريط التنقل في آخر الصفحة."
+      />
 
       {selected && (
         <ProjectDetailModal
