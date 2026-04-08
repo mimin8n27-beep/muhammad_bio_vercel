@@ -3,7 +3,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
-import { SceneBackdrop } from "./components/site/SceneBackdrop";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import HomePremium from "./pages/HomePremium";
 import PortfolioShowcasePremium from "./pages/PortfolioShowcasePremium";
@@ -34,12 +33,7 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
-          <div className="site-app-shell">
-            <SceneBackdrop intensity="high" className="site-global-background" />
-            <div className="site-app-content">
-              <Router />
-            </div>
-          </div>
+          <Router />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
