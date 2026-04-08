@@ -125,7 +125,7 @@
       radial-gradient(circle at 52% 100%, rgba(73, 166, 255, 0.22), transparent 0 30%),
       linear-gradient(135deg, rgba(8, 19, 39, 0.72), transparent 35%, rgba(14, 46, 78, 0.42) 68%, transparent 100%),
       linear-gradient(180deg, #020711 0%, #071222 42%, #0b1630 100%);
-    background-attachment: fixed;
+    background-attachment: scroll;
     position: relative;
   }
 
