@@ -165,7 +165,7 @@ export default function HomePremium() {
   const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}`;
 
   return (
-    <div className="page-shell">
+    <div className="page-shell dark">
       <SharedHeaderPremium />
 
       <main>
@@ -175,7 +175,7 @@ export default function HomePremium() {
             <div className="relative z-10 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
               <MotionReveal variant="blur-in" distance={36}>
                 <span className="section-eyebrow">Premium Tech direction</span>
-                <h1 className="mb-5 max-w-3xl text-[clamp(3rem,6vw,5.6rem)] font-bold leading-[0.95]">
+                <h1 className="mb-5 max-w-3xl bg-[linear-gradient(135deg,#ffffff_0%,#9ad8ff_48%,#6dffd3_100%)] bg-clip-text text-[clamp(3rem,6vw,5.6rem)] font-bold leading-[0.95] text-transparent drop-shadow-[0_0_28px_rgba(73,166,255,0.22)]">
                   Automation systems with a sci-fi pulse and cinematic precision.
                 </h1>
                 <p className="mb-8 max-w-2xl text-lg leading-8 text-muted-foreground">
@@ -202,7 +202,8 @@ export default function HomePremium() {
 
                 <div className="grid gap-3 sm:grid-cols-3">
                   {metrics.map((metric) => (
-                    <div key={metric.label} className="metric-card card-tilt">
+                    <div key={metric.label} className="metric-card card-tilt relative overflow-hidden">
+                      <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(109,255,211,0.9),transparent)]" />
                       <metric.icon className="mb-3 h-5 w-5 text-primary" />
                       <p className="mb-1 text-2xl font-bold">{metric.value}</p>
                       <p className="text-sm text-muted-foreground">{metric.label}</p>
