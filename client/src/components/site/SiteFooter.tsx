@@ -8,8 +8,8 @@ interface SiteFooterProps {
 
 export function SiteFooter({
   homeHref = "/",
-  homeLabel = "Back to top",
-  note = "Cinematic automation systems with a stronger sci-fi pulse.",
+  homeLabel = "العودة للرئيسية",
+  note = "أنظمة أوتوميشن premium مبنية لتقليل التشغيل اليدوي وربط أدوات العمل بوضوح وثقة.",
 }: SiteFooterProps) {
   return (
     <footer className="site-footer-shell px-4 pb-8 pt-8">
@@ -18,7 +18,7 @@ export function SiteFooter({
           <div className="site-footer-copy">
             <span className="site-footer-badge">
               <Sparkles className="h-4 w-4" />
-              Signal online
+              استوديو الأوتوميشن
             </span>
             <div>
               <p className="font-[var(--font-family-heading)] text-xl font-bold text-white">

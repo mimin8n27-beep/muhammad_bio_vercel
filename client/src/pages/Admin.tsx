@@ -345,7 +345,7 @@ export default function Admin() {
     {
       label: "المشاريع النشطة",
       value: projects.filter((project) => project.status === "active").length,
-      hint: "Live showcase inventory",
+      hint: "مشاريع الأوتوميشن المعروضة",
       icon: FolderOpen,
     },
     {
@@ -363,7 +363,7 @@ export default function Admin() {
     {
       label: "أنظمة Live mirror",
       value: projects.filter((project) => inferViewerMode(project) === "live_n8n" && project.link_url).length,
-      hint: "Read-only n8n windows",
+      hint: "معاينات n8n الجاهزة",
       icon: Gauge,
     },
   ];
@@ -380,10 +380,10 @@ export default function Admin() {
             <div className="hidden md:block">
               <div className="section-eyebrow mb-0 border-white/10 bg-white/5 text-[#9cd8ff]">
                 <Sparkles className="h-3.5 w-3.5" />
-                Admin panel
+                Automation admin
               </div>
             </div>
-            <span className="font-bold">Admin dashboard</span>
+            <span className="font-bold">لوحة إدارة الأوتوميشن</span>
           </div>
 
           <div className="flex items-center gap-3">
@@ -436,25 +436,25 @@ export default function Admin() {
             <div className="relative z-10">
               <div className="mb-5 flex items-center gap-3 text-[#9cd8ff]">
                 <ShieldCheck className="h-5 w-5" />
-                <span className="text-sm font-semibold uppercase tracking-[0.24em]">Admin overview</span>
+                <span className="text-sm font-semibold uppercase tracking-[0.24em]">Automation overview</span>
               </div>
               <div className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
                 <div>
                   <h2 className="max-w-3xl text-3xl font-bold leading-tight text-white md:text-4xl">
-                    Control center
+                    مركز إدارة المشاريع والـ workflows
                   </h2>
                 </div>
 
                 <div className="admin-signal-panel admin-signal-panel-live">
                   <div className="admin-signal-line">
                     <Activity className="h-4 w-4 text-[#7bf1d3]" />
-                    <span>Control stream</span>
+                    <span>القسم الحالي</span>
                     <span className="admin-signal-value">{tab}</span>
                   </div>
                   <div className="admin-signal-line">
                     <Gauge className="h-4 w-4 text-primary" />
-                    <span>Display mode</span>
-                    <span className="admin-signal-value">{darkMode ? "Cinematic dark" : "Bright fallback"}</span>
+                    <span>وضع العرض</span>
+                    <span className="admin-signal-value">{darkMode ? "Dark mode" : "Light mode"}</span>
                   </div>
                   <div className="admin-led-bank" aria-hidden="true">
                     <span />
@@ -832,7 +832,7 @@ export default function Admin() {
                         </button>
                         {inferViewerMode(p) === "live_n8n" && p.link_url && (
                           <span className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-xs text-emerald-300 mr-auto">
-                            Live mirror ready
+                            المعاينة الحية جاهزة
                           </span>
                         )}
                         {inferViewerMode(p) !== "live_n8n" && p.svg_url && (

@@ -105,12 +105,12 @@ export default function PortfolioShowcasePremium() {
   };
 
   const previewLabel = useMemo(() => {
-    if (!selected) return "Open project";
+    if (!selected) return "فتح المشروع";
     const mode = inferViewerMode(selected);
-    if (mode === "live_n8n") return "Open live showcase";
-    if (mode === "svg_only") return "Open workflow viewer";
-    if (mode === "image_only") return "Open design preview";
-    return "Open project";
+    if (mode === "live_n8n") return "فتح المعاينة الحية";
+    if (mode === "svg_only") return "فتح مخطط الـ workflow";
+    if (mode === "image_only") return "فتح المعاينة";
+    return "فتح المشروع";
   }, [selected]);
 
   return (
@@ -126,14 +126,14 @@ export default function PortfolioShowcasePremium() {
           <MotionReveal variant="beam-sweep" intensity="high">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2">
               <ShieldCheck className="h-4 w-4 text-primary" />
-              <span className="text-sm font-semibold text-primary">Showcase mode</span>
+              <span className="text-sm font-semibold text-primary">معرض الأوتوميشن</span>
             </div>
             <h1 className="mb-4 text-3xl font-bold leading-tight text-foreground md:text-5xl">
-              معرض الأعمال
+              معرض أعمال الأوتوميشن
             </h1>
             <p className="mx-auto max-w-2xl text-base text-muted-foreground">
-              واجهة عرض أكثر حيوية ولمعانًا لعرض الـ automations، مع فصل كامل بين المشاهدة
-              وأي صلاحيات تعديل.
+              نماذج من workflows وأنظمة الربط والتنفيذ التي تساعد الشركات على تقليل العمل اليدوي
+              وبناء تشغيل أسرع وأكثر وضوحًا.
             </p>
           </MotionReveal>
         </div>
@@ -152,7 +152,7 @@ export default function PortfolioShowcasePremium() {
               ))}
             </div>
           ) : projects.length === 0 ? (
-            <div className="py-24 text-center text-muted-foreground">لا توجد مشاريع حاليًا</div>
+            <div className="py-24 text-center text-muted-foreground">لا توجد مشاريع معروضة حاليًا</div>
           ) : (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {projects.map((project, index) => {
@@ -186,12 +186,12 @@ export default function PortfolioShowcasePremium() {
                         <div className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-[#06101f]/85 px-3 py-1.5 text-[11px] font-semibold text-white/88 backdrop-blur">
                           <Lock className="h-3.5 w-3.5 text-[#7bf1d3]" />
                           {mode === "live_n8n"
-                            ? "Live read-only"
+                            ? "معاينة حية"
                             : mode === "svg_only"
-                              ? "Legacy viewer"
+                              ? "مخطط workflow"
                               : mode === "image_only"
-                                ? "Image showcase"
-                                : "Case study"}
+                                ? "معاينة بصرية"
+                                : "دراسة حالة"}
                         </div>
                       </div>
 
@@ -201,7 +201,7 @@ export default function PortfolioShowcasePremium() {
                             {project.title}
                           </h3>
                           {hasDedicatedViewer(project) ? (
-                            <span className="pill-label whitespace-nowrap text-[10px]">View-only</span>
+                            <span className="pill-label whitespace-nowrap text-[10px]">Preview</span>
                           ) : null}
                         </div>
 
@@ -228,7 +228,7 @@ export default function PortfolioShowcasePremium() {
 
                         <div className="inline-flex items-center gap-2 text-sm text-[#c0d4ec]">
                           <Maximize2 className="h-4 w-4 text-primary" />
-                          {hasDedicatedViewer(project) ? "Open preview" : "Open project details"}
+                          {hasDedicatedViewer(project) ? "فتح المعاينة" : "فتح التفاصيل"}
                         </div>
                       </div>
                     </div>
@@ -243,9 +243,9 @@ export default function PortfolioShowcasePremium() {
       <section className="border-t border-border py-16">
         <div className="container text-center">
           <MotionReveal variant="dock-slide" intensity="high">
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">هل أعجبك أسلوب العرض؟</h2>
+            <h2 className="mb-4 text-3xl font-bold md:text-4xl">هل تريد تنفيذ نظام مشابه لشغلك؟</h2>
             <p className="mb-8 text-lg text-[#c8ddf0]">
-              دعنا نبني لك automation يبدو فاخرًا ويُعرض بأمان.
+              دعنا نبني لك workflow أو integration مصممة حسب احتياجك وتدعم التشغيل اليومي بثقة.
             </p>
             <a
               href={`https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}`}
@@ -262,7 +262,7 @@ export default function PortfolioShowcasePremium() {
       <SiteFooter
         homeHref="/"
         homeLabel="العودة للرئيسية"
-        note="واجهة المعرض أصبحت أكثر حيوية وحركة، مع خطوط إضاءة أوضح وخلفية أكثر حياة من النسخة السابقة."
+        note="هذا المعرض يجمع نماذج لأعمال الأوتوميشن والربط بين الأدوات وتحسين التشغيل اليومي."
       />
 
       {selected ? (
@@ -318,7 +318,7 @@ function ProjectDetailModal({
               <div className="ml-4 flex-1">
                 <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
                   <Lock className="h-3.5 w-3.5" />
-                  Read-only showcase
+                  عرض المشروع
                 </div>
                 <h2 className="text-2xl font-bold leading-tight text-foreground">{project.title}</h2>
               </div>
@@ -394,11 +394,11 @@ function ProjectShowcaseViewer({
               <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-white/55">
                 <span className="showcase-chip">
                   <Lock className="h-3.5 w-3.5" />
-                  View only
+                  للمعاينة فقط
                 </span>
                 <span className="showcase-chip">
                   <ShieldCheck className="h-3.5 w-3.5 text-[#7bf1d3]" />
-                  Secure preview
+                  معاينة آمنة
                 </span>
               </div>
             </div>
@@ -440,7 +440,7 @@ function ProjectShowcaseViewer({
             <Workflow className="h-12 w-12 text-primary" />
             <p className="text-lg font-semibold text-white">لا يوجد محتوى جاهز للعرض</p>
             <p className="max-w-md text-center text-sm leading-7 text-white/55">
-              أضف رابط live preview أو SVG أو صورة من لوحة الإدارة ليظهر هذا المشروع داخل نافذة العرض.
+              أضف رابط معاينة حيّة أو SVG أو صورة من لوحة الإدارة ليظهر هذا المشروع داخل نافذة العرض.
             </p>
           </div>
         )}
@@ -487,7 +487,7 @@ function LiveN8nViewer({ project }: { project: Project }) {
             <div className="skeleton-block h-4 w-64" />
             <p className="mt-5 text-xs text-white/45">
               {source === "direct"
-                ? "جاري تحميل الـ live preview..."
+                ? "جارٍ تحميل المعاينة الحيّة..."
                 : "جاري التحويل لمسار preview proxy الآمن..."}
             </p>
           </div>
@@ -498,7 +498,7 @@ function LiveN8nViewer({ project }: { project: Project }) {
         <iframe
           key={`${project.id}-${source}`}
           src={src}
-          title={`${project.title} live preview`}
+          title={`${project.title} preview`}
           className="h-full w-full border-0 bg-[#09111f]"
           sandbox="allow-same-origin allow-scripts"
           referrerPolicy="no-referrer"
@@ -510,7 +510,7 @@ function LiveN8nViewer({ project }: { project: Project }) {
         <div className="showcase-fallback-card">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-amber-400/10 px-3 py-1 text-xs font-semibold text-amber-200">
             <Lock className="h-3.5 w-3.5" />
-            Framing fallback
+            بديل المعاينة
           </div>
           <h3 className="mb-2 text-lg font-semibold text-white">
             المعاينة الحية رفضت الفتح داخل الـ frame

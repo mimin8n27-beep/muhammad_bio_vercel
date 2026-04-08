@@ -17,65 +17,65 @@ const EMAIL = "mimi.n8n27@gmail.com";
 
 const plans = [
   {
-    name: "Small",
-    desc: "Basic workflow automation",
+    name: "Starter Flow",
+    desc: "لأتمتة مهمة أساسية أو مسار تشغيل واحد",
     hours: "4-8 hours",
-    features: ["Basic workflow or trigger", "1-2 automation nodes", "Simple logic flow"],
+    features: ["Workflow واحدة واضحة", "ربط أداة أو أداتين", "Trigger + actions أساسية"],
     basePrice: "$150 - $400",
     premiumOptions: [
-      { label: "PDF documentation", price: "+$50" },
-      { label: "Video demo", price: "+$100" },
+      { label: "Documentation مختصرة", price: "+$50" },
+      { label: "Video walkthrough", price: "+$100" },
       { label: "1 week support", price: "+$50" },
     ],
     finalPrice: "$200 - $450",
     popular: false,
   },
   {
-    name: "Medium",
-    desc: "Intermediate automation workflows",
+    name: "Growth Automation",
+    desc: "للفِرق التي تريد تشغيل أسرع ومتابعة أوضح",
     hours: "8-15 hours",
-    features: ["Workflow logic and notifications", "3-5 automation nodes", "Multi-step processes", "Basic error handling"],
+    features: ["Workflow متعددة الخطوات", "Notifications و follow-up", "3-5 nodes أو أكثر", "Error handling أساسي"],
     basePrice: "$400 - $900",
     premiumOptions: [
-      { label: "PDF documentation", price: "+$50 - $100" },
-      { label: "Video demo", price: "+$100 - $200" },
+      { label: "Documentation أوضح", price: "+$50 - $100" },
+      { label: "Video walkthrough", price: "+$100 - $200" },
       { label: "2 weeks support", price: "+$80 - $150" },
     ],
     finalPrice: "$500 - $1,050",
     popular: true,
   },
   {
-    name: "Large",
-    desc: "Advanced automation systems",
+    name: "Advanced Systems",
+    desc: "لأنظمة الربط المعقدة وعمليات التشغيل الأوسع",
     hours: "15-30 hours",
-    features: ["Complex workflow logic", "Error handling and validation", "API integrations", "Data transformation", "Advanced monitoring"],
+    features: ["Complex workflow logic", "API integrations", "Validation + error handling", "Data transformation", "Monitoring أوضح"],
     basePrice: "$900 - $2,500+",
     premiumOptions: [
-      { label: "PDF documentation", price: "+$100 - $150" },
-      { label: "Video demo", price: "+$150 - $300" },
+      { label: "Detailed documentation", price: "+$100 - $150" },
+      { label: "Video walkthrough", price: "+$150 - $300" },
       { label: "3 weeks support", price: "+$100 - $200" },
     ],
     finalPrice: "$1,050 - $2,800+",
     popular: false,
   },
   {
-    name: "Enterprise",
-    desc: "Full automation system",
+    name: "Custom Automation",
+    desc: "حلول أوتوميشن مخصصة بالكامل حسب التشغيل والأدوات",
     hours: "30+ hours",
-    features: ["Full automation architecture", "Multiple APIs and integrations", "Scalable infrastructure", "Custom workflows", "Dedicated support", "Performance optimization"],
-    basePrice: "$2,500+",
-    premiumOptions: [{ label: "Documentation, demo, and support suite", price: "+$250 - $600+" }],
+    features: ["Automation architecture كاملة", "n8n + APIs + AI steps", "Custom workflows", "Scalable logic", "Dedicated support", "Performance optimization"],
+    basePrice: "Custom quote",
+    premiumOptions: [{ label: "Documentation + walkthrough + support", price: "حسب النطاق" }],
     finalPrice: "$2,750+",
     popular: false,
   },
 ];
 
 const faqs = [
-  { q: "Can I customize the pricing?", a: "Yes. Pricing can shift based on scope, integrations, and delivery expectations." },
-  { q: "What is included in support?", a: "Support covers fixes, small adjustments, and technical guidance based on the selected plan." },
-  { q: "Do you offer payment plans?", a: "Yes. We can agree on a payment structure that fits the project size and timeline." },
-  { q: "What if the project needs more time?", a: "If scope expands, we discuss the extra work before moving forward." },
-  { q: "Can I upgrade later?", a: "Absolutely. You can start with a smaller package and expand once the workflow grows." },
+  { q: "هل السعر ثابت؟", a: "السعر يتحدد حسب تعقيد الـ workflow، عدد الأدوات، وحجم الـ integrations المطلوبة." },
+  { q: "ما الذي يشمله الدعم؟", a: "الدعم يشمل المتابعة بعد التسليم، إصلاحات بسيطة، وتوضيح أي نقطة مهمة في النظام المنفذ." },
+  { q: "هل يمكن التقسيط؟", a: "في المشاريع الأكبر يمكن الاتفاق على دفعات مناسبة حسب مراحل التنفيذ." },
+  { q: "ماذا لو توسع نطاق المشروع أثناء التنفيذ؟", a: "أي زيادة في النطاق تُراجع أولًا ونحدّث الخطة والتكلفة قبل تنفيذ الجزء الإضافي." },
+  { q: "هل أستطيع البدء ببساطة ثم التوسع لاحقًا؟", a: "نعم، وهذا خيار ممتاز. نبدأ بـ workflow أساسية ثم نطوّرها عندما يكبر الاحتياج." },
 ];
 
 function FaqItem({ question, answer }: { question: string; answer: string }) {
@@ -135,16 +135,16 @@ export default function PricingPremium() {
         setSubmitted(false);
       }, 3000);
     } catch {
-      setError("Something went wrong while sending. Please try again.");
+      setError("تعذر إرسال الرسالة حالياً. حاول مرة أخرى بعد قليل.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}?text=${encodeURIComponent(
-    `Hello Muhammad, I am ${formData.name || "a potential client"} and I would like to discuss an automation project.`,
+    `مرحباً محمد، أنا ${formData.name || "عميل مهتم"} وأريد مناقشة مشروع أوتوميشن.`,
   )}`;
-  const emailLink = `mailto:${EMAIL}?subject=Pricing inquiry`;
+  const emailLink = `mailto:${EMAIL}?subject=Automation project pricing`;
 
   return (
     <div className="page-shell pricing-page-shell dark min-h-screen text-foreground">
@@ -167,11 +167,10 @@ export default function PricingPremium() {
                 <span className="pricing-hero-spark pricing-hero-spark-b" />
                 <span className="pricing-hero-spark pricing-hero-spark-c" />
               </div>
-              <span className="pricing-eyebrow">Pricing control</span>
-              <h1 className="pricing-hero-title">Pricing Plans</h1>
+              <span className="pricing-eyebrow">Automation pricing</span>
+              <h1 className="pricing-hero-title">باقات الأوتوميشن</h1>
               <p className="pricing-hero-copy">
-                Stronger contrast, deeper atmosphere, and motion-rich pricing cards that feel
-                alive instead of static.
+                باقات مصممة حسب مستوى التعقيد: من workflow بسيطة إلى أنظمة تشغيل وربط متقدمة باستخدام n8n و APIs و AI steps.
               </p>
             </div>
           </MotionReveal>
@@ -194,7 +193,7 @@ export default function PricingPremium() {
                     <div className="absolute left-1/2 top-0 z-20 -translate-x-1/2 -translate-y-1/2">
                       <span className="pricing-popular-badge">
                         <span className="pricing-popular-badge-dot" />
-                        Most Popular
+                        الأكثر طلبًا
                       </span>
                     </div>
                   ) : null}
@@ -205,14 +204,14 @@ export default function PricingPremium() {
 
                     <div className="mb-5">
                       <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        Estimated Time
+                        المدة التقديرية
                       </p>
                       <p className="text-xl font-bold text-white">{plan.hours}</p>
                     </div>
 
                     <div className="mb-6">
                       <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        Features
+                        ماذا يشمل
                       </p>
                       <ul className="space-y-2">
                         {plan.features.map((feature, index) => (
@@ -226,14 +225,14 @@ export default function PricingPremium() {
 
                     <div className="pricing-price-box mb-4 rounded-xl border border-primary/15 bg-primary/10 p-4">
                       <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        Base Price
+                        السعر الأساسي
                       </p>
                       <p className="text-2xl font-bold text-primary">{plan.basePrice}</p>
                     </div>
 
                     <div className="mb-4">
                       <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        Premium Options
+                        إضافات اختيارية
                       </p>
                       <ul className="space-y-1.5">
                         {plan.premiumOptions.map((option, index) => (
@@ -247,7 +246,7 @@ export default function PricingPremium() {
 
                     <div className="pricing-final-box mb-6 rounded-xl border border-white/10 bg-white/5 p-4">
                       <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        Final Price Range
+                        النطاق النهائي
                       </p>
                       <p className="text-xl font-bold text-primary">{plan.finalPrice}</p>
                     </div>
@@ -260,7 +259,7 @@ export default function PricingPremium() {
                           : "border-2 border-border text-white hover:border-primary hover:text-primary"
                       }`}
                     >
-                      Contact Me
+                      ابدأ الاستفسار
                       <ArrowRight className="h-4 w-4" />
                     </a>
                   </div>
@@ -276,11 +275,10 @@ export default function PricingPremium() {
           <MotionReveal variant="beam-sweep" intensity="high">
             <div className="mb-12 text-center">
               <h2 className="mb-3 text-3xl font-bold text-foreground md:text-4xl">
-                Start your automation project
+                ابدأ مشروع الأوتوميشن
               </h2>
               <p className="text-muted-foreground">
-                Choose the right package, send your details, and I will help you shape the best
-                automation setup for your business.
+                اختر الباقة المناسبة أو اكتب احتياجك مباشرة، وسأساعدك في تحديد أفضل workflow أو system setup لشغلك.
               </p>
             </div>
           </MotionReveal>
@@ -288,26 +286,26 @@ export default function PricingPremium() {
           {submitted ? (
             <div className="py-12 text-center">
               <CheckCircle className="mx-auto mb-4 h-16 w-16 animate-bounce text-primary" />
-              <h3 className="mb-2 text-2xl font-bold">Message sent successfully</h3>
-              <p className="text-muted-foreground">Your message was received and I will get back to you soon.</p>
+              <h3 className="mb-2 text-2xl font-bold">تم إرسال الرسالة بنجاح</h3>
+              <p className="text-muted-foreground">وصل طلبك وسأعود لك قريبًا بالخطوة التالية المناسبة.</p>
             </div>
           ) : (
             <MotionReveal variant="glow-pop" intensity="high">
               <form onSubmit={handleSubmit} className="surface-card surface-card-glow light-sweep space-y-5 rounded-[1.6rem] p-6">
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-foreground">Full name</label>
+                  <label className="mb-2 block text-sm font-semibold text-foreground">الاسم</label>
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    placeholder="Muhammad Ahmed"
+                    placeholder="اكتب اسمك"
                     className="w-full rounded-xl border border-border bg-white/5 px-4 py-3 text-white transition-all placeholder:text-[#91a9ca] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-foreground">Email</label>
+                  <label className="mb-2 block text-sm font-semibold text-foreground">البريد الإلكتروني</label>
                   <input
                     type="email"
                     name="email"
@@ -319,25 +317,25 @@ export default function PricingPremium() {
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-foreground">Company</label>
+                  <label className="mb-2 block text-sm font-semibold text-foreground">الشركة أو النشاط</label>
                   <input
                     type="text"
                     name="company"
                     value={formData.company}
                     onChange={handleChange}
-                    placeholder="Optional"
+                    placeholder="اختياري"
                     className="w-full rounded-xl border border-border bg-white/5 px-4 py-3 text-white transition-all placeholder:text-[#91a9ca] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-foreground">Project details</label>
+                  <label className="mb-2 block text-sm font-semibold text-foreground">تفاصيل المشروع</label>
                   <textarea
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
                     required
                     rows={4}
-                    placeholder="Tell me about the workflow, integrations, and what success should look like."
+                    placeholder="اشرح العملية الحالية، الأدوات المستخدمة، وما الذي تريد أن ينجزه الأوتوميشن."
                     className="w-full resize-none rounded-xl border border-border bg-white/5 px-4 py-3 text-white transition-all placeholder:text-[#91a9ca] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
@@ -351,7 +349,7 @@ export default function PricingPremium() {
                     className="sci-fi-button flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-3 font-semibold text-white transition-all disabled:opacity-50 hover:bg-primary/90 hover:shadow-[0_22px_60px_rgba(109,255,211,0.28)]"
                   >
                     {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                    {isSubmitting ? "Sending..." : "Send inquiry"}
+                    {isSubmitting ? "جارٍ الإرسال..." : "أرسل الاستفسار"}
                   </button>
                   <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
                     <button
@@ -368,7 +366,7 @@ export default function PricingPremium() {
                       className="sci-fi-button flex w-full items-center justify-center gap-2 rounded-xl border-2 border-border px-5 py-3 font-semibold text-white transition-all hover:border-primary hover:text-primary sm:w-auto"
                     >
                       <Mail className="h-4 w-4" />
-                      Email
+                      البريد
                     </button>
                   </a>
                 </div>
@@ -400,7 +398,7 @@ export default function PricingPremium() {
                   <Mail className="h-6 w-6 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Email</p>
+                  <p className="text-sm text-muted-foreground">البريد</p>
                   <p className="text-sm font-semibold text-foreground">{EMAIL}</p>
                 </div>
               </a>
@@ -413,7 +411,7 @@ export default function PricingPremium() {
         <div className="container mx-auto max-w-2xl">
           <MotionReveal variant="dock-slide" intensity="high">
             <h2 className="mb-12 text-center text-3xl font-bold text-foreground md:text-4xl">
-              Frequently Asked Questions
+              الأسئلة الشائعة
             </h2>
           </MotionReveal>
           <div className="space-y-4">
@@ -428,8 +426,8 @@ export default function PricingPremium() {
 
       <SiteFooter
         homeHref="/"
-        homeLabel="Return to home"
-        note="Pricing now carries the same animated command-deck language instead of ending with a header-like panel."
+        homeLabel="العودة للرئيسية"
+        note="باقات مخصصة لمشاريع الأوتوميشن حسب حجم الـ workflow، عدد الـ integrations، ومستوى التعقيد المطلوب."
       />
     </div>
   );

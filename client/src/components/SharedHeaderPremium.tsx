@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 
 const navigation = [
-  { label: "Home", href: "/" },
-  { label: "Portfolio", href: "/portfolio" },
-  { label: "Pricing", href: "/pricing" },
+  { label: "الرئيسية", href: "/" },
+  { label: "الأعمال", href: "/portfolio" },
+  { label: "الباقات", href: "/pricing" },
 ];
 
 export default function SharedHeaderPremium() {
@@ -64,7 +64,7 @@ export default function SharedHeaderPremium() {
             </div>
             <div>
               <p className="font-[var(--font-family-heading)] text-base font-bold text-white md:text-lg">Muhammad Bio</p>
-              <p className="text-[11px] text-white/55">Cinematic automation systems</p>
+              <p className="text-[11px] text-white/55">أنظمة أوتوميشن premium</p>
             </div>
           </button>
 
@@ -95,14 +95,14 @@ export default function SharedHeaderPremium() {
               className="sci-fi-button inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/15 px-4 py-2 text-sm font-semibold text-[#c8eeff] transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/25"
             >
               <Sparkles className="h-4 w-4" />
-              Let's Talk
+              ابدأ مشروعك
             </button>
           </nav>
 
           <button
             className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-white/6 text-white md:hidden"
             onClick={() => setMenuOpen((value) => !value)}
-            aria-label="Toggle menu"
+            aria-label="فتح القائمة"
           >
             <Menu className="h-5 w-5" />
           </button>
@@ -131,7 +131,7 @@ export default function SharedHeaderPremium() {
                   onClick={goToContact}
                   className="sci-fi-button rounded-2xl bg-primary/90 px-4 py-3 text-sm font-semibold text-primary-foreground"
                 >
-                  Contact
+                  تواصل الآن
                 </button>
               </div>
             </motion.div>
