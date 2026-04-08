@@ -120,13 +120,48 @@
     @apply bg-background text-foreground;
     font-family: var(--font-family-body);
     background-image:
-      radial-gradient(circle at 12% 12%, rgba(56, 122, 255, 0.3), transparent 0 28%),
-      radial-gradient(circle at 88% 16%, rgba(109, 255, 211, 0.18), transparent 0 24%),
-      radial-gradient(circle at 52% 100%, rgba(73, 166, 255, 0.22), transparent 0 30%),
-      linear-gradient(135deg, rgba(8, 19, 39, 0.72), transparent 35%, rgba(14, 46, 78, 0.42) 68%, transparent 100%),
-      linear-gradient(180deg, #020711 0%, #071222 42%, #0b1630 100%);
+      radial-gradient(circle at 16% 18%, rgba(41, 89, 194, 0.3), transparent 0 22%),
+      radial-gradient(circle at 84% 14%, rgba(80, 175, 201, 0.16), transparent 0 18%),
+      radial-gradient(circle at 50% 82%, rgba(52, 99, 193, 0.16), transparent 0 24%),
+      linear-gradient(180deg, #02050d 0%, #050a16 38%, #07101f 100%);
     background-attachment: scroll;
     position: relative;
+  }
+
+  body::before,
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -2;
+  }
+
+  body::before {
+    background-image:
+      radial-gradient(circle at 4% 10%, rgba(255, 255, 255, 0.92) 0 0.9px, transparent 1.3px),
+      radial-gradient(circle at 8% 52%, rgba(255, 255, 255, 0.8) 0 1px, transparent 1.4px),
+      radial-gradient(circle at 12% 84%, rgba(192, 228, 255, 0.82) 0 1px, transparent 1.4px),
+      radial-gradient(circle at 88% 16%, rgba(255, 255, 255, 0.9) 0 0.95px, transparent 1.35px),
+      radial-gradient(circle at 92% 42%, rgba(196, 230, 255, 0.78) 0 1px, transparent 1.4px),
+      radial-gradient(circle at 96% 74%, rgba(255, 255, 255, 0.84) 0 1px, transparent 1.4px),
+      radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.45) 0 0.75px, transparent 1.1px),
+      radial-gradient(circle at 22% 68%, rgba(255, 255, 255, 0.4) 0 0.75px, transparent 1.1px),
+      radial-gradient(circle at 78% 32%, rgba(255, 255, 255, 0.42) 0 0.75px, transparent 1.1px),
+      radial-gradient(circle at 82% 84%, rgba(255, 255, 255, 0.4) 0 0.75px, transparent 1.1px);
+    opacity: 0.9;
+    animation: starDriftMid 80s linear infinite;
+  }
+
+  body::after {
+    background:
+      linear-gradient(120deg, transparent 8%, rgba(199, 232, 255, 0.38) 9%, transparent 10%) 6% 18% / 180px 180px no-repeat,
+      linear-gradient(120deg, transparent 8%, rgba(199, 232, 255, 0.32) 9%, transparent 10%) 88% 24% / 160px 160px no-repeat,
+      linear-gradient(120deg, transparent 8%, rgba(199, 232, 255, 0.28) 9%, transparent 10%) 82% 78% / 200px 200px no-repeat,
+      radial-gradient(circle at 15% 50%, rgba(74, 130, 255, 0.08), transparent 18%),
+      radial-gradient(circle at 86% 34%, rgba(108, 230, 214, 0.07), transparent 14%);
+    opacity: 0.72;
+    animation: meteorLayer 20s linear infinite;
   }
 
   h1,
@@ -185,6 +220,7 @@
     min-height: 100vh;
     overflow: clip;
     isolation: isolate;
+    perspective: 1800px;
     background:
       radial-gradient(circle at 50% -10%, rgba(73, 166, 255, 0.12), transparent 38%),
       linear-gradient(180deg, rgba(2, 8, 18, 0.34), rgba(2, 8, 18, 0.04) 18%, rgba(2, 8, 18, 0.32) 100%);
@@ -205,8 +241,8 @@
       linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 52px 52px;
     mask-image: radial-gradient(circle at center, black 38%, transparent 90%);
-    opacity: 0.5;
-    animation: pageGridDrift 28s linear infinite;
+    opacity: 0.14;
+    animation: pageGridDrift 38s linear infinite;
   }
 
   .page-shell::after {
@@ -220,7 +256,7 @@
         transparent 1px,
         transparent 4px
       );
-    opacity: 0.16;
+    opacity: 0.08;
     animation: ambientPulse 16s ease-in-out infinite;
   }
 
@@ -644,7 +680,7 @@
       border-color var(--motion-soft) ease,
       box-shadow var(--motion-soft) ease,
       background-color var(--motion-soft) ease;
-    animation: cardFloat 9s ease-in-out infinite;
+    animation: cardFloat 7.5s ease-in-out infinite;
   }
 
   .surface-card::after {
@@ -676,9 +712,11 @@
   }
 
   .surface-card:hover {
-    transform: translate3d(0, -10px, 0) rotateX(4deg) rotateY(-4deg);
+    transform: translate3d(0, -14px, 28px) rotateX(8deg) rotateY(-8deg);
     border-color: rgba(73, 166, 255, 0.4);
-    box-shadow: var(--shadow-strong);
+    box-shadow:
+      0 40px 100px rgba(1, 8, 20, 0.45),
+      0 0 40px rgba(73, 166, 255, 0.12);
   }
 
   .surface-card:hover::before,
@@ -714,7 +752,8 @@
       linear-gradient(135deg, rgba(73, 166, 255, 0.1), transparent 45%, rgba(109, 255, 211, 0.1));
     box-shadow: var(--shadow-strong);
     backdrop-filter: blur(24px);
-    animation: heroFloat 12s ease-in-out infinite;
+    transform: translateZ(36px) rotateX(2deg);
+    animation: heroFloat 10s ease-in-out infinite;
   }
 
   .hero-card::after {
@@ -967,7 +1006,8 @@
       0 30px 80px rgba(2, 8, 20, 0.26),
       inset 0 1px 0 rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(18px);
-    animation: frameFloat 14s ease-in-out infinite;
+    transform: translateZ(24px) rotateX(1.4deg);
+    animation: frameFloat 11s ease-in-out infinite;
   }
 
   .section-frame .section-title,
@@ -2317,6 +2357,15 @@
   }
 }
 
+@keyframes meteorLayer {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-36px, 26px, 0);
+  }
+}
+
 @keyframes meteorFly {
   0% {
     opacity: 0;
@@ -2350,30 +2399,30 @@
 @keyframes cardFloat {
   0%,
   100% {
-    transform: translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg);
+    transform: translate3d(0, 0, 18px) rotateX(2deg) rotateY(-2deg);
   }
   50% {
-    transform: translate3d(0, -4px, 0) rotateX(1.4deg) rotateY(-1.6deg);
+    transform: translate3d(0, -7px, 28px) rotateX(4deg) rotateY(-4deg);
   }
 }
 
 @keyframes heroFloat {
   0%,
   100% {
-    transform: translate3d(0, 0, 0) rotateX(0deg);
+    transform: translate3d(0, 0, 36px) rotateX(2deg) rotateY(-1.4deg);
   }
   50% {
-    transform: translate3d(0, -6px, 0) rotateX(1deg);
+    transform: translate3d(0, -9px, 52px) rotateX(4deg) rotateY(-2deg);
   }
 }
 
 @keyframes frameFloat {
   0%,
   100% {
-    transform: translate3d(0, 0, 0) rotateX(0deg);
+    transform: translate3d(0, 0, 24px) rotateX(1.4deg) rotateY(-1deg);
   }
   50% {
-    transform: translate3d(0, -5px, 0) rotateX(0.8deg);
+    transform: translate3d(0, -8px, 34px) rotateX(3deg) rotateY(-1.8deg);
   }
 }
 
