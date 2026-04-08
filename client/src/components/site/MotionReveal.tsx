@@ -123,20 +123,29 @@ export function MotionReveal({
   viewportMargin = "-10% 0px",
 }: MotionRevealProps) {
   const reduceMotion = useReducedMotion();
-  const ref = useRef<HTMLDivElement | null>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const parallaxY = useTransform(scrollYProgress, [0, 1], [parallaxRange, -parallaxRange]);
 
   if (reduceMotion) {
     return <div className={className}>{children}</div>;
   }
 
+  if (variant === "parallax") {
+    return (
+      <ParallaxReveal
+        className={className}
+        delay={delay}
+        distance={distance}
+        intensity={intensity}
+        once={once}
+        parallaxRange={parallaxRange}
+        viewportMargin={viewportMargin}
+      >
+        {children}
+      </ParallaxReveal>
+    );
+  }
+
   return (
     <motion.div
-      ref={ref}
       className={className}
       custom={distance}
       variants={getRevealVariants(variant, intensity)}
@@ -148,7 +157,53 @@ export function MotionReveal({
         ease: [0.16, 1, 0.3, 1],
         delay,
       }}
-      style={variant === "parallax" ? { y: parallaxY } : undefined}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function ParallaxReveal({
+  children,
+  className,
+  delay,
+  distance,
+  intensity,
+  once,
+  parallaxRange,
+  viewportMargin,
+}: {
+  children: ReactNode;
+  className?: string;
+  delay: number;
+  distance: number;
+  intensity: NonNullable<MotionRevealProps["intensity"]>;
+  once: boolean;
+  parallaxRange: number;
+  viewportMargin: string;
+}) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const parallaxY = useTransform(scrollYProgress, [0, 1], [parallaxRange, -parallaxRange]);
+
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      custom={distance}
+      variants={getRevealVariants("parallax", intensity)}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once, margin: viewportMargin }}
+      transition={{
+        duration: intensityMap[intensity].duration,
+        ease: [0.16, 1, 0.3, 1],
+        delay,
+      }}
+      style={{ y: parallaxY }}
     >
       {children}
     </motion.div>
