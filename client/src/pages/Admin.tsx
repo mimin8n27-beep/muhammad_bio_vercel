@@ -52,21 +52,6 @@ interface Message {
   created_at: string;
 }
 
-interface N8nWorkflowNode {
-  id?: string;
-  name?: string;
-  type?: string;
-  typeVersion?: number;
-  disabled?: boolean;
-  position?: [number, number];
-}
-
-interface N8nWorkflowJson {
-  name?: string;
-  nodes?: N8nWorkflowNode[];
-  connections?: Record<string, unknown>;
-}
-
 const emptyProject: Project = {
   title: "", description: "", client_name: "",
   tools: "", status: "active", image_url: "", link_url: "", svg_url: "",
@@ -83,55 +68,23 @@ function inferViewerMode(project: Partial<Project>): ProjectViewerMode {
   return DEFAULT_PROJECT_VIEWER_MODE;
 }
 
-function normalizeNodeLabel(value: string) {
-  return value
-    .replace(/^n8n-nodes-base\./, "")
-    .replace(/^@[^.]+\./, "")
-    .replace(/[-_]/g, " ")
-    .replace(/([a-z])([A-Z])/g, "$1 $2")
-    .trim();
-}
+function getWorkflowAssetType(value: string) {
+  const normalized = value.trim().toLowerCase();
+  if (!normalized) return null;
+  if (normalized.startsWith("data:text/html")) return "html";
+  if (normalized.startsWith("data:image/svg+xml")) return "svg";
 
-function collectWorkflowTools(nodes: N8nWorkflowNode[]) {
-  const labels = nodes
-    .map((node) => node.type || node.name || "")
-    .map(normalizeNodeLabel)
-    .filter(Boolean);
+  try {
+    const url = new URL(value);
+    const pathname = url.pathname.toLowerCase();
+    if (pathname.endsWith(".html") || pathname.endsWith(".htm")) return "html";
+    if (pathname.endsWith(".svg")) return "svg";
+  } catch {
+    if (normalized.endsWith(".html") || normalized.endsWith(".htm")) return "html";
+    if (normalized.endsWith(".svg")) return "svg";
+  }
 
-  return Array.from(new Set(labels)).slice(0, 12);
-}
-
-function buildWorkflowDescription(workflow: N8nWorkflowJson) {
-  const nodes = workflow.nodes || [];
-  const totalNodes = nodes.length;
-  const disabledNodes = nodes.filter((node) => node.disabled).length;
-  const triggerNodes = nodes.filter((node) => {
-    const target = `${node.type || ""} ${node.name || ""}`.toLowerCase();
-    return target.includes("trigger") || target.includes("webhook");
-  }).length;
-  const topNodes = nodes
-    .slice(0, 6)
-    .map((node) => `- ${node.name || normalizeNodeLabel(node.type || "Node")}`);
-
-  return [
-    "## Workflow overview",
-    `- Imported from n8n JSON`,
-    `- Total nodes: ${totalNodes}`,
-    `- Trigger nodes: ${triggerNodes}`,
-    `- Disabled nodes: ${disabledNodes}`,
-    "",
-    "## Main nodes",
-    ...(topNodes.length ? topNodes : ["- No nodes found"]),
-  ].join("\n");
-}
-
-function mergeTools(existingTools: string, nextTools: string[]) {
-  const current = existingTools
-    .split(/[\s,]+/)
-    .map((tool) => tool.trim())
-    .filter(Boolean);
-
-  return Array.from(new Set([...current, ...nextTools])).join(" ");
+  return null;
 }
 
 export default function Admin() {
@@ -152,7 +105,6 @@ export default function Admin() {
   const [saving, setSaving] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
   const [svgUploading, setSvgUploading] = useState(false);
-  const [jsonImporting, setJsonImporting] = useState(false);
 
   // Client form state
   const emptyClient = { name: "", email: "", company: "", phone: "", status: "lead", notes: "", plan: "" };
@@ -174,36 +126,6 @@ export default function Admin() {
     return urlData.publicUrl;
   };
   const [darkMode, setDarkMode] = useState(true);
-
-  const importWorkflowJson = async (file: File) => {
-    setJsonImporting(true);
-    setProjectFormError("");
-
-    try {
-      const rawText = await file.text();
-      const parsed = JSON.parse(rawText) as N8nWorkflowJson;
-
-      if (!parsed || !Array.isArray(parsed.nodes)) {
-        throw new Error("ملف JSON ده مش باين إنه export صحيح من n8n.");
-      }
-
-      const importedTools = collectWorkflowTools(parsed.nodes);
-      const importedDescription = buildWorkflowDescription(parsed);
-
-      setEditProject((current) => ({
-        ...current,
-        title: parsed.name?.trim() || current.title || file.name.replace(/\.json$/i, ""),
-        tools: mergeTools(current.tools, importedTools),
-        description: current.description?.trim()
-          ? `${current.description.trim()}\n\n${importedDescription}`
-          : importedDescription,
-      }));
-    } catch (error: any) {
-      setProjectFormError(error?.message || "فشلنا في قراءة ملف الـ JSON.");
-    } finally {
-      setJsonImporting(false);
-    }
-  };
 
   const handleLogin = () => {
     if (password === ADMIN_PASSWORD) {
@@ -366,7 +288,16 @@ export default function Admin() {
   // ===== Login Screen =====
   if (!authed) {
     return (
-      <div className="page-shell dark min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4 text-white" dir="rtl">
+      <div className="page-shell admin-space-shell dark min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4 text-white" dir="rtl">
+        <div className="admin-space-backdrop" aria-hidden="true">
+          <div className="admin-nebula admin-nebula-a" />
+          <div className="admin-nebula admin-nebula-b" />
+          <div className="admin-starfield" />
+          <div className="admin-flight-path admin-flight-path-a" />
+          <div className="admin-flight-path admin-flight-path-b" />
+          <div className="admin-led-strip admin-led-strip-top" />
+          <div className="admin-led-strip admin-led-strip-bottom" />
+        </div>
         <div className="w-full max-w-sm">
           <div className="text-center mb-8">
             <div className="admin-orbit-badge mx-auto mb-4 h-14 w-14 text-xl">
@@ -447,9 +378,18 @@ export default function Admin() {
   ];
 
   return (
-    <div className={`page-shell ${darkMode ? "dark bg-[#020814] text-white" : "bg-gray-50 text-gray-900"} min-h-screen`} dir="rtl">
+    <div className={`page-shell admin-space-shell ${darkMode ? "dark bg-[#020814] text-white" : "bg-gray-50 text-gray-900"} min-h-screen`} dir="rtl">
+      <div className="admin-space-backdrop" aria-hidden="true">
+        <div className="admin-nebula admin-nebula-a" />
+        <div className="admin-nebula admin-nebula-b" />
+        <div className="admin-starfield" />
+        <div className="admin-flight-path admin-flight-path-a" />
+        <div className="admin-flight-path admin-flight-path-b" />
+        <div className="admin-led-strip admin-led-strip-top" />
+        <div className="admin-led-strip admin-led-strip-bottom" />
+      </div>
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-white/8 bg-[#020814]/88 backdrop-blur-xl">
+      <header className="admin-command-header sticky top-0 z-50 border-b border-white/8 bg-[#020814]/88 backdrop-blur-xl">
         <div className="container flex flex-col gap-5 px-6 py-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center gap-3">
             <div className="admin-orbit-badge">
@@ -500,9 +440,9 @@ export default function Admin() {
         </div>
       </header>
 
-      <div className="container px-6 py-8">
-        <section className="admin-hero-grid mb-8">
-          <div className="hero-card overflow-hidden px-6 py-6 md:px-8 md:py-8">
+      <div className="admin-command-deck container px-6 py-8">
+        <section className="admin-hero-grid admin-hero-grid-cinematic mb-8">
+          <div className="hero-card admin-cockpit-hero overflow-hidden px-6 py-6 md:px-8 md:py-8">
             <div className="hero-accent hero-accent-medium">
               <div className="hero-accent-grid" />
               <div className="hero-accent-beam" />
@@ -510,6 +450,9 @@ export default function Admin() {
               <div className="hero-accent-ring hero-accent-ring-primary" />
               <div className="hero-accent-ring hero-accent-ring-secondary" />
               <div className="hero-accent-scanline" />
+              <div className="admin-radar-sweep" />
+              <div className="admin-led-cluster admin-led-cluster-left" />
+              <div className="admin-led-cluster admin-led-cluster-right" />
             </div>
             <div className="relative z-10">
               <div className="mb-5 flex items-center gap-3 text-[#9cd8ff]">
@@ -526,7 +469,7 @@ export default function Admin() {
                   </p>
                 </div>
 
-                <div className="admin-signal-panel">
+                <div className="admin-signal-panel admin-signal-panel-live">
                   <div className="admin-signal-line">
                     <Activity className="h-4 w-4 text-[#7bf1d3]" />
                     <span>Control stream</span>
@@ -537,6 +480,14 @@ export default function Admin() {
                     <span>Display mode</span>
                     <span className="admin-signal-value">{darkMode ? "Cinematic dark" : "Bright fallback"}</span>
                   </div>
+                  <div className="admin-led-bank" aria-hidden="true">
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                  </div>
                 </div>
               </div>
             </div>
@@ -544,7 +495,7 @@ export default function Admin() {
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {dashboardStats.map((item) => (
-              <div key={item.label} className="admin-stat-card">
+              <div key={item.label} className="admin-stat-card light-sweep">
                 <div className="mb-5 flex items-start justify-between gap-4">
                   <div className="admin-stat-icon">
                     <item.icon className="h-5 w-5" />
@@ -562,7 +513,7 @@ export default function Admin() {
         </section>
 
         {/* Tabs */}
-        <div className="mb-8 flex flex-wrap gap-3">
+        <div className="admin-tab-dock mb-8 flex flex-wrap gap-3">
           {tabs.map(({ key, label, icon: Icon, count }) => (
             <button
               key={key}
@@ -598,7 +549,7 @@ export default function Admin() {
 
             {/* Form */}
             {showForm && (
-              <div className="admin-panel-shell rounded-[1.8rem] p-6 mb-6">
+              <div className="admin-panel-shell admin-console-form light-sweep rounded-[1.8rem] p-6 mb-6">
                 <div className="flex items-center justify-between mb-5">
                   <h3 className="font-bold text-lg">{editingId ? "تعديل مشروع" : "إضافة مشروع جديد"}</h3>
                   <button onClick={() => { setShowForm(false); setProjectFormError(""); }} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
@@ -639,44 +590,6 @@ export default function Admin() {
                       className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/25 outline-none focus:border-[#0066ff] transition-colors text-sm"
                     />
                   </div>
-
-                  <div className="mt-4 rounded-2xl border border-primary/16 bg-[linear-gradient(180deg,rgba(15,30,54,0.74),rgba(8,17,33,0.9))] p-4">
-                    <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                      <div>
-                        <p className="text-sm font-semibold text-white">Import n8n JSON</p>
-                        <p className="mt-1 text-xs leading-6 text-white/45">
-                          ارفع export JSON من n8n وسنملأ اسم المشروع والأدوات ووصف أولي تلقائيًا.
-                        </p>
-                      </div>
-
-                      <label className="admin-command-button cursor-pointer">
-                        {jsonImporting ? (
-                          <>
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                            جاري الاستيراد...
-                          </>
-                        ) : (
-                          <>
-                            <Upload className="h-4 w-4" />
-                            Import n8n JSON
-                          </>
-                        )}
-                        <input
-                          type="file"
-                          accept=".json,application/json"
-                          className="hidden"
-                          disabled={jsonImporting}
-                          onChange={async (event) => {
-                            const file = event.target.files?.[0];
-                            if (!file) return;
-                            await importWorkflowJson(file);
-                            event.currentTarget.value = "";
-                          }}
-                        />
-                      </label>
-                    </div>
-                  </div>
-
                   <div className="grid md:grid-cols-2 gap-4 mt-4">
                     <div>
                       <label className="block text-sm text-white/50 mb-1.5">نوع العرض</label>
@@ -688,7 +601,6 @@ export default function Admin() {
                           setEditProject((p) => ({
                             ...p,
                             viewer_mode: nextMode,
-                            link_url: nextMode === "live_n8n" ? p.link_url : p.link_url,
                           }));
                         }}
                         className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-[#0066ff] transition-colors text-sm"
@@ -794,7 +706,7 @@ export default function Admin() {
                           {editProject.svg_url
                             ? editProject.svg_url.startsWith("https://")
                               ? "✅ " + editProject.svg_url.split("/").pop()
-                              : editProject.svg_url.startsWith("data:text/html")
+                              : getWorkflowAssetType(editProject.svg_url) === "html"
                                 ? "✅ ملف HTML محمّل (قديم)"
                                 : "✅ ملف SVG محمّل"
                             : "لم يتم رفع ملف بعد"}
@@ -843,7 +755,7 @@ export default function Admin() {
                       {/* Preview — HTML shows badge, SVG shows image */}
                       {editProject.svg_url && (
                         <div className="border border-white/10 rounded-xl overflow-hidden bg-[#0f172a] p-3" style={{ height: 80 }}>
-                          {editProject.svg_url.includes("project-workflows") || editProject.svg_url.endsWith(".html") || editProject.svg_url.startsWith("data:text/html") ? (
+                          {getWorkflowAssetType(editProject.svg_url) === "html" ? (
                             <div className="flex items-center gap-3 h-full">
                               <div className="w-10 h-10 rounded-lg bg-[#0066ff]/20 border border-[#0066ff]/30 flex items-center justify-center text-lg">🌐</div>
                               <div>
@@ -914,7 +826,7 @@ export default function Admin() {
             ) : (
               <div className="grid md:grid-cols-2 gap-4">
                 {projects.map((p: any) => (
-                  <div key={p.id} className="admin-panel-shell overflow-hidden rounded-[1.6rem] transition-all hover:-translate-y-1 hover:border-primary/30">
+                  <div key={p.id} className="admin-panel-shell light-sweep overflow-hidden rounded-[1.6rem] transition-all hover:-translate-y-1 hover:border-primary/30">
                     {p.image_url && (
                       <div className="aspect-video overflow-hidden">
                         <img src={p.image_url} alt={p.title} className="w-full h-full object-cover" />
@@ -974,7 +886,7 @@ export default function Admin() {
 
             {/* Client Form */}
             {showClientForm && (
-              <div className="admin-panel-shell rounded-[1.8rem] p-6 mb-6">
+              <div className="admin-panel-shell admin-console-form light-sweep rounded-[1.8rem] p-6 mb-6">
                 <div className="flex items-center justify-between mb-5">
                   <h3 className="font-bold text-lg">{editingClientId ? "تعديل عميل" : "إضافة عميل جديد"}</h3>
                   <button onClick={() => setShowClientForm(false)} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
@@ -1056,7 +968,7 @@ export default function Admin() {
             ) : (
               <div className="grid md:grid-cols-2 gap-4">
                 {clients.map((c) => (
-                  <div key={c.id} className="admin-panel-shell rounded-[1.6rem] p-5 transition-all hover:-translate-y-1 hover:border-primary/30">
+                  <div key={c.id} className="admin-panel-shell light-sweep rounded-[1.6rem] p-5 transition-all hover:-translate-y-1 hover:border-primary/30">
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <h3 className="font-bold text-lg">{c.name}</h3>
@@ -1117,7 +1029,7 @@ export default function Admin() {
             ) : (
               <div className="flex flex-col gap-4">
                 {messages.map((m) => (
-                  <div key={m.id} className="admin-panel-shell rounded-[1.6rem] p-5 transition-all hover:-translate-y-1 hover:border-primary/30">
+                  <div key={m.id} className="admin-panel-shell light-sweep rounded-[1.6rem] p-5 transition-all hover:-translate-y-1 hover:border-primary/30">
                     <div className="flex items-start justify-between gap-4 mb-3">
                       <div>
                         <h3 className="font-bold">{m.name}</h3>
@@ -1146,3 +1058,6 @@ export default function Admin() {
     </div>
   );
 }
+
+
+
