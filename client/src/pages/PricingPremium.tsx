@@ -160,7 +160,7 @@ export default function PricingPremium() {
 
       <SharedHeaderPremium />
 
-      <section className="pricing-hero-shell border-b border-border py-20 text-center md:py-28">
+      <section className="pricing-hero-shell border-b border-border py-16 text-center md:py-22">
         <div className="container mx-auto max-w-4xl">
           <MotionReveal variant="beam-sweep" intensity="high">
             <div className="pricing-hero-card">
@@ -180,7 +180,7 @@ export default function PricingPremium() {
         </div>
       </section>
 
-      <section className="py-20">
+      <section className="py-16">
         <div className="container">
           <div className="grid items-start gap-6 md:grid-cols-2 xl:grid-cols-4">
             {plans.map((plan, i) => (
