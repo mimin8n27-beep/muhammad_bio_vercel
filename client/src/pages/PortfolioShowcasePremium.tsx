@@ -119,7 +119,7 @@ export default function PortfolioShowcasePremium() {
       <SceneBackdrop intensity="high" />
       <SharedHeaderPremium />
 
-      <section className="relative overflow-hidden bg-[linear-gradient(180deg,rgba(4,12,24,0.9),rgba(7,18,34,0.95))] py-20 md:py-28">
+      <section className="relative overflow-hidden bg-[linear-gradient(180deg,rgba(4,12,24,0.9),rgba(7,18,34,0.95))] py-16 md:py-22">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-0 right-0 h-96 w-96 rounded-full bg-primary blur-3xl" />
           <div className="absolute bottom-0 left-0 h-96 w-96 rounded-full bg-[#6dffd3] blur-3xl" />
@@ -130,10 +130,10 @@ export default function PortfolioShowcasePremium() {
               <ShieldCheck className="h-4 w-4 text-primary" />
               <span className="text-sm font-semibold text-primary">Showcase mode</span>
             </div>
-            <h1 className="mb-4 text-4xl font-bold leading-tight text-foreground md:text-6xl">
+            <h1 className="mb-4 text-3xl font-bold leading-tight text-foreground md:text-5xl">
               معرض الأعمال
             </h1>
-            <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+            <p className="mx-auto max-w-2xl text-base text-muted-foreground">
               واجهة عرض أكثر حيوية ولمعانًا لعرض الـ automations، مع فصل كامل بين المشاهدة
               وأي صلاحيات تعديل.
             </p>
@@ -141,7 +141,7 @@ export default function PortfolioShowcasePremium() {
         </div>
       </section>
 
-      <section className="border-t border-border py-20">
+      <section className="border-t border-border py-16">
         <div className="container">
           {loading ? (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -242,7 +242,7 @@ export default function PortfolioShowcasePremium() {
         </div>
       </section>
 
-      <section className="border-t border-border py-20">
+      <section className="border-t border-border py-16">
         <div className="container text-center">
           <MotionReveal variant="dock-slide" intensity="high">
             <h2 className="mb-4 text-3xl font-bold md:text-4xl">هل أعجبك أسلوب العرض؟</h2>
