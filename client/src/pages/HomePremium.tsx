@@ -177,10 +177,10 @@ export default function HomePremium() {
             <div className="relative z-10 grid gap-8 lg:grid-cols-[1.08fr_0.82fr] lg:items-center">
               <MotionReveal variant="beam-sweep" intensity="medium" distance={28}>
                 <span className="section-eyebrow">Cinematic system interface</span>
-                <h1 className="mb-4 max-w-[13ch] bg-[linear-gradient(135deg,#ffffff_0%,#b7e6ff_46%,#84f7dc_100%)] bg-clip-text text-[clamp(2.25rem,4.1vw,3.95rem)] font-bold leading-[0.98] text-transparent drop-shadow-[0_0_22px_rgba(73,166,255,0.22)]">
+                <h1 className="mb-4 max-w-[13ch] bg-[linear-gradient(135deg,#ffffff_0%,#d0f0ff_46%,#a0ffe8_100%)] bg-clip-text text-[clamp(2.25rem,4.1vw,3.95rem)] font-bold leading-[0.98] text-transparent drop-shadow-[0_0_22px_rgba(73,166,255,0.22)]">
                   Automation systems with a sci-fi pulse and cinematic precision.
                 </h1>
-                <p className="mb-7 max-w-xl text-[0.96rem] leading-7 text-muted-foreground">
+                <p className="mb-7 max-w-xl text-[0.96rem] leading-7 text-[#ccdcf0]">
                   We turn operations into something that feels intelligent on the surface and reliable underneath:
                   sharper lead flow, calmer execution, clearer reporting, and a visual identity that feels like it came
                   from a near-future control room.
@@ -189,7 +189,7 @@ export default function HomePremium() {
                 <div className="mb-8 flex flex-col gap-3 sm:flex-row">
                   <a
                     href="#contact-section"
-                    className="sci-fi-button inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_18px_48px_rgba(73,166,255,0.32)] transition-all hover:-translate-y-0.5 hover:bg-primary/90"
+                    className="sci-fi-button inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_18px_48px_rgba(73,166,255,0.40)] transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-[0_22px_60px_rgba(109,255,211,0.28)]"
                   >
                     Start a project
                     <ArrowRight className="h-4 w-4" />
@@ -388,7 +388,7 @@ export default function HomePremium() {
                     <h2 className="mb-3 text-3xl font-bold text-white md:text-4xl">
                       Discovery, architecture, implementation, then a cinematic handoff.
                     </h2>
-                    <p className="max-w-2xl text-white/70">
+                    <p className="max-w-2xl text-[#c8ddf0]">
                       The atmosphere feels futuristic, but the delivery remains grounded: diagnose, design, build,
                       test, then ship a system your team can trust in the real world.
                     </p>

@@ -149,7 +149,7 @@ export default function PricingPremium() {
 
   return (
     <div className="page-shell pricing-page-shell dark min-h-screen text-foreground">
-      <SceneBackdrop intensity="high" />
+      <SceneBackdrop intensity="medium" />
       <div className="pricing-top-aurora" aria-hidden="true">
         <div className="pricing-top-aurora-orb pricing-top-aurora-orb-a" />
         <div className="pricing-top-aurora-orb pricing-top-aurora-orb-b" />
@@ -203,7 +203,7 @@ export default function PricingPremium() {
 
                   <div className="flex flex-1 flex-col p-6">
                     <h3 className="mb-1 text-2xl font-bold text-white">{plan.name}</h3>
-                    <p className="mb-5 text-sm text-muted-foreground">{plan.desc}</p>
+                    <p className="mb-5 text-sm text-[#c8ddf0]">{plan.desc}</p>
 
                     <div className="mb-5">
                       <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -218,7 +218,7 @@ export default function PricingPremium() {
                       </p>
                       <ul className="space-y-2">
                         {plan.features.map((feature, index) => (
-                          <li key={index} className="flex items-start gap-2 text-sm text-white/92">
+                          <li key={index} className="flex items-start gap-2 text-sm text-[#c8ddf0]">
                             <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
                             {feature}
                           </li>
@@ -239,7 +239,7 @@ export default function PricingPremium() {
                       </p>
                       <ul className="space-y-1.5">
                         {plan.premiumOptions.map((option, index) => (
-                          <li key={index} className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+                          <li key={index} className="flex items-center justify-between gap-3 text-xs text-[#c8ddf0]">
                             <span>{option.label}</span>
                             <span className="font-semibold text-white">{option.price}</span>
                           </li>
@@ -258,7 +258,7 @@ export default function PricingPremium() {
                       href="#contact-section"
                       className={`sci-fi-button mt-auto flex w-full items-center justify-center gap-2 rounded-xl py-3 text-center text-sm font-semibold transition-all duration-200 ${
                         plan.popular
-                          ? "bg-primary text-white shadow-md hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/30"
+                          ? "bg-primary text-white shadow-[0_18px_48px_rgba(73,166,255,0.40)] hover:bg-primary/90 hover:shadow-[0_22px_60px_rgba(109,255,211,0.28)]"
                           : "border-2 border-border text-white hover:border-primary hover:text-primary"
                       }`}
                     >
@@ -350,7 +350,7 @@ export default function PricingPremium() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="sci-fi-button flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-3 font-semibold text-white transition-all disabled:opacity-50 hover:bg-primary/90"
+                    className="sci-fi-button flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-3 font-semibold text-white transition-all disabled:opacity-50 hover:bg-primary/90 hover:shadow-[0_22px_60px_rgba(109,255,211,0.28)]"
                   >
                     {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                     {isSubmitting ? "Sending..." : "Send inquiry"}

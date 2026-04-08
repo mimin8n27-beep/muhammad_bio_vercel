@@ -116,7 +116,7 @@ export default function PortfolioShowcasePremium() {
 
   return (
     <div className="page-shell dark min-h-screen text-foreground" dir="rtl">
-      <SceneBackdrop intensity="high" />
+      <SceneBackdrop intensity="medium" />
       <SharedHeaderPremium />
 
       <section className="relative overflow-hidden bg-[linear-gradient(180deg,rgba(4,12,24,0.9),rgba(7,18,34,0.95))] py-16 md:py-22">
@@ -208,7 +208,7 @@ export default function PortfolioShowcasePremium() {
                         </div>
 
                         {project.description ? (
-                          <p className="mb-4 line-clamp-3 text-sm text-muted-foreground">
+                          <p className="mb-4 line-clamp-3 text-sm leading-7 text-[#c8ddf0]">
                             {stripMarkdown(project.description)}
                           </p>
                         ) : null}
@@ -228,7 +228,7 @@ export default function PortfolioShowcasePremium() {
                           </div>
                         ) : null}
 
-                        <div className="inline-flex items-center gap-2 text-sm text-white/75">
+                        <div className="inline-flex items-center gap-2 text-sm text-[#c0d4ec]">
                           <Maximize2 className="h-4 w-4 text-primary" />
                           {hasDedicatedViewer(project) ? "Open preview" : "Open project details"}
                         </div>
@@ -246,7 +246,7 @@ export default function PortfolioShowcasePremium() {
         <div className="container text-center">
           <MotionReveal variant="dock-slide" intensity="high">
             <h2 className="mb-4 text-3xl font-bold md:text-4xl">هل أعجبك أسلوب العرض؟</h2>
-            <p className="mb-8 text-lg text-white/80">
+            <p className="mb-8 text-lg text-[#c8ddf0]">
               دعنا نبني لك automation يبدو فاخرًا ويُعرض بأمان.
             </p>
             <a
