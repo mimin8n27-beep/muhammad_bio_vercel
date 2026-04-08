@@ -52,6 +52,21 @@ interface Message {
   created_at: string;
 }
 
+interface N8nWorkflowNode {
+  id?: string;
+  name?: string;
+  type?: string;
+  typeVersion?: number;
+  disabled?: boolean;
+  position?: [number, number];
+}
+
+interface N8nWorkflowJson {
+  name?: string;
+  nodes?: N8nWorkflowNode[];
+  connections?: Record<string, unknown>;
+}
+
 const emptyProject: Project = {
   title: "", description: "", client_name: "",
   tools: "", status: "active", image_url: "", link_url: "", svg_url: "",
@@ -66,6 +81,57 @@ function inferViewerMode(project: Partial<Project>): ProjectViewerMode {
   if (project.svg_url) return "svg_only";
   if (project.image_url) return "image_only";
   return DEFAULT_PROJECT_VIEWER_MODE;
+}
+
+function normalizeNodeLabel(value: string) {
+  return value
+    .replace(/^n8n-nodes-base\./, "")
+    .replace(/^@[^.]+\./, "")
+    .replace(/[-_]/g, " ")
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .trim();
+}
+
+function collectWorkflowTools(nodes: N8nWorkflowNode[]) {
+  const labels = nodes
+    .map((node) => node.type || node.name || "")
+    .map(normalizeNodeLabel)
+    .filter(Boolean);
+
+  return Array.from(new Set(labels)).slice(0, 12);
+}
+
+function buildWorkflowDescription(workflow: N8nWorkflowJson) {
+  const nodes = workflow.nodes || [];
+  const totalNodes = nodes.length;
+  const disabledNodes = nodes.filter((node) => node.disabled).length;
+  const triggerNodes = nodes.filter((node) => {
+    const target = `${node.type || ""} ${node.name || ""}`.toLowerCase();
+    return target.includes("trigger") || target.includes("webhook");
+  }).length;
+  const topNodes = nodes
+    .slice(0, 6)
+    .map((node) => `- ${node.name || normalizeNodeLabel(node.type || "Node")}`);
+
+  return [
+    "## Workflow overview",
+    `- Imported from n8n JSON`,
+    `- Total nodes: ${totalNodes}`,
+    `- Trigger nodes: ${triggerNodes}`,
+    `- Disabled nodes: ${disabledNodes}`,
+    "",
+    "## Main nodes",
+    ...(topNodes.length ? topNodes : ["- No nodes found"]),
+  ].join("\n");
+}
+
+function mergeTools(existingTools: string, nextTools: string[]) {
+  const current = existingTools
+    .split(/[\s,]+/)
+    .map((tool) => tool.trim())
+    .filter(Boolean);
+
+  return Array.from(new Set([...current, ...nextTools])).join(" ");
 }
 
 export default function Admin() {
@@ -86,6 +152,7 @@ export default function Admin() {
   const [saving, setSaving] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
   const [svgUploading, setSvgUploading] = useState(false);
+  const [jsonImporting, setJsonImporting] = useState(false);
 
   // Client form state
   const emptyClient = { name: "", email: "", company: "", phone: "", status: "lead", notes: "", plan: "" };
@@ -107,6 +174,36 @@ export default function Admin() {
     return urlData.publicUrl;
   };
   const [darkMode, setDarkMode] = useState(true);
+
+  const importWorkflowJson = async (file: File) => {
+    setJsonImporting(true);
+    setProjectFormError("");
+
+    try {
+      const rawText = await file.text();
+      const parsed = JSON.parse(rawText) as N8nWorkflowJson;
+
+      if (!parsed || !Array.isArray(parsed.nodes)) {
+        throw new Error("ملف JSON ده مش باين إنه export صحيح من n8n.");
+      }
+
+      const importedTools = collectWorkflowTools(parsed.nodes);
+      const importedDescription = buildWorkflowDescription(parsed);
+
+      setEditProject((current) => ({
+        ...current,
+        title: parsed.name?.trim() || current.title || file.name.replace(/\.json$/i, ""),
+        tools: mergeTools(current.tools, importedTools),
+        description: current.description?.trim()
+          ? `${current.description.trim()}\n\n${importedDescription}`
+          : importedDescription,
+      }));
+    } catch (error: any) {
+      setProjectFormError(error?.message || "فشلنا في قراءة ملف الـ JSON.");
+    } finally {
+      setJsonImporting(false);
+    }
+  };
 
   const handleLogin = () => {
     if (password === ADMIN_PASSWORD) {
@@ -541,6 +638,43 @@ export default function Admin() {
                       placeholder="n8n Gmail Sheets OpenAI Telegram"
                       className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/25 outline-none focus:border-[#0066ff] transition-colors text-sm"
                     />
+                  </div>
+
+                  <div className="mt-4 rounded-2xl border border-primary/16 bg-[linear-gradient(180deg,rgba(15,30,54,0.74),rgba(8,17,33,0.9))] p-4">
+                    <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                      <div>
+                        <p className="text-sm font-semibold text-white">Import n8n JSON</p>
+                        <p className="mt-1 text-xs leading-6 text-white/45">
+                          ارفع export JSON من n8n وسنملأ اسم المشروع والأدوات ووصف أولي تلقائيًا.
+                        </p>
+                      </div>
+
+                      <label className="admin-command-button cursor-pointer">
+                        {jsonImporting ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            جاري الاستيراد...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="h-4 w-4" />
+                            Import n8n JSON
+                          </>
+                        )}
+                        <input
+                          type="file"
+                          accept=".json,application/json"
+                          className="hidden"
+                          disabled={jsonImporting}
+                          onChange={async (event) => {
+                            const file = event.target.files?.[0];
+                            if (!file) return;
+                            await importWorkflowJson(file);
+                            event.currentTarget.value = "";
+                          }}
+                        />
+                      </label>
+                    </div>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4 mt-4">
