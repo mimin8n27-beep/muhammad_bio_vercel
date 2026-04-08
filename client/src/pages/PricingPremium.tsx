@@ -295,7 +295,7 @@ export default function PricingPremium() {
             </div>
           ) : (
             <MotionReveal variant="glow-pop" intensity="high">
-              <form onSubmit={handleSubmit} className="surface-card space-y-5 rounded-[1.6rem] p-6">
+              <form onSubmit={handleSubmit} className="surface-card surface-card-glow light-sweep space-y-5 rounded-[1.6rem] p-6">
                 <div>
                   <label className="mb-2 block text-sm font-semibold text-foreground">Full name</label>
                   <input

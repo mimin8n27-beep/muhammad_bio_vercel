@@ -171,7 +171,7 @@ export default function HomePremium() {
 
       <main>
         <section className="relative overflow-hidden px-4 pb-12 pt-8 md:pb-20">
-          <SceneBackdrop intensity="medium" />
+          <SceneBackdrop intensity="high" />
           <div className="hero-card container relative overflow-hidden px-6 py-10 md:px-10 md:py-14">
             <HeroAccent intensity="high" />
             <div className="relative z-10 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">

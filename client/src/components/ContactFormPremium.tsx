@@ -60,7 +60,7 @@ export default function ContactFormPremium({
   const emailLink = `mailto:${email}?subject=Automation project inquiry`;
 
   return (
-    <div className="surface-card mx-auto max-w-5xl p-6 md:p-8">
+    <div className="surface-card surface-card-glow light-sweep mx-auto max-w-5xl p-6 md:p-8">
       <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
         <div>
           <span className="section-eyebrow">Secure outreach</span>
