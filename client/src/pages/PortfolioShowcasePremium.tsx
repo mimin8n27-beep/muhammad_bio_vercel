@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 
-import SharedHeaderPremium from "@/components/SharedHeaderPremium";
+import SharedHeaderPremiumEn from "@/components/SharedHeaderPremiumEn";
 import { MotionReveal } from "@/components/site/MotionReveal";
-import { SiteFooter } from "@/components/site/SiteFooter";
+import { SiteFooterEn } from "@/components/site/SiteFooterEn";
 import { stripMarkdown } from "@/components/site/SafeRichText";
 import {
   DEFAULT_PROJECT_VIEWER_MODE,
@@ -105,17 +105,17 @@ export default function PortfolioShowcasePremium() {
   };
 
   const previewLabel = useMemo(() => {
-    if (!selected) return "فتح المشروع";
+    if (!selected) return "Open project";
     const mode = inferViewerMode(selected);
-    if (mode === "live_n8n") return "فتح المعاينة الحية";
-    if (mode === "svg_only") return "فتح مخطط الـ workflow";
-    if (mode === "image_only") return "فتح المعاينة";
-    return "فتح المشروع";
+    if (mode === "live_n8n") return "Open live preview";
+    if (mode === "svg_only") return "Open workflow map";
+    if (mode === "image_only") return "Open preview";
+    return "Open project";
   }, [selected]);
 
   return (
     <div className="page-shell dark min-h-screen text-foreground" dir="rtl">
-      <SharedHeaderPremium />
+      <SharedHeaderPremiumEn />
 
       <section className="relative overflow-hidden bg-[linear-gradient(180deg,rgba(4,12,24,0.9),rgba(7,18,34,0.95))] py-16 md:py-22">
         <div className="absolute inset-0 opacity-20">
@@ -126,14 +126,14 @@ export default function PortfolioShowcasePremium() {
           <MotionReveal variant="beam-sweep" intensity="high">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2">
               <ShieldCheck className="h-4 w-4 text-primary" />
-              <span className="text-sm font-semibold text-primary">معرض الأوتوميشن</span>
+              <span className="text-sm font-semibold text-primary">Automation showcase</span>
             </div>
             <h1 className="mb-4 text-3xl font-bold leading-tight text-foreground md:text-5xl">
-              معرض أعمال الأوتوميشن
+              Automation portfolio
             </h1>
             <p className="mx-auto max-w-2xl text-base text-muted-foreground">
-              نماذج من workflows وأنظمة الربط والتنفيذ التي تساعد الشركات على تقليل العمل اليدوي
-              وبناء تشغيل أسرع وأكثر وضوحًا.
+              A selection of workflows, integrations, and automation builds designed to reduce manual work
+              and create a cleaner operating layer.
             </p>
           </MotionReveal>
         </div>
@@ -152,7 +152,7 @@ export default function PortfolioShowcasePremium() {
               ))}
             </div>
           ) : projects.length === 0 ? (
-            <div className="py-24 text-center text-muted-foreground">لا توجد مشاريع معروضة حاليًا</div>
+            <div className="py-24 text-center text-muted-foreground">No projects are published right now.</div>
           ) : (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {projects.map((project, index) => {
@@ -186,12 +186,12 @@ export default function PortfolioShowcasePremium() {
                         <div className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-[#06101f]/85 px-3 py-1.5 text-[11px] font-semibold text-white/88 backdrop-blur">
                           <Lock className="h-3.5 w-3.5 text-[#7bf1d3]" />
                           {mode === "live_n8n"
-                            ? "معاينة حية"
+                            ? "Live preview"
                             : mode === "svg_only"
-                              ? "مخطط workflow"
+                              ? "Workflow map"
                               : mode === "image_only"
-                                ? "معاينة بصرية"
-                                : "دراسة حالة"}
+                                ? "Visual preview"
+                                : "Case study"}
                         </div>
                       </div>
 
@@ -201,7 +201,7 @@ export default function PortfolioShowcasePremium() {
                             {project.title}
                           </h3>
                           {hasDedicatedViewer(project) ? (
-                            <span className="pill-label whitespace-nowrap text-[10px]">Preview</span>
+                            <span className="pill-label whitespace-nowrap text-[10px]">View-only</span>
                           ) : null}
                         </div>
 
@@ -228,7 +228,7 @@ export default function PortfolioShowcasePremium() {
 
                         <div className="inline-flex items-center gap-2 text-sm text-[#c0d4ec]">
                           <Maximize2 className="h-4 w-4 text-primary" />
-                          {hasDedicatedViewer(project) ? "فتح المعاينة" : "فتح التفاصيل"}
+                          {hasDedicatedViewer(project) ? "Open preview" : "Open details"}
                         </div>
                       </div>
                     </div>
@@ -243,9 +243,9 @@ export default function PortfolioShowcasePremium() {
       <section className="border-t border-border py-16">
         <div className="container text-center">
           <MotionReveal variant="dock-slide" intensity="high">
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">هل تريد تنفيذ نظام مشابه لشغلك؟</h2>
+            <h2 className="mb-4 text-3xl font-bold md:text-4xl">Need a similar automation setup for your business?</h2>
             <p className="mb-8 text-lg text-[#c8ddf0]">
-              دعنا نبني لك workflow أو integration مصممة حسب احتياجك وتدعم التشغيل اليومي بثقة.
+              Let&apos;s build a workflow or integration designed around your operation and ready for daily use.
             </p>
             <a
               href={`https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}`}
@@ -253,16 +253,16 @@ export default function PortfolioShowcasePremium() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-3 font-bold text-primary transition-all hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-xl"
             >
-              ابدأ مشروعك الآن
+              Start your project
             </a>
           </MotionReveal>
         </div>
       </section>
 
-      <SiteFooter
+      <SiteFooterEn
         homeHref="/"
-        homeLabel="العودة للرئيسية"
-        note="هذا المعرض يجمع نماذج لأعمال الأوتوميشن والربط بين الأدوات وتحسين التشغيل اليومي."
+        homeLabel="Back to home"
+        note="This portfolio highlights automation systems, integrations, and workflow builds focused on operational clarity."
       />
 
       {selected ? (
@@ -318,7 +318,7 @@ function ProjectDetailModal({
               <div className="ml-4 flex-1">
                 <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
                   <Lock className="h-3.5 w-3.5" />
-                  عرض المشروع
+                  Read-only showcase
                 </div>
                 <h2 className="text-2xl font-bold leading-tight text-foreground">{project.title}</h2>
               </div>
@@ -329,7 +329,7 @@ function ProjectDetailModal({
 
             {project.client_name ? (
               <div className="mb-4 text-sm text-muted-foreground">
-                المؤلف: <span className="font-medium text-foreground">{project.client_name}</span>
+                Client: <span className="font-medium text-foreground">{project.client_name}</span>
               </div>
             ) : null}
 
@@ -341,7 +341,7 @@ function ProjectDetailModal({
 
             {project.tools ? (
               <div className="mb-2">
-                <p className="mb-3 text-sm font-semibold text-muted-foreground">الأدوات المستخدمة</p>
+                <p className="mb-3 text-sm font-semibold text-muted-foreground">Tools used</p>
                 <div className="flex flex-wrap gap-2">
                   {toolsList(project.tools).map((tool, index) => (
                     <span key={index} className="rounded-lg bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
@@ -365,7 +365,7 @@ function ProjectDetailModal({
             </button>
           ) : (
             <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center text-sm text-white/60">
-              هذا المشروع لا يحتوي حاليًا على نافذة عرض مباشرة.
+              This project does not currently include a dedicated preview window.
             </div>
           )}
         </div>
@@ -394,11 +394,11 @@ function ProjectShowcaseViewer({
               <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-white/55">
                 <span className="showcase-chip">
                   <Lock className="h-3.5 w-3.5" />
-                  للمعاينة فقط
+                  View only
                 </span>
                 <span className="showcase-chip">
                   <ShieldCheck className="h-3.5 w-3.5 text-[#7bf1d3]" />
-                  معاينة آمنة
+                  Secure preview
                 </span>
               </div>
             </div>
@@ -413,12 +413,12 @@ function ProjectShowcaseViewer({
                 className="showcase-secondary-action"
               >
                 <ExternalLink className="h-4 w-4" />
-                فتح في تاب جديد
+                Open in a new tab
               </a>
             ) : null}
             <button onClick={onClose} className="showcase-close-action">
               <X className="h-4 w-4" />
-              إغلاق
+              Close
             </button>
           </div>
         </div>
@@ -438,9 +438,9 @@ function ProjectShowcaseViewer({
         ) : (
           <div className="showcase-empty-state">
             <Workflow className="h-12 w-12 text-primary" />
-            <p className="text-lg font-semibold text-white">لا يوجد محتوى جاهز للعرض</p>
+            <p className="text-lg font-semibold text-white">No preview content is available yet</p>
             <p className="max-w-md text-center text-sm leading-7 text-white/55">
-              أضف رابط معاينة حيّة أو SVG أو صورة من لوحة الإدارة ليظهر هذا المشروع داخل نافذة العرض.
+              Add a live preview link, SVG, or image from the admin panel to display this project in the viewer.
             </p>
           </div>
         )}
@@ -487,8 +487,8 @@ function LiveN8nViewer({ project }: { project: Project }) {
             <div className="skeleton-block h-4 w-64" />
             <p className="mt-5 text-xs text-white/45">
               {source === "direct"
-                ? "جارٍ تحميل المعاينة الحيّة..."
-                : "جاري التحويل لمسار preview proxy الآمن..."}
+                ? "Loading live preview..."
+                : "Switching to the secure preview proxy..."}
             </p>
           </div>
         </div>
@@ -510,14 +510,14 @@ function LiveN8nViewer({ project }: { project: Project }) {
         <div className="showcase-fallback-card">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-amber-400/10 px-3 py-1 text-xs font-semibold text-amber-200">
             <Lock className="h-3.5 w-3.5" />
-            بديل المعاينة
+            Framing fallback
           </div>
           <h3 className="mb-2 text-lg font-semibold text-white">
-            المعاينة الحية رفضت الفتح داخل الـ frame
+            The live preview could not be opened inside the frame
           </h3>
           <p className="mb-5 text-sm leading-7 text-white/60">
-            الرابط ما زال آمنًا للعرض فقط، لكن المصدر يمنع الـ embedding الكامل. تقدر تفتحه في
-            تاب جديد أو تعيد المحاولة عبر الـ proxy.
+            The link is still safe to view, but the source blocks full embedding. You can open it in a new tab
+            or retry through the secure proxy route.
           </p>
 
           {project.image_url ? (
@@ -536,7 +536,7 @@ function LiveN8nViewer({ project }: { project: Project }) {
               className="showcase-primary-action"
             >
               <ArrowUpRight className="h-4 w-4" />
-              إعادة المحاولة عبر proxy
+              Retry through proxy
             </button>
             <a
               href={project.link_url}
@@ -545,7 +545,7 @@ function LiveN8nViewer({ project }: { project: Project }) {
               className="showcase-secondary-action"
             >
               <ExternalLink className="h-4 w-4" />
-              فتح في نافذة جديدة
+              Open in a new tab
             </a>
           </div>
         </div>

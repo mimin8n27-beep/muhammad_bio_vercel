@@ -1,9 +1,9 @@
-import ContactFormPremium from "@/components/ContactFormPremium";
-import SharedHeaderPremium from "@/components/SharedHeaderPremium";
+import ContactFormPremiumEn from "@/components/ContactFormPremiumEn";
+import SharedHeaderPremiumEn from "@/components/SharedHeaderPremiumEn";
 import { HeroAccent } from "@/components/site/HeroAccent";
 import { MotionReveal } from "@/components/site/MotionReveal";
 import { SectionIntro } from "@/components/site/SectionIntro";
-import { SiteFooter } from "@/components/site/SiteFooter";
+import { SiteFooterEn } from "@/components/site/SiteFooterEn";
 import { SurfaceCard } from "@/components/site/SurfaceCard";
 import { stripMarkdown } from "@/components/site/SafeRichText";
 import { supabase } from "@/lib/supabase";
@@ -39,52 +39,52 @@ interface Project {
 
 const expertise = [
   {
-    title: "تشخيص التشغيـل قبل البناء",
-    description: "أراجع الرحلة كاملة أولًا: أين تبدأ البيانات، أين تتعطل، وأين يدخل العنصر اليدوي الذي يمكن تحويله إلى أوتوميشن أوضح.",
+    title: "Operational diagnosis before build",
+    description: "I review the full process first: where data starts, where it stalls, and where manual effort can be replaced with cleaner automation.",
     icon: Workflow,
   },
   {
-    title: "Architecture قابلة للتوسع",
-    description: "كل workflow يُبنى ليعيش مع النمو، مع logic واضحة ومرونة في إضافة integrations جديدة بدون تعقيد مؤذٍ.",
+    title: "Scalable workflow architecture",
+    description: "Each workflow is built to grow with the business, with clear logic and room for future integrations without unnecessary complexity.",
     icon: Boxes,
   },
   {
-    title: "Automation مدعومة بالـ AI",
-    description: "أجمع بين n8n و APIs و AI steps عندما تكون مفيدة فعلًا في السرعة، الدقة، وجودة تجربة العميل.",
+    title: "AI-enabled automation",
+    description: "I combine n8n, APIs, and AI steps only where they create real value in speed, accuracy, and customer experience.",
     icon: Bot,
   },
 ];
 
 const pillars = [
   {
-    title: "التقاط العملاء المحتملين بدون تسريب",
-    description: "من أول رسالة حتى التأهيل والمتابعة، يظل الـ pipeline يتحرك بدون مطاردة يدوية أو فقدان لطلبات مهمة.",
+    title: "Lead capture without leakage",
+    description: "From the first message to qualification and follow-up, the pipeline keeps moving without manual chasing or missed requests.",
     icon: MessageSquareText,
   },
   {
-    title: "تقارير أسرع وقرارات أوضح",
-    description: "Dashboards وتنبيهات وتقارير دورية تُبنى تلقائيًا بدل الانتظار للتجميع اليدوي أو الملفات المبعثرة.",
+    title: "Faster reporting and clearer decisions",
+    description: "Dashboards, alerts, and periodic reports are generated automatically instead of relying on manual exports and scattered files.",
     icon: BarChart3,
   },
   {
-    title: "ربط الأدوات في نظام واحد",
-    description: "CRM و WhatsApp و Gmail و Google Sheets والأنظمة الداخلية يشتغلون كمنظومة واحدة متزامنة وأقل عرضة للأخطاء.",
+    title: "Connected tools in one system",
+    description: "CRM, WhatsApp, Gmail, Google Sheets, and internal systems work as one synchronized layer with fewer errors and less friction.",
     icon: Database,
   },
 ];
 
 const faqs = [
   {
-    q: "كيف تعرف إذا كانت العملية مناسبة للأوتوميشن؟",
-    a: "أنظر إلى التكرار، الوقت الضائع، احتمالية الخطأ البشري، وتأثير التأخير على الفريق أو العميل. إذا كانت خطوة تتكرر كثيرًا وتستهلك وقتًا بلا قيمة مباشرة، فهي غالبًا مرشح ممتاز للأوتوميشن.",
+    q: "How do you decide whether a process is worth automating?",
+    a: "I look at repetition, wasted time, human error risk, and the cost of delay. If a step happens often and adds little strategic value, it is usually a strong automation candidate.",
   },
   {
-    q: "هل يمكن تطوير workflow موجودة بدل بنائها من الصفر؟",
-    a: "نعم. أحيانًا أفضل نتيجة تأتي من تحسين الموجود بالفعل: ضبط الـ inputs، إصلاح نقاط الفشل، وتخفيف الفوضى داخل الـ flow بدل إعادة البناء الكامل.",
+    q: "Can you improve an existing workflow instead of rebuilding it?",
+    a: "Yes. In many cases, the fastest win comes from improving what already exists: tightening inputs, fixing failure points, and reducing noise inside the flow.",
   },
   {
-    q: "ما الذي يجعل التسليم مريحًا وآمنًا للفريق؟",
-    a: "أبني logic واضحة، أوثق المهم، وأسلّم النظام بحيث يكون مفهومًا بعد الإطلاق وليس فقط أثناء التنفيذ. الهدف أن يعتمد عليه فريقك بثقة.",
+    q: "What makes the handoff feel safe for the team?",
+    a: "I keep the logic clear, document what matters, and hand over a system your team can understand after launch, not only during development.",
   },
 ];
 
@@ -155,9 +155,9 @@ export default function HomePremium() {
 
   const metrics = useMemo(
     () => [
-      { value: "50+", label: "سيناريو أوتوميشن منفذ", icon: Sparkles },
-      { value: "24/7", label: "تشغيل مستمر بدون متابعة يدوية", icon: Clock3 },
-      { value: "n8n + AI", label: "تنفيذ ذكي وربط بين الأدوات", icon: ShieldCheck },
+      { value: "50+", label: "Automation workflows delivered", icon: Sparkles },
+      { value: "24/7", label: "Always-on operational systems", icon: Clock3 },
+      { value: "n8n + AI", label: "Connected execution across tools", icon: ShieldCheck },
     ],
     [],
   );
@@ -166,7 +166,7 @@ export default function HomePremium() {
 
   return (
     <div className="page-shell dark">
-      <SharedHeaderPremium />
+      <SharedHeaderPremiumEn />
 
       <main>
         <section className="relative overflow-hidden px-4 pb-14 pt-8 md:pb-20">
@@ -174,13 +174,13 @@ export default function HomePremium() {
             <HeroAccent intensity="high" />
             <div className="relative z-10 grid gap-8 lg:grid-cols-[1.08fr_0.82fr] lg:items-center">
               <MotionReveal variant="beam-sweep" intensity="medium" distance={28}>
-                <span className="section-eyebrow">أنظمة الأوتوميشن</span>
+                <span className="section-eyebrow">Automation systems</span>
                 <h1 className="mb-5 max-w-[12ch] bg-[linear-gradient(135deg,#ffffff_0%,#d0f0ff_46%,#a0ffe8_100%)] bg-clip-text text-[clamp(3rem,5.6vw,5.75rem)] font-bold leading-[0.94] text-transparent drop-shadow-[0_0_22px_rgba(73,166,255,0.22)]">
-                  أبني أنظمة أوتوميشن تربط أدواتك وتقلل التشغيل اليدوي بشكل فاخر وواضح.
+                  I build automation systems that connect your tools and reduce manual operations with premium clarity.
                 </h1>
                 <p className="mb-8 max-w-2xl text-[1.08rem] leading-8 text-[#ccdcf0]">
-                  شغلي يتركّز على بناء workflows احترافية تجمع بين n8n و integrations و AI steps بحيث يصبح التشغيل أسرع،
-                  والردود أوضح، والمتابعة أدق، والبيانات متصلة بين الأدوات بدل ما تكون مشتتة.
+                  My work focuses on premium workflows built with n8n, integrations, and AI steps so operations move faster,
+                  responses stay cleaner, follow-up becomes sharper, and data stays connected across the stack.
                 </p>
 
                 <div className="mb-8 flex flex-col gap-3 sm:flex-row">
@@ -188,14 +188,14 @@ export default function HomePremium() {
                     href="#contact-section"
                     className="sci-fi-button inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_18px_48px_rgba(73,166,255,0.40)] transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-[0_22px_60px_rgba(109,255,211,0.28)]"
                   >
-                    ابدأ مشروعك
+                    Start a project
                     <ArrowRight className="h-4 w-4" />
                   </a>
                   <a
                     href="/portfolio"
                     className="sci-fi-button inline-flex items-center justify-center gap-2 rounded-full border border-primary/18 bg-white/6 px-6 py-3 text-sm font-semibold text-foreground transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:text-primary"
                   >
-                    شاهد الأعمال
+                    View selected work
                   </a>
                 </div>
 
@@ -212,9 +212,9 @@ export default function HomePremium() {
 
                 <div className="mt-1 grid gap-3 sm:grid-cols-3">
                   {[
-                    "n8n workflows مصممة حسب العملية",
-                    "Integrations بين الأدوات بدون فوضى",
-                    "Automation premium تخدم التشغيل الحقيقي",
+                    "n8n workflows designed around real operations",
+                    "Integrations between tools without operational noise",
+                    "Premium automation built for actual execution",
                   ].map((signal, index) => (
                     <MotionReveal
                       key={signal}
@@ -245,7 +245,7 @@ export default function HomePremium() {
                     </div>
                     <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(109,255,211,0.14),transparent_38%)]" />
                     <div className="pointer-events-none absolute left-4 top-4 rounded-full border border-white/14 bg-[#06101f]/75 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#bceeff] backdrop-blur">
-                      مشغّل الأوتوميشن
+                      Automation operator
                     </div>
                   </div>
                 </div>
@@ -260,8 +260,8 @@ export default function HomePremium() {
               <MotionReveal variant="glow-pop" intensity="high">
                 <SectionIntro
                   eyebrow="What I optimize"
-                      title="الأوتوميشن الحقيقي يبدأ من فهم العملية وليس من كثرة الأدوات"
-                      description="القيمة ليست في شكل الـ workflow فقط، بل في جودة التصميم: مدخلات واضحة، مسار تنفيذ مضبوط، وربط أنظف بين الأدوات التي تعتمد عليها يوميًا."
+                      title="Real automation starts with process clarity, not tool overload"
+                      description="The value is not in how the workflow looks. It comes from strong design: clean inputs, reliable execution paths, and tighter connections between the tools you already depend on."
                 />
               </MotionReveal>
 
@@ -288,9 +288,9 @@ export default function HomePremium() {
               <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
                 <MotionReveal variant="beam-sweep" intensity="high">
                   <SectionIntro
-                    eyebrow="نتائج التنفيذ"
-                    title="متابعة يدوية أقل. سرعة أوضح. وثقة أكبر في كل خطوة."
-                    description="هذه هي المساحات التي يظهر فيها أثر الأوتوميشن بسرعة: استجابة أسرع، أخطاء أقل، وربط أفضل بين التشغيل والتقارير."
+                    eyebrow="Core outcomes"
+                    title="Less manual follow-up. Faster execution. More confidence in every step."
+                    description="These are the areas where automation creates visible value quickly: faster response time, fewer errors, and better alignment between operations and reporting."
                   />
                 </MotionReveal>
 
@@ -319,9 +319,9 @@ export default function HomePremium() {
             <div className="section-frame px-7 py-10 md:px-10 md:py-12">
               <MotionReveal variant="glow-pop" intensity="high">
                 <SectionIntro
-                  eyebrow="أعمال مختارة"
-                  title="نماذج من أنظمة الأوتوميشن التي تم تنفيذها"
-                  description="أمثلة على workflows وربط أنظمة وحالات استخدام عملية صُممت لتحسين التشغيل ورفع جودة المتابعة والتنفيذ."
+                  eyebrow="Selected work"
+                  title="Examples of automation systems already delivered"
+                  description="A selection of workflows, integrations, and operating systems designed to improve execution quality and reduce manual load."
                 />
               </MotionReveal>
 
@@ -358,7 +358,7 @@ export default function HomePremium() {
                           </div>
                           <div className="mb-2 flex items-center justify-between gap-3">
                             <h3 className="text-lg font-semibold">{project.title}</h3>
-                            <span className="pill-label text-[11px]">حالة تنفيذ</span>
+                            <span className="pill-label text-[11px]">Automation case</span>
                           </div>
                           <p className="line-clamp-3 text-sm leading-7 text-muted-foreground">
                             {stripMarkdown(project.description)}
@@ -383,10 +383,10 @@ export default function HomePremium() {
                       Delivery process
                     </span>
                     <h2 className="mb-3 text-3xl font-bold text-white md:text-4xl">
-                      فهم العملية، تصميم الـ workflow، تنفيذ الأوتوميشن، ثم تسليم واضح وقابل للاعتماد.
+                      Process diagnosis, workflow design, implementation, then a handoff your team can actually rely on.
                     </h2>
                     <p className="max-w-2xl text-[#c8ddf0]">
-                      التنفيذ عندي ليس مجرد شكل بصري. أبدأ بالتشخيص، ثم أبني architecture مناسبة، ثم أنفذ وأختبر حتى يصل لفريقك نظام أوتوميشن جاهز للاستخدام الفعلي.
+                      The work is not just about visuals. I start with diagnosis, build the right architecture, then implement and test until your team receives an automation system ready for real use.
                     </p>
                   </div>
                   <a
@@ -395,7 +395,7 @@ export default function HomePremium() {
                     rel="noopener noreferrer"
                     className="sci-fi-button inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#0b1730] transition-transform hover:-translate-y-0.5"
                   >
-                    تحدث عبر WhatsApp
+                    Chat on WhatsApp
                     <ArrowRight className="h-4 w-4" />
                   </a>
                 </div>
@@ -409,9 +409,9 @@ export default function HomePremium() {
             <div className="section-frame px-7 py-10 md:px-10 md:py-12">
               <MotionReveal variant="glow-pop" intensity="high">
                 <SectionIntro
-                  eyebrow="الأسئلة الشائعة"
-                  title="أسئلة مهمة قبل بدء أي مشروع أوتوميشن"
-                  description="إجابات مختصرة وواضحة تساعدك تعرف هل الأوتوميشن مناسب لاحتياجك الآن وما الشكل الأنسب للتنفيذ."
+                  eyebrow="FAQ"
+                  title="Questions worth answering before any automation project starts"
+                  description="Short, practical answers to help you understand whether automation fits your current operation and what the right setup should look like."
                   align="center"
                 />
               </MotionReveal>
@@ -432,14 +432,14 @@ export default function HomePremium() {
             <div className="section-frame px-7 py-10 md:px-10 md:py-12">
               <MotionReveal variant="beam-sweep" intensity="high">
                 <SectionIntro
-                  eyebrow="ابدأ الآن"
-                  title="هات العملية المرهقة أو المتعبة وسنحوّلها إلى أوتوميشن يخدم شغلك بوضوح."
-                  description="إذا كان فريقك يكرر نفس الخطوات، أو تضيع الطلبات بين الأدوات، أو التقارير تتأخر، فهذه بالضبط المساحة التي نبني لها نظام أوتوميشن أقوى."
+                  eyebrow="Start here"
+                  title="Bring the messy process. We&apos;ll turn it into automation your business can depend on."
+                  description="If your team keeps repeating the same steps, requests get lost between tools, or reporting arrives too late, that is exactly where a stronger automation layer creates value."
                   align="center"
                 />
               </MotionReveal>
               <MotionReveal delay={0.08} variant="glow-pop" intensity="high">
-                <ContactFormPremium
+                <ContactFormPremiumEn
                   whatsappNumber={WHATSAPP_NUMBER}
                   email={EMAIL}
                   source="home"
@@ -449,10 +449,10 @@ export default function HomePremium() {
           </div>
         </section>
       </main>
-      <SiteFooter
+      <SiteFooterEn
         homeHref="/"
-        homeLabel="العودة للرئيسية"
-        note="شغلي في الأوتوميشن يركّز على n8n و integrations و AI workflows التي تقلل الوقت الضائع وترفع جودة التنفيذ."
+        homeLabel="Back to home"
+        note="My automation work is centered on n8n, integrations, and AI workflows that reduce wasted time and improve execution quality."
       />
     </div>
   );
