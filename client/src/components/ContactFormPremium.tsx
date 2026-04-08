@@ -1,143 +1,196 @@
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Menu, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useLocation } from "wouter";
+import { Button } from "@/components/ui/button";
+import { submitContactForm } from "@/lib/contact";
+import { CheckCircle2, Mail, MessageCircle, ShieldCheck } from "lucide-react";
+import { useState } from "react";
 
-const navigation = [
-  { label: "Home", href: "/" },
-  { label: "Portfolio", href: "/portfolio" },
-  { label: "Pricing", href: "/pricing" },
-];
+interface ContactFormPremiumProps {
+  whatsappNumber: string;
+  email: string;
+  source?: string;
+}
 
-export default function SharedHeaderPremium() {
-  const [location, setLocation] = useLocation();
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const reduceMotion = useReducedMotion();
+const initialState = {
+  name: "",
+  email: "",
+  company: "",
+  message: "",
+  website: "",
+};
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16);
-    onScroll();
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+export default function ContactFormPremium({
+  whatsappNumber,
+  email,
+  source = "website",
+}: ContactFormPremiumProps) {
+  const [formData, setFormData] = useState(initialState);
+  const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [location]);
-
-  const goHome = () => {
-    if (location === "/") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-
-    setLocation("/");
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setFormData((current) => ({ ...current, [name]: value }));
   };
 
-  const goToContact = () => {
-    if (location === "/") {
-      document.getElementById("contact-section")?.scrollIntoView({ behavior: "smooth" });
-      return;
-    }
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+    setError("");
 
-    setLocation("/?scroll=contact");
+    try {
+      await submitContactForm({ ...formData, source });
+      setSubmitted(true);
+      setFormData(initialState);
+      setTimeout(() => setSubmitted(false), 4000);
+    } catch (submissionError) {
+      setError(
+        submissionError instanceof Error
+          ? submissionError.message
+          : "Unable to send your message right now.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  const whatsappLink = `https://wa.me/${whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent(
+    `Hello Muhammad, I'm ${formData.name || "a new client"} and I'd like to discuss an automation project.`,
+  )}`;
+
+  const emailLink = `mailto:${email}?subject=Automation project inquiry`;
 
   return (
-    <header className="sticky top-0 z-50 px-4 pt-4">
-      <motion.div
-        dir="ltr"
-        initial={reduceMotion ? false : { opacity: 0, y: -18 }}
-        animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className={`shared-header-premium mx-auto max-w-7xl rounded-[1.4rem] border px-4 py-2.5 transition-all duration-300 md:px-6 ${
-          scrolled
-            ? "hud-panel border-primary/25 bg-[rgba(4,11,24,0.9)] shadow-[0_24px_80px_rgba(0,0,0,0.44)] backdrop-blur-2xl"
-            : "border-primary/15 bg-[linear-gradient(135deg,rgba(8,19,36,0.86),rgba(12,24,47,0.78))] shadow-[0_22px_60px_rgba(2,8,20,0.34)] backdrop-blur-2xl"
-        }`}
-      >
-        <div className="flex items-center justify-between gap-4">
-          <button onClick={goHome} className="flex items-center gap-3 text-left">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#246bff,#7bf1d3)] text-sm font-bold text-[#08111f] shadow-[0_12px_28px_rgba(36,107,255,0.28)]">
-              M
-            </div>
-            <div>
-              <p className="font-[var(--font-family-heading)] text-base font-bold text-white md:text-lg">Muhammad Bio</p>
-              <p className="text-[11px] text-white/55">Cinematic automation systems</p>
-            </div>
-          </button>
+    <div className="surface-card mx-auto max-w-5xl p-6 md:p-8">
+      <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+        <div>
+          <span className="section-eyebrow">Secure outreach</span>
+          <h3 className="mb-3 text-3xl font-bold text-white">Tell me what needs to become smoother</h3>
+          <p className="mb-6 max-w-xl text-muted-foreground">
+            Share your workflow, the tools involved, and the bottlenecks you want to remove.
+            The form uses stricter validation, a hidden bot trap, and a small submit cooldown.
+          </p>
 
-          <nav className="hidden items-center gap-7 md:flex" dir="ltr">
-            {navigation.map((item) => {
-              const active = location === item.href;
-              return (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className={`relative px-1 py-2 text-sm font-medium transition-colors ${
-                    active ? "text-white" : "text-white/62 hover:text-white"
-                  }`}
-                >
-                  {item.label}
-                  {active ? (
-                    <motion.span
-                      layoutId="header-nav-indicator"
-                      className="absolute inset-x-0 -bottom-1 h-px bg-[linear-gradient(90deg,transparent,#6dffd3,transparent)]"
-                      transition={{ type: "spring", stiffness: 420, damping: 34 }}
-                    />
-                  ) : null}
-                </a>
-              );
-            })}
-            <button
-              onClick={goToContact}
-              className="sci-fi-button inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/15 px-4 py-2 text-sm font-semibold text-[#c8eeff] transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/25"
+          <div className="grid gap-4 sm:grid-cols-2">
+            <a
+              href={whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="surface-card light-sweep p-4"
             >
-              <Sparkles className="h-4 w-4" />
-              Let's Talk
-            </button>
-          </nav>
+              <div className="mb-3 feature-icon">
+                <MessageCircle className="h-5 w-5" />
+              </div>
+              <p className="mb-1 font-semibold text-white">WhatsApp</p>
+              <p className="text-sm text-[#d8ecff]">{whatsappNumber}</p>
+            </a>
 
-          <button
-            className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-white/6 text-white md:hidden"
-            onClick={() => setMenuOpen((value) => !value)}
-            aria-label="Toggle menu"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
+            <a href={emailLink} className="surface-card light-sweep p-4">
+              <div className="mb-3 feature-icon">
+                <Mail className="h-5 w-5" />
+              </div>
+              <p className="mb-1 font-semibold text-white">Email</p>
+              <p className="text-sm text-[#d8ecff]">{email}</p>
+            </a>
+          </div>
+
+          <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm text-[#d8ecff]">
+            <ShieldCheck className="h-4 w-4 text-primary" />
+            Built with lighter anti-spam protection and safer handling.
+          </div>
         </div>
 
-        <AnimatePresence initial={false}>
-          {menuOpen ? (
-            <motion.div
-              initial={reduceMotion ? false : { opacity: 0, height: 0, marginTop: 0 }}
-              animate={reduceMotion ? undefined : { opacity: 1, height: "auto", marginTop: 16 }}
-              exit={reduceMotion ? undefined : { opacity: 0, height: 0, marginTop: 0 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="hud-panel overflow-hidden rounded-[1.2rem] border-white/12 md:hidden"
-            >
-              <div className="grid gap-2 border-t border-white/10 p-3" dir="ltr">
-                {navigation.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    className="rounded-2xl px-4 py-3 text-sm font-medium text-white/75 transition-colors hover:bg-primary/10 hover:text-white"
-                  >
-                    {item.label}
-                  </a>
-                ))}
-                <button
-                  onClick={goToContact}
-                  className="sci-fi-button rounded-2xl bg-primary/90 px-4 py-3 text-sm font-semibold text-primary-foreground"
-                >
-                  Contact
-                </button>
+        <div>
+          {submitted ? (
+            <div className="surface-card-glow flex min-h-[28rem] flex-col items-center justify-center rounded-[1.6rem] border border-primary/15 bg-primary/8 p-8 text-center">
+              <CheckCircle2 className="mb-4 h-16 w-16 text-primary" />
+              <h4 className="mb-2 text-2xl font-bold">Message received</h4>
+              <p className="max-w-sm text-muted-foreground">
+                Your note reached the inbox safely. I&apos;ll get back to you soon with the next best step.
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="grid gap-4">
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-[#dcecff]">Full name</label>
+                <div className="field-shell">
+                  <input
+                    className="field-input"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Muhammad Ahmed"
+                    required
+                  />
+                </div>
               </div>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
-      </motion.div>
-    </header>
+
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-[#dcecff]">Email</label>
+                <div className="field-shell">
+                  <input
+                    className="field-input"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="you@company.com"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-[#dcecff]">Company</label>
+                <div className="field-shell">
+                  <input
+                    className="field-input"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleChange}
+                    placeholder="Optional"
+                  />
+                </div>
+              </div>
+
+              <div className="hidden" aria-hidden="true">
+                <label htmlFor="website">Website</label>
+                <input
+                  id="website"
+                  name="website"
+                  value={formData.website}
+                  onChange={handleChange}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-[#dcecff]">What should this automation improve?</label>
+                <div className="field-shell">
+                  <textarea
+                    className="field-input min-h-36 resize-none"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder="Describe the process, the tools involved, and what success looks like."
+                    required
+                  />
+                </div>
+              </div>
+
+              {error ? <p className="text-sm text-destructive">{error}</p> : null}
+
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="sci-fi-button mt-2 h-12 rounded-2xl bg-primary text-primary-foreground shadow-[0_16px_40px_rgba(31,122,255,0.35)] hover:bg-primary/90"
+              >
+                {isSubmitting ? "Sending..." : "Send secure inquiry"}
+              </Button>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

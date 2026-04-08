@@ -51,7 +51,7 @@ export default function SharedHeaderPremium() {
         initial={reduceMotion ? false : { opacity: 0, y: -18 }}
         animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className={`shared-header-premium mx-auto max-w-7xl rounded-[1.4rem] border px-4 py-3 transition-all duration-300 md:px-6 ${
+        className={`shared-header-premium mx-auto max-w-7xl rounded-[1.4rem] border px-4 py-2.5 transition-all duration-300 md:px-6 ${
           scrolled
             ? "hud-panel border-primary/25 bg-[rgba(4,11,24,0.9)] shadow-[0_24px_80px_rgba(0,0,0,0.44)] backdrop-blur-2xl"
             : "border-primary/15 bg-[linear-gradient(135deg,rgba(8,19,36,0.86),rgba(12,24,47,0.78))] shadow-[0_22px_60px_rgba(2,8,20,0.34)] backdrop-blur-2xl"
@@ -59,12 +59,12 @@ export default function SharedHeaderPremium() {
       >
         <div className="flex items-center justify-between gap-4">
           <button onClick={goHome} className="flex items-center gap-3 text-left">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#246bff,#7bf1d3)] text-sm font-bold text-[#08111f] shadow-[0_12px_28px_rgba(36,107,255,0.28)]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#246bff,#7bf1d3)] text-sm font-bold text-[#08111f] shadow-[0_12px_28px_rgba(36,107,255,0.28)]">
               M
             </div>
             <div>
-              <p className="font-[var(--font-family-heading)] text-lg font-bold text-white">Muhammad Bio</p>
-              <p className="text-xs text-white/55">Cinematic automation systems</p>
+              <p className="font-[var(--font-family-heading)] text-base font-bold text-white md:text-lg">Muhammad Bio</p>
+              <p className="text-[11px] text-white/55">Cinematic automation systems</p>
             </div>
           </button>
 
