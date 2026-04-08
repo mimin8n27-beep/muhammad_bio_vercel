@@ -60,12 +60,12 @@ export default function ContactFormPremium({
   const emailLink = `mailto:${email}?subject=Automation project inquiry`;
 
   return (
-    <div className="surface-card surface-card-glow light-sweep mx-auto max-w-5xl p-6 md:p-8">
-      <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+    <div className="surface-card surface-card-glow light-sweep mx-auto max-w-6xl p-7 md:p-10 lg:p-12">
+      <div className="grid gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:gap-12">
         <div>
           <span className="section-eyebrow">Secure outreach</span>
-          <h3 className="mb-3 text-3xl font-bold text-white">Tell me what needs to become smoother</h3>
-          <p className="mb-6 max-w-xl text-muted-foreground">
+          <h3 className="mb-4 text-4xl font-bold leading-[1.02] text-white md:text-5xl">Tell me what needs to become smoother</h3>
+          <p className="mb-7 max-w-xl text-[1.04rem] leading-8 text-[#c8ddf0]">
             Share your workflow, the tools involved, and the bottlenecks you want to remove.
             The form uses stricter validation, a hidden bot trap, and a small submit cooldown.
           </p>
@@ -75,7 +75,7 @@ export default function ContactFormPremium({
               href={whatsappLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="surface-card light-sweep p-4"
+              className="surface-card light-sweep p-5"
             >
               <div className="mb-3 feature-icon">
                 <MessageCircle className="h-5 w-5" />
@@ -84,7 +84,7 @@ export default function ContactFormPremium({
               <p className="text-sm text-[#d8ecff]">{whatsappNumber}</p>
             </a>
 
-            <a href={emailLink} className="surface-card light-sweep p-4">
+            <a href={emailLink} className="surface-card light-sweep p-5">
               <div className="mb-3 feature-icon">
                 <Mail className="h-5 w-5" />
               </div>
@@ -93,13 +93,13 @@ export default function ContactFormPremium({
             </a>
           </div>
 
-          <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm text-[#d8ecff]">
+          <div className="mt-7 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2.5 text-sm text-[#d8ecff]">
             <ShieldCheck className="h-4 w-4 text-primary" />
             Built with lighter anti-spam protection and safer handling.
           </div>
         </div>
 
-        <div>
+        <div className="relative z-20">
           {submitted ? (
             <div className="surface-card-glow flex min-h-[28rem] flex-col items-center justify-center rounded-[1.6rem] border border-primary/15 bg-primary/8 p-8 text-center">
               <CheckCircle2 className="mb-4 h-16 w-16 text-primary" />
@@ -109,7 +109,7 @@ export default function ContactFormPremium({
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="grid gap-4">
+            <form onSubmit={handleSubmit} className="relative z-20 grid gap-5">
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#dcecff]">Full name</label>
                 <div className="field-shell">
@@ -119,6 +119,7 @@ export default function ContactFormPremium({
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Muhammad Ahmed"
+                    autoComplete="name"
                     required
                   />
                 </div>
@@ -134,6 +135,7 @@ export default function ContactFormPremium({
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="you@company.com"
+                    autoComplete="email"
                     required
                   />
                 </div>
@@ -148,6 +150,7 @@ export default function ContactFormPremium({
                     value={formData.company}
                     onChange={handleChange}
                     placeholder="Optional"
+                    autoComplete="organization"
                   />
                 </div>
               </div>
