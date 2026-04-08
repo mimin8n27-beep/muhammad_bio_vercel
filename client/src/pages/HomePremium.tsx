@@ -170,17 +170,17 @@ export default function HomePremium() {
       <SharedHeaderPremium />
 
       <main>
-        <section className="relative overflow-hidden px-4 pb-10 pt-6 md:pb-16">
+        <section className="relative overflow-hidden px-4 pb-14 pt-8 md:pb-20">
           <SceneBackdrop intensity="high" />
-          <div className="hero-card container relative overflow-hidden px-5 py-8 md:px-8 md:py-10">
+          <div className="hero-card container relative overflow-hidden px-7 py-10 md:px-10 md:py-14">
             <HeroAccent intensity="high" />
             <div className="relative z-10 grid gap-8 lg:grid-cols-[1.08fr_0.82fr] lg:items-center">
               <MotionReveal variant="beam-sweep" intensity="medium" distance={28}>
                 <span className="section-eyebrow">Cinematic system interface</span>
-                <h1 className="mb-4 max-w-[13ch] bg-[linear-gradient(135deg,#ffffff_0%,#d0f0ff_46%,#a0ffe8_100%)] bg-clip-text text-[clamp(2.25rem,4.1vw,3.95rem)] font-bold leading-[0.98] text-transparent drop-shadow-[0_0_22px_rgba(73,166,255,0.22)]">
+                <h1 className="mb-5 max-w-[12ch] bg-[linear-gradient(135deg,#ffffff_0%,#d0f0ff_46%,#a0ffe8_100%)] bg-clip-text text-[clamp(3rem,5.6vw,5.75rem)] font-bold leading-[0.94] text-transparent drop-shadow-[0_0_22px_rgba(73,166,255,0.22)]">
                   Automation systems with a sci-fi pulse and cinematic precision.
                 </h1>
-                <p className="mb-7 max-w-xl text-[0.96rem] leading-7 text-[#ccdcf0]">
+                <p className="mb-8 max-w-2xl text-[1.08rem] leading-8 text-[#ccdcf0]">
                   We turn operations into something that feels intelligent on the surface and reliable underneath:
                   sharper lead flow, calmer execution, clearer reporting, and a visual identity that feels like it came
                   from a near-future control room.
@@ -259,7 +259,7 @@ export default function HomePremium() {
 
         <section className="site-section">
           <div className="container">
-            <div className="section-frame px-5 py-8 md:px-8 md:py-10">
+            <div className="section-frame px-7 py-10 md:px-10 md:py-12">
               <MotionReveal variant="glow-pop" intensity="high">
                 <SectionIntro
                   eyebrow="What I optimize"
@@ -287,7 +287,7 @@ export default function HomePremium() {
 
         <section className="site-section">
           <div className="container">
-            <div className="section-frame px-5 py-8 md:px-8 md:py-10">
+            <div className="section-frame px-7 py-10 md:px-10 md:py-12">
               <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
                 <MotionReveal variant="beam-sweep" intensity="high">
                   <SectionIntro
@@ -319,7 +319,7 @@ export default function HomePremium() {
 
         <section className="site-section">
           <div className="container">
-            <div className="section-frame px-5 py-8 md:px-8 md:py-10">
+            <div className="section-frame px-7 py-10 md:px-10 md:py-12">
               <MotionReveal variant="glow-pop" intensity="high">
                 <SectionIntro
                   eyebrow="Recent work"
@@ -379,7 +379,7 @@ export default function HomePremium() {
         <section className="site-section">
           <div className="container">
             <MotionReveal variant="beam-sweep" intensity="high">
-              <div className="cta-band px-6 py-8 md:px-10 md:py-10">
+              <div className="cta-band px-8 py-10 md:px-12 md:py-12">
                 <div className="relative z-10 grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
                   <div>
                     <span className="section-eyebrow border-white/15 bg-white/8 text-white/80">
@@ -410,7 +410,7 @@ export default function HomePremium() {
 
         <section className="site-section">
           <div className="container">
-            <div className="section-frame px-5 py-8 md:px-8 md:py-10">
+            <div className="section-frame px-7 py-10 md:px-10 md:py-12">
               <MotionReveal variant="glow-pop" intensity="high">
                 <SectionIntro
                   eyebrow="FAQ"
@@ -433,7 +433,7 @@ export default function HomePremium() {
 
         <section id="contact-section" className="site-section">
           <div className="container">
-            <div className="section-frame px-5 py-8 md:px-8 md:py-10">
+            <div className="section-frame px-7 py-10 md:px-10 md:py-12">
               <MotionReveal variant="beam-sweep" intensity="high">
                 <SectionIntro
                   eyebrow="Contact"
