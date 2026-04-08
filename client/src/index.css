@@ -196,8 +196,7 @@
       linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 52px 52px;
     mask-image: radial-gradient(circle at center, black 38%, transparent 90%);
-    opacity: 0.72;
-    animation: pageGridDrift 22s linear infinite;
+    opacity: 0.42;
   }
 
   .page-shell::after {
@@ -210,7 +209,7 @@
         transparent 1px,
         transparent 4px
       );
-    opacity: 0.2;
+    opacity: 0.1;
   }
 
   .scene-backdrop {
@@ -219,7 +218,7 @@
     overflow: hidden;
     pointer-events: none;
     z-index: 0;
-    mix-blend-mode: screen;
+    opacity: 0.55;
   }
 
   .scene-orb,
@@ -275,8 +274,8 @@
       linear-gradient(90deg, rgba(123, 170, 255, 0.1) 1px, transparent 1px);
     background-size: 62px 62px;
     mask-image: radial-gradient(circle at center, black 30%, transparent 82%);
-    opacity: 0.56;
-    animation: gridShift 20s linear infinite;
+    opacity: 0.18;
+    animation: gridShift 36s linear infinite;
   }
 
   .scene-beam {
@@ -286,8 +285,8 @@
     height: 170%;
     background: linear-gradient(180deg, transparent, rgba(167, 225, 255, 0.22), transparent);
     filter: blur(8px);
-    opacity: 0.7;
-    animation: flightTrail 14s linear infinite;
+    opacity: 0.2;
+    animation: flightTrail 24s linear infinite;
   }
 
   .scene-beam-a {
@@ -308,8 +307,8 @@
     height: 22%;
     background: linear-gradient(180deg, transparent, rgba(109, 255, 211, 0.08), transparent);
     filter: blur(18px);
-    opacity: 0.82;
-    animation: scanline 12s ease-in-out infinite;
+    opacity: 0.18;
+    animation: scanline 20s ease-in-out infinite;
   }
 
   .scene-noise {
@@ -318,13 +317,13 @@
     background-image: radial-gradient(rgba(255, 255, 255, 0.15) 0.7px, transparent 0.8px);
     background-size: 16px 16px;
     mix-blend-mode: soft-light;
-    opacity: 0.22;
+    opacity: 0.08;
   }
 
   .scene-particles {
     position: absolute;
     inset: 0;
-    opacity: 0.48;
+    opacity: 0.2;
   }
 
   .scene-particles-a {
@@ -378,11 +377,11 @@
   }
 
   .scene-backdrop-high .scene-orb {
-    opacity: 0.72;
+    opacity: 0.32;
   }
 
   .scene-backdrop-high .scene-particles {
-    opacity: 0.68;
+    opacity: 0.26;
   }
 
   .site-section {
@@ -444,8 +443,8 @@
     border-radius: 1.6rem;
     border: 1px solid var(--border);
     background:
-      radial-gradient(circle at top right, rgba(73, 166, 255, 0.16), transparent 24%),
-      linear-gradient(180deg, rgba(8, 20, 39, 0.94), rgba(4, 10, 20, 0.96)),
+      radial-gradient(circle at top right, rgba(73, 166, 255, 0.12), transparent 24%),
+      linear-gradient(180deg, rgba(10, 22, 42, 0.9), rgba(5, 12, 24, 0.92)),
       var(--card);
     box-shadow: var(--shadow-soft);
     backdrop-filter: blur(18px);
@@ -477,15 +476,21 @@
     background-size: 220% 1px;
     background-repeat: no-repeat;
     background-position: -140% 0;
-    opacity: 0.65;
+    opacity: 0;
     pointer-events: none;
-    animation: ledSweep 7s linear infinite;
+    transition: opacity var(--motion-soft) ease;
   }
 
   .surface-card:hover {
     transform: translateY(-6px);
     border-color: rgba(73, 166, 255, 0.4);
     box-shadow: var(--shadow-strong);
+  }
+
+  .surface-card:hover::before,
+  .surface-card-glow::before {
+    opacity: 0.85;
+    animation: ledSweep 2.2s linear 1;
   }
 
   .surface-card:hover::after,
@@ -502,8 +507,8 @@
     border-radius: 2rem;
     border: 1px solid rgba(97, 148, 236, 0.24);
     background:
-      radial-gradient(circle at 70% 20%, rgba(73, 166, 255, 0.18), transparent 22%),
-      linear-gradient(180deg, rgba(8, 18, 34, 0.96), rgba(4, 10, 20, 0.98)),
+      radial-gradient(circle at 70% 20%, rgba(73, 166, 255, 0.12), transparent 22%),
+      linear-gradient(180deg, rgba(8, 18, 34, 0.9), rgba(4, 10, 20, 0.92)),
       linear-gradient(135deg, rgba(73, 166, 255, 0.08), transparent 45%, rgba(109, 255, 211, 0.08));
     box-shadow: var(--shadow-strong);
     backdrop-filter: blur(24px);
@@ -743,11 +748,11 @@
     border-radius: 2rem;
     border: 1px solid rgba(97, 148, 236, 0.22);
     background:
-      radial-gradient(circle at 50% 0%, rgba(73, 166, 255, 0.18), transparent 34%),
-      radial-gradient(circle at 85% 15%, rgba(109, 255, 211, 0.1), transparent 20%),
-      linear-gradient(180deg, rgba(7, 16, 30, 0.92), rgba(4, 10, 20, 0.94));
-    box-shadow: var(--shadow-cosmic);
-    backdrop-filter: blur(22px);
+      radial-gradient(circle at 50% 0%, rgba(73, 166, 255, 0.08), transparent 34%),
+      radial-gradient(circle at 85% 15%, rgba(109, 255, 211, 0.04), transparent 20%),
+      linear-gradient(180deg, rgba(220, 232, 246, 0.62), rgba(196, 214, 232, 0.48));
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(12px);
   }
 
   .section-frame::before {
@@ -755,9 +760,9 @@
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent),
-      radial-gradient(circle at 10% 10%, rgba(73, 166, 255, 0.12), transparent 18%),
-      radial-gradient(circle at 90% 20%, rgba(109, 255, 211, 0.08), transparent 18%);
+      linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent),
+      radial-gradient(circle at 10% 10%, rgba(73, 166, 255, 0.06), transparent 18%),
+      radial-gradient(circle at 90% 20%, rgba(109, 255, 211, 0.04), transparent 18%);
     pointer-events: none;
   }
 
@@ -767,12 +772,10 @@
     inset: 0;
     border-radius: inherit;
     background:
-      linear-gradient(90deg, transparent, rgba(109, 255, 211, 0.9), transparent) top / 220% 1px no-repeat,
-      linear-gradient(90deg, transparent, rgba(73, 166, 255, 0.75), transparent) bottom / 220% 1px no-repeat;
-    background-position: -140% 0, 140% 100%;
+      linear-gradient(90deg, transparent, rgba(109, 255, 211, 0.45), transparent) top / 100% 1px no-repeat,
+      linear-gradient(90deg, transparent, rgba(73, 166, 255, 0.28), transparent) bottom / 100% 1px no-repeat;
     pointer-events: none;
-    animation: ledSweep 6.5s linear infinite;
-    opacity: 0.95;
+    opacity: 0.8;
   }
 
   .section-frame > * {
@@ -942,8 +945,8 @@
     border-radius: 2rem;
     border: 1px solid rgba(97, 148, 236, 0.24);
     background:
-      radial-gradient(circle at 14% 0%, rgba(73, 166, 255, 0.16), transparent 28%),
-      radial-gradient(circle at 88% 16%, rgba(109, 255, 211, 0.08), transparent 18%),
+      radial-gradient(circle at 14% 0%, rgba(73, 166, 255, 0.12), transparent 28%),
+      radial-gradient(circle at 88% 16%, rgba(109, 255, 211, 0.05), transparent 18%),
       linear-gradient(135deg, rgba(5, 11, 21, 0.98), rgba(7, 17, 32, 0.98) 48%, rgba(4, 10, 20, 0.98));
     padding: 1.5rem 1.6rem;
     box-shadow: var(--shadow-cosmic);
@@ -967,11 +970,9 @@
     inset: 0;
     border-radius: inherit;
     background:
-      linear-gradient(90deg, transparent, rgba(109, 255, 211, 0.95), transparent) top / 220% 1px no-repeat,
-      linear-gradient(90deg, transparent, rgba(73, 166, 255, 0.82), transparent) bottom / 220% 1px no-repeat;
-    background-position: -140% 0, 140% 100%;
-    animation: ledSweep 6.8s linear infinite;
-    opacity: 0.92;
+      linear-gradient(90deg, transparent, rgba(109, 255, 211, 0.55), transparent) top / 100% 1px no-repeat,
+      linear-gradient(90deg, transparent, rgba(73, 166, 255, 0.35), transparent) bottom / 100% 1px no-repeat;
+    opacity: 0.78;
     pointer-events: none;
   }
 
