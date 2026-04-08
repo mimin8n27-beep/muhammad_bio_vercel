@@ -170,17 +170,17 @@ export default function HomePremium() {
       <SharedHeaderPremium />
 
       <main>
-        <section className="relative overflow-hidden px-4 pb-12 pt-8 md:pb-20">
+        <section className="relative overflow-hidden px-4 pb-10 pt-6 md:pb-16">
           <SceneBackdrop intensity="high" />
-          <div className="hero-card container relative overflow-hidden px-6 py-10 md:px-10 md:py-14">
+          <div className="hero-card container relative overflow-hidden px-5 py-8 md:px-8 md:py-10">
             <HeroAccent intensity="high" />
-            <div className="relative z-10 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+            <div className="relative z-10 grid gap-8 lg:grid-cols-[1.08fr_0.82fr] lg:items-center">
               <MotionReveal variant="beam-sweep" intensity="medium" distance={28}>
                 <span className="section-eyebrow">Cinematic system interface</span>
-                <h1 className="mb-5 max-w-[13ch] bg-[linear-gradient(135deg,#ffffff_0%,#9ad8ff_48%,#6dffd3_100%)] bg-clip-text text-[clamp(2.6rem,5.2vw,4.8rem)] font-bold leading-[0.96] text-transparent drop-shadow-[0_0_22px_rgba(73,166,255,0.18)]">
+                <h1 className="mb-4 max-w-[13ch] bg-[linear-gradient(135deg,#ffffff_0%,#b7e6ff_46%,#84f7dc_100%)] bg-clip-text text-[clamp(2.25rem,4.1vw,3.95rem)] font-bold leading-[0.98] text-transparent drop-shadow-[0_0_22px_rgba(73,166,255,0.22)]">
                   Automation systems with a sci-fi pulse and cinematic precision.
                 </h1>
-                <p className="mb-8 max-w-2xl text-[1.02rem] leading-8 text-muted-foreground">
+                <p className="mb-7 max-w-xl text-[0.96rem] leading-7 text-muted-foreground">
                   We turn operations into something that feels intelligent on the surface and reliable underneath:
                   sharper lead flow, calmer execution, clearer reporting, and a visual identity that feels like it came
                   from a near-future control room.
@@ -202,13 +202,13 @@ export default function HomePremium() {
                   </a>
                 </div>
 
-                <div className="mb-6 grid gap-3 sm:grid-cols-3">
+                <div className="mb-5 grid gap-3 sm:grid-cols-3">
                   {metrics.map((metric) => (
                     <div key={metric.label} className="metric-card card-tilt relative overflow-hidden">
                       <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(109,255,211,0.9),transparent)]" />
                       <metric.icon className="mb-3 h-5 w-5 text-primary" />
-                      <p className="mb-1 text-2xl font-bold">{metric.value}</p>
-                      <p className="text-sm text-muted-foreground">{metric.label}</p>
+                      <p className="mb-1 text-xl font-bold">{metric.value}</p>
+                      <p className="text-[0.84rem] text-muted-foreground">{metric.label}</p>
                     </div>
                   ))}
                 </div>
@@ -225,7 +225,7 @@ export default function HomePremium() {
                       intensity="soft"
                       variant="dock-slide"
                     >
-                      <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white/74 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur">
+                      <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-[0.82rem] text-white/82 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur">
                         {signal}
                       </div>
                     </MotionReveal>
@@ -234,8 +234,8 @@ export default function HomePremium() {
               </MotionReveal>
 
               <MotionReveal delay={0.08} variant="parallax" intensity="medium" parallaxRange={14}>
-                <div className="surface-card-glow overflow-hidden rounded-[2rem] p-3">
-                  <div className="relative aspect-[4/4.6] overflow-hidden rounded-[1.6rem] border border-white/20">
+                <div className="surface-card-glow overflow-hidden rounded-[1.8rem] p-2.5">
+                  <div className="relative aspect-[4/4.5] overflow-hidden rounded-[1.45rem] border border-white/20">
                     <img
                       src={PROFILE_IMAGE}
                       alt="Muhammad portrait"
