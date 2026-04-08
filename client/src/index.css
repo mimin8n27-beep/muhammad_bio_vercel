@@ -119,14 +119,7 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-family-body);
-    background-image:
-      radial-gradient(circle at 16% 14%, rgba(58, 119, 226, 0.2) 0%, rgba(43, 88, 178, 0.14) 14%, rgba(15, 32, 64, 0.08) 28%, transparent 48%),
-      radial-gradient(circle at 82% 18%, rgba(109, 255, 211, 0.16) 0%, rgba(68, 172, 170, 0.12) 16%, rgba(13, 31, 44, 0.05) 32%, transparent 54%),
-      radial-gradient(circle at 50% 76%, rgba(73, 166, 255, 0.14) 0%, rgba(35, 84, 156, 0.12) 18%, rgba(11, 24, 42, 0.08) 34%, transparent 58%),
-      radial-gradient(circle at 52% 42%, rgba(9, 20, 38, 0.58) 0%, rgba(6, 14, 27, 0.74) 22%, rgba(4, 11, 21, 0.9) 44%, rgba(3, 9, 19, 0.96) 66%, rgba(2, 7, 16, 1) 100%),
-      linear-gradient(180deg, #030913 0%, #040a14 24%, #030811 52%, #020710 78%, #020710 100%);
-    background-attachment: scroll;
-    background-color: #020710;
+    background: #020710;
     position: relative;
   }
 
@@ -140,22 +133,13 @@
   }
 
   body::before {
-    background-image:
-      radial-gradient(circle, rgba(176, 225, 255, 0.12) 0 1px, transparent 1.5px),
-      radial-gradient(circle, rgba(109, 255, 211, 0.08) 0 1px, transparent 1.4px);
-    background-position:
-      0 0,
-      1.2rem 1.6rem;
-    background-size: 7.5rem 7.5rem, 9rem 9rem;
-    opacity: 0.12;
-    mix-blend-mode: screen;
-    animation: none;
+    background: none;
+    opacity: 0;
   }
 
   body::after {
-    background:
-      radial-gradient(circle at 50% 50%, rgba(2, 7, 16, 0) 0%, rgba(2, 7, 16, 0.18) 52%, rgba(2, 7, 16, 0.42) 100%),
-      radial-gradient(circle at 50% 12%, rgba(73, 166, 255, 0.06), transparent 34%);
+    background: none;
+    opacity: 0;
     z-index: -1;
   }
 
@@ -215,10 +199,7 @@
     min-height: 100vh;
     overflow: clip;
     isolation: isolate;
-    background:
-      radial-gradient(circle at 50% -12%, rgba(73, 166, 255, 0.1) 0%, rgba(43, 93, 168, 0.08) 16%, transparent 42%),
-      radial-gradient(circle at 18% 0%, rgba(109, 255, 211, 0.06), transparent 28%),
-      linear-gradient(180deg, rgba(2, 8, 18, 0.22), rgba(2, 8, 18, 0.06) 18%, rgba(2, 8, 18, 0.28) 100%);
+    background: transparent;
   }
 
   .page-shell::before,
@@ -231,28 +212,32 @@
   }
 
   .page-shell::before {
-    background-image:
-      linear-gradient(var(--grid-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 52px 52px;
-    mask-image: radial-gradient(circle at center, black 38%, transparent 90%);
-    opacity: 0.18;
-    animation: none;
+    background: none;
+    opacity: 0;
   }
 
   .page-shell::after {
-    background:
-      linear-gradient(135deg, transparent 0%, rgba(73, 166, 255, 0.09) 32%, transparent 54%, rgba(109, 255, 211, 0.07) 76%, transparent 100%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 16%, transparent 84%, rgba(255, 255, 255, 0.03)),
-      repeating-linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.02) 0,
-        rgba(255, 255, 255, 0.02) 1px,
-        transparent 1px,
-        transparent 4px
-      );
-    opacity: 0.09;
-    animation: none;
+    background: none;
+    opacity: 0;
+  }
+
+  .site-app-shell {
+    position: relative;
+    min-height: 100vh;
+    isolation: isolate;
+  }
+
+  .site-app-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .site-global-background {
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    opacity: 1;
+    overflow: hidden;
   }
 
   .scene-backdrop {

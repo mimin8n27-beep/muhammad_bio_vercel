@@ -1,6 +1,5 @@
 import SharedHeaderPremium from "@/components/SharedHeaderPremium";
 import { MotionReveal } from "@/components/site/MotionReveal";
-import { SceneBackdrop } from "@/components/site/SceneBackdrop";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { supabase } from "@/lib/supabase";
 import {
@@ -149,7 +148,6 @@ export default function PricingPremium() {
 
   return (
     <div className="page-shell pricing-page-shell dark min-h-screen text-foreground">
-      <SceneBackdrop intensity="medium" />
       <div className="pricing-top-aurora" aria-hidden="true">
         <div className="pricing-top-aurora-orb pricing-top-aurora-orb-a" />
         <div className="pricing-top-aurora-orb pricing-top-aurora-orb-b" />

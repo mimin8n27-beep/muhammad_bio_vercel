@@ -2,7 +2,6 @@ import ContactFormPremium from "@/components/ContactFormPremium";
 import SharedHeaderPremium from "@/components/SharedHeaderPremium";
 import { HeroAccent } from "@/components/site/HeroAccent";
 import { MotionReveal } from "@/components/site/MotionReveal";
-import { SceneBackdrop } from "@/components/site/SceneBackdrop";
 import { SectionIntro } from "@/components/site/SectionIntro";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { SurfaceCard } from "@/components/site/SurfaceCard";
@@ -171,7 +170,6 @@ export default function HomePremium() {
 
       <main>
         <section className="relative overflow-hidden px-4 pb-14 pt-8 md:pb-20">
-          <SceneBackdrop intensity="high" />
           <div className="hero-card container relative overflow-hidden px-7 py-10 md:px-10 md:py-14">
             <HeroAccent intensity="high" />
             <div className="relative z-10 grid gap-8 lg:grid-cols-[1.08fr_0.82fr] lg:items-center">

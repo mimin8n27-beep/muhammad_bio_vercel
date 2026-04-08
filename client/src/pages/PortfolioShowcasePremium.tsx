@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 
 import SharedHeaderPremium from "@/components/SharedHeaderPremium";
 import { MotionReveal } from "@/components/site/MotionReveal";
-import { SceneBackdrop } from "@/components/site/SceneBackdrop";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { stripMarkdown } from "@/components/site/SafeRichText";
 import {
@@ -116,7 +115,6 @@ export default function PortfolioShowcasePremium() {
 
   return (
     <div className="page-shell dark min-h-screen text-foreground" dir="rtl">
-      <SceneBackdrop intensity="medium" />
       <SharedHeaderPremium />
 
       <section className="relative overflow-hidden bg-[linear-gradient(180deg,rgba(4,12,24,0.9),rgba(7,18,34,0.95))] py-16 md:py-22">
