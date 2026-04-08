@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
-import SharedHeader from "@/components/SharedHeader";
+import SharedHeaderPremium from "@/components/SharedHeaderPremium";
 import { ArrowRight, CheckCircle, Loader2, CheckCircle2, Mail, MessageCircle } from "lucide-react";
 
 const WHATSAPP_NUMBER = "+201061455162";
@@ -127,29 +127,29 @@ export default function Pricing() {
   const emailLink = `mailto:${EMAIL}?subject=استفسار عن خطط التسعير`;
 
   return (
-    <div className="min-h-screen bg-white text-foreground">
+    <div className="page-shell dark min-h-screen text-foreground">
 
       {/* Header */}
-      <SharedHeader />
+      <SharedHeaderPremium />
 
       {/* Hero */}
-      <section className="bg-gradient-to-b from-blue-50 to-white py-16 md:py-24 text-center border-b border-border">
+      <section className="bg-[linear-gradient(180deg,rgba(4,12,24,0.84),rgba(7,18,34,0.92))] py-16 md:py-24 text-center border-b border-border">
         <div className="container max-w-2xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Pricing Plans</h1>
+          <h1 className="mb-4 bg-[linear-gradient(135deg,#ffffff_0%,#9ad8ff_48%,#6dffd3_100%)] bg-clip-text text-4xl font-bold text-transparent md:text-5xl">Pricing Plans</h1>
           <p className="text-muted-foreground text-lg mb-3">Flexible pricing for AI automation and workflow systems.</p>
           <p className="text-muted-foreground">Choose the right automation package for your project. From simple workflows to enterprise-scale systems.</p>
         </div>
       </section>
 
       {/* Pricing Cards */}
-      <section className="py-20 bg-white">
+      <section className="py-20">
         <div className="container">
           <div className="grid md:grid-cols-4 gap-6 items-start">
             {plans.map((plan, i) => (
               <div key={i} className={`relative rounded-2xl border-2 flex flex-col transition-all duration-300 group
                 ${plan.popular
-                  ? "border-primary shadow-2xl shadow-primary/15 bg-white"
-                  : "border-border bg-white hover:border-primary/50 hover:shadow-lg hover:-translate-y-1"}`}>
+                  ? "surface-card border-primary shadow-2xl shadow-primary/15"
+                  : "surface-card border-border hover:border-primary/50 hover:shadow-lg hover:-translate-y-1"}`}>
 
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
@@ -184,7 +184,7 @@ export default function Pricing() {
                   </div>
 
                   {/* Base Price */}
-                  <div className="bg-blue-50 rounded-xl p-4 mb-4">
+                  <div className="mb-4 rounded-xl border border-primary/15 bg-primary/10 p-4">
                     <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-1">Base Price</p>
                     <p className="text-2xl font-bold text-primary">{plan.basePrice}</p>
                   </div>
@@ -203,7 +203,7 @@ export default function Pricing() {
                   </div>
 
                   {/* Final Price */}
-                  <div className="bg-gray-50 rounded-xl p-4 mb-6">
+                  <div className="mb-6 rounded-xl border border-white/10 bg-white/5 p-4">
                     <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-1">Final Price Range</p>
                     <p className="text-xl font-bold text-primary">{plan.finalPrice}</p>
                   </div>
@@ -225,7 +225,7 @@ export default function Pricing() {
       </section>
 
       {/* Contact Form */}
-      <section id="contact-section" className="py-20 bg-[#f8faff] border-t border-border">
+      <section id="contact-section" className="py-20 border-t border-border">
         <div className="container max-w-2xl mx-auto" dir="rtl">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
@@ -243,47 +243,47 @@ export default function Pricing() {
               <p className="text-muted-foreground">تم استقبال رسالتك بنجاح. سأتواصل معك قريباً.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="surface-card space-y-5 rounded-[1.6rem] p-6">
               <div>
                 <label className="block text-sm font-semibold text-foreground mb-2">اسمك الكامل</label>
                 <input type="text" name="name" value={formData.name} onChange={handleChange} required
                   placeholder="محمد أحمد"
-                  className="w-full px-4 py-3 bg-white border border-border rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" />
+                  className="w-full rounded-xl border border-border bg-white/5 px-4 py-3 text-white placeholder:text-[#91a9ca] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-foreground mb-2">بريدك الإلكتروني</label>
                 <input type="email" name="email" value={formData.email} onChange={handleChange} required
                   placeholder="your@gmail.com"
-                  className="w-full px-4 py-3 bg-white border border-border rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" />
+                  className="w-full rounded-xl border border-border bg-white/5 px-4 py-3 text-white placeholder:text-[#91a9ca] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-foreground mb-2">اسم شركتك</label>
                 <input type="text" name="company" value={formData.company} onChange={handleChange}
                   placeholder="اسم الشركة (اختياري)"
-                  className="w-full px-4 py-3 bg-white border border-border rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" />
+                  className="w-full rounded-xl border border-border bg-white/5 px-4 py-3 text-white placeholder:text-[#91a9ca] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-foreground mb-2">رسالتك</label>
                 <textarea name="message" value={formData.message} onChange={handleChange} required rows={4}
                   placeholder="أخبرني عن احتياجاتك والعمليات التي تريد أتمتتها..."
-                  className="w-full px-4 py-3 bg-white border border-border rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all resize-none" />
+                  className="w-full resize-none rounded-xl border border-border bg-white/5 px-4 py-3 text-white placeholder:text-[#91a9ca] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" />
               </div>
 
               {error && <p className="text-red-500 text-sm">{error}</p>}
 
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <button type="submit" disabled={isSubmitting}
-                  className="flex-1 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl font-semibold transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                  className="sci-fi-button flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-3 font-semibold text-white transition-all disabled:opacity-50 hover:bg-primary/90">
                   {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                   {isSubmitting ? "جاري الإرسال..." : "إرسال الرسالة"}
                 </button>
                 <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-                  <button type="button" className="w-full sm:w-auto px-5 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-semibold transition-all flex items-center justify-center gap-2">
+                  <button type="button" className="sci-fi-button flex w-full items-center justify-center gap-2 rounded-xl bg-green-500 px-5 py-3 font-semibold text-white transition-all hover:bg-green-600 sm:w-auto">
                     <MessageCircle className="w-4 h-4" /> WhatsApp
                   </button>
                 </a>
                 <a href={emailLink}>
-                  <button type="button" className="w-full sm:w-auto px-5 py-3 border-2 border-border text-foreground hover:border-primary hover:text-primary rounded-xl font-semibold transition-all flex items-center justify-center gap-2">
+                  <button type="button" className="sci-fi-button flex w-full items-center justify-center gap-2 rounded-xl border-2 border-border px-5 py-3 font-semibold text-white transition-all hover:border-primary hover:text-primary sm:w-auto">
                     <Mail className="w-4 h-4" /> البريد الإلكتروني
                   </button>
                 </a>
@@ -296,7 +296,7 @@ export default function Pricing() {
             <h4 className="text-lg font-bold text-foreground mb-6 text-center">طرق التواصل السريعة</h4>
             <div className="grid md:grid-cols-2 gap-4">
               <a href={whatsappLink} target="_blank" rel="noopener noreferrer"
-                className="p-4 bg-white border border-border rounded-xl hover:border-primary hover:shadow-lg transition-all flex items-center gap-3 group">
+                className="surface-card flex items-center gap-3 rounded-xl p-4 transition-all hover:border-primary hover:shadow-lg group">
                 <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition-colors">
                   <MessageCircle className="w-6 h-6 text-green-600" />
                 </div>
@@ -306,7 +306,7 @@ export default function Pricing() {
                 </div>
               </a>
               <a href={emailLink}
-                className="p-4 bg-white border border-border rounded-xl hover:border-primary hover:shadow-lg transition-all flex items-center gap-3 group">
+                className="surface-card flex items-center gap-3 rounded-xl p-4 transition-all hover:border-primary hover:shadow-lg group">
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
                   <Mail className="w-6 h-6 text-blue-600" />
                 </div>
@@ -321,7 +321,7 @@ export default function Pricing() {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 bg-white border-t border-border">
+      <section className="py-20 border-t border-border">
         <div className="container max-w-2xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-12 text-center">
             Frequently Asked Questions
@@ -335,8 +335,8 @@ export default function Pricing() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 bg-white border-t border-border">
-        <div className="container flex flex-col md:flex-row items-center justify-between gap-4">
+      <footer className="px-4 pb-8 pt-2">
+        <div className="container hud-panel flex flex-col items-center justify-between gap-4 rounded-[1.6rem] border-white/12 px-6 py-6 md:flex-row">
           <p className="text-muted-foreground text-sm">© 2026 Muhammad. All rights reserved.</p>
           <a href="/" className="text-sm text-muted-foreground hover:text-primary transition-colors">
             ← العودة للرئيسية

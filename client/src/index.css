@@ -252,6 +252,10 @@
     line-height: 1.8;
   }
 
+  .dark {
+    color-scheme: dark;
+  }
+
   .surface-card {
     position: relative;
     overflow: hidden;
@@ -571,12 +575,26 @@
     background: transparent;
     border: none;
     outline: none;
-    color: inherit;
+    color: #f3f8ff;
+    caret-color: #7fd3ff;
+    font-weight: 500;
   }
 
   .field-input::placeholder {
-    color: var(--muted-foreground);
-    opacity: 0.76;
+    color: #91a9ca;
+    opacity: 1;
+  }
+
+  .dark label {
+    color: #dcecff;
+  }
+
+  .dark .text-muted-foreground {
+    color: #9db5d3;
+  }
+
+  .dark .text-foreground {
+    color: #f3f8ff;
   }
 
   .skeleton-block {

@@ -64,7 +64,7 @@ export default function ContactFormPremium({
       <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
         <div>
           <span className="section-eyebrow">Secure outreach</span>
-          <h3 className="mb-3 text-3xl font-bold">Tell me what needs to become smoother</h3>
+          <h3 className="mb-3 text-3xl font-bold text-white">Tell me what needs to become smoother</h3>
           <p className="mb-6 max-w-xl text-muted-foreground">
             Share your workflow, the tools involved, and the bottlenecks you want to remove.
             The form uses stricter validation, a hidden bot trap, and a small submit cooldown.
@@ -75,25 +75,25 @@ export default function ContactFormPremium({
               href={whatsappLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="surface-card p-4"
+              className="surface-card light-sweep p-4"
             >
               <div className="mb-3 feature-icon">
                 <MessageCircle className="h-5 w-5" />
               </div>
-              <p className="mb-1 font-semibold">WhatsApp</p>
-              <p className="text-sm text-muted-foreground">{whatsappNumber}</p>
+              <p className="mb-1 font-semibold text-white">WhatsApp</p>
+              <p className="text-sm text-[#d8ecff]">{whatsappNumber}</p>
             </a>
 
-            <a href={emailLink} className="surface-card p-4">
+            <a href={emailLink} className="surface-card light-sweep p-4">
               <div className="mb-3 feature-icon">
                 <Mail className="h-5 w-5" />
               </div>
-              <p className="mb-1 font-semibold">Email</p>
-              <p className="text-sm text-muted-foreground">{email}</p>
+              <p className="mb-1 font-semibold text-white">Email</p>
+              <p className="text-sm text-[#d8ecff]">{email}</p>
             </a>
           </div>
 
-          <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary/8 px-4 py-2 text-sm text-muted-foreground">
+          <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm text-[#d8ecff]">
             <ShieldCheck className="h-4 w-4 text-primary" />
             Built with lighter anti-spam protection and safer handling.
           </div>
@@ -111,7 +111,7 @@ export default function ContactFormPremium({
           ) : (
             <form onSubmit={handleSubmit} className="grid gap-4">
               <div>
-                <label className="mb-2 block text-sm font-semibold">Full name</label>
+                <label className="mb-2 block text-sm font-semibold text-[#dcecff]">Full name</label>
                 <div className="field-shell">
                   <input
                     className="field-input"
@@ -125,7 +125,7 @@ export default function ContactFormPremium({
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-semibold">Email</label>
+                <label className="mb-2 block text-sm font-semibold text-[#dcecff]">Email</label>
                 <div className="field-shell">
                   <input
                     className="field-input"
@@ -140,7 +140,7 @@ export default function ContactFormPremium({
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-semibold">Company</label>
+                <label className="mb-2 block text-sm font-semibold text-[#dcecff]">Company</label>
                 <div className="field-shell">
                   <input
                     className="field-input"
@@ -165,7 +165,7 @@ export default function ContactFormPremium({
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-semibold">What should this automation improve?</label>
+                <label className="mb-2 block text-sm font-semibold text-[#dcecff]">What should this automation improve?</label>
                 <div className="field-shell">
                   <textarea
                     className="field-input min-h-36 resize-none"
@@ -183,7 +183,7 @@ export default function ContactFormPremium({
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="mt-2 h-12 rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90"
+                className="sci-fi-button mt-2 h-12 rounded-2xl bg-primary text-primary-foreground shadow-[0_16px_40px_rgba(31,122,255,0.35)] hover:bg-primary/90"
               >
                 {isSubmitting ? "Sending..." : "Send secure inquiry"}
               </Button>

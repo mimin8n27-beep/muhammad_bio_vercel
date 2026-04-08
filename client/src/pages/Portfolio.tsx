@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
-import SharedHeader from "@/components/SharedHeader";
+import SharedHeaderPremium from "@/components/SharedHeaderPremium";
 import { ArrowLeft, X, Maximize2 } from "lucide-react";
 
 const WHATSAPP_NUMBER = "+201064998737";
@@ -137,17 +137,17 @@ export default function Portfolio() {
     tools ? tools.split(/[\s,]+/).map((t) => t.trim()).filter(Boolean) : [];
 
   return (
-    <div className="min-h-screen bg-white text-foreground" dir="rtl">
+    <div className="page-shell dark min-h-screen text-foreground" dir="rtl">
 
-      <SharedHeader />
+      <SharedHeaderPremium />
 
-      <section className="relative overflow-hidden bg-gradient-to-br from-white via-blue-50 to-white py-20 md:py-28">
-        <div className="absolute inset-0 opacity-5">
+      <section className="relative overflow-hidden bg-[linear-gradient(180deg,rgba(4,12,24,0.84),rgba(7,18,34,0.92))] py-20 md:py-28">
+        <div className="absolute inset-0 opacity-15">
           <div className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary rounded-full blur-3xl" />
         </div>
         <div className="container relative z-10 text-center">
-          <div className="inline-block mb-4 px-4 py-2 bg-blue-100 rounded-lg">
+          <div className="inline-block mb-4 rounded-full border border-primary/20 bg-primary/10 px-4 py-2">
             <span className="text-sm font-semibold text-primary">مشاريعي</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 leading-tight">معرض الأعمال</h1>
@@ -169,11 +169,11 @@ export default function Portfolio() {
                 <div
                   key={project.id}
                   onClick={() => openModal(project)}
-                  className="group bg-white border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                  className="surface-card card-tilt group cursor-pointer overflow-hidden rounded-2xl transition-all duration-300"
                 >
                   <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center overflow-hidden">
                     {project.image_url ? (
-                      <img src={project.image_url} alt={project.title} className="w-full h-full object-cover" />
+                      <img src={project.image_url} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
                     ) : (
                       <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
                         <span className="text-3xl">⚡</span>
@@ -209,7 +209,7 @@ export default function Portfolio() {
         </div>
       </section>
 
-      <section className="py-20 bg-gradient-to-br from-primary to-primary/80 text-white border-t border-border">
+      <section className="py-20 border-t border-border">
         <div className="container text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">هل يعجبك عملي؟</h2>
           <p className="text-white/80 mb-8 text-lg">تواصل معي وابدأ مشروعك الآن</p>
@@ -224,10 +224,10 @@ export default function Portfolio() {
         </div>
       </section>
 
-      <footer className="py-8 bg-white border-t border-border">
-        <div className="container flex flex-col md:flex-row items-center justify-between gap-4">
+      <footer className="px-4 pb-8 pt-2">
+        <div className="container hud-panel flex flex-col items-center justify-between gap-4 rounded-[1.6rem] border-white/12 px-6 py-6 md:flex-row">
           <p className="text-muted-foreground text-sm">© 2026 محمد - متخصص في أتمتة الأعمال الرقمية</p>
-          <a href="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+          <a href="/" className="flex items-center gap-2 text-sm text-white/70 hover:text-primary transition-colors">
             <ArrowLeft className="w-4 h-4" /> العودة للرئيسية
           </a>
         </div>
@@ -239,7 +239,7 @@ export default function Portfolio() {
           onClick={() => setSelected(null)}
         >
           <div
-            className="bg-white rounded-2xl w-full max-w-3xl max-h-[92vh] flex flex-col shadow-2xl"
+            className="hud-panel rounded-2xl w-full max-w-3xl max-h-[92vh] flex flex-col shadow-2xl text-white"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="overflow-y-auto flex-1">
@@ -277,7 +277,7 @@ export default function Portfolio() {
               </div>
             </div>
 
-            <div className="p-4 border-t border-border bg-white rounded-b-2xl flex-shrink-0" dir="rtl">
+            <div className="p-4 border-t border-border rounded-b-2xl flex-shrink-0" dir="rtl">
               <button
                 onClick={(e) => {
                   e.stopPropagation();

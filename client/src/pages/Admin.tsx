@@ -223,7 +223,7 @@ export default function Admin() {
   // ===== Login Screen =====
   if (!authed) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4" dir="rtl">
+      <div className="page-shell dark min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4 text-white" dir="rtl">
         <div className="w-full max-w-sm">
           <div className="text-center mb-8">
             <div className="w-14 h-14 bg-[#0066ff] rounded-2xl flex items-center justify-center font-bold text-xl mx-auto mb-4">
@@ -233,7 +233,7 @@ export default function Admin() {
             <p className="text-white/40 text-sm mt-1">أدخل كلمة المرور للدخول</p>
           </div>
 
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+          <div className="hud-panel rounded-2xl p-6">
             <div className="relative mb-4">
               <input
                 type={showPass ? "text" : "password"}
@@ -277,7 +277,7 @@ export default function Admin() {
   ];
 
   return (
-    <div className={`min-h-screen ${darkMode ? "bg-[#0a0a0a] text-white" : "bg-gray-50 text-gray-900"}`} dir="rtl">
+    <div className={`page-shell ${darkMode ? "dark bg-[#0a0a0a] text-white" : "bg-gray-50 text-gray-900"} min-h-screen`} dir="rtl">
       {/* Header */}
       <header className={`sticky top-0 z-50 backdrop-blur border-b ${darkMode ? "bg-[#0a0a0a]/90 border-white/10" : "bg-white/90 border-gray-200"}`}>
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -364,7 +364,7 @@ export default function Admin() {
 
             {/* Form */}
             {showForm && (
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-6">
+              <div className="hud-panel rounded-2xl p-6 mb-6">
                 <div className="flex items-center justify-between mb-5">
                   <h3 className="font-bold text-lg">{editingId ? "تعديل مشروع" : "إضافة مشروع جديد"}</h3>
                   <button onClick={() => setShowForm(false)} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
