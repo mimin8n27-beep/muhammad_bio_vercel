@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import {
+  DEFAULT_PROJECT_VIEWER_MODE,
+  PROJECT_VIEWER_MODES,
+  type ProjectViewerMode,
+  isAllowedN8nPreviewUrl,
+} from "@/lib/portfolioViewer";
+import {
   LogOut, Plus, Trash2, Edit2, Save, X, Loader2,
   MessageSquare, Users, FolderOpen, Eye, EyeOff,
   Sun, Moon, ExternalLink, Upload
@@ -22,6 +28,7 @@ interface Project {
   image_url: string;
   link_url: string;
   svg_url: string;
+  viewer_mode: ProjectViewerMode;
 }
 
 interface Client {
@@ -48,7 +55,18 @@ interface Message {
 const emptyProject: Project = {
   title: "", description: "", client_name: "",
   tools: "", status: "active", image_url: "", link_url: "", svg_url: "",
+  viewer_mode: DEFAULT_PROJECT_VIEWER_MODE,
 };
+
+function inferViewerMode(project: Partial<Project>): ProjectViewerMode {
+  if (PROJECT_VIEWER_MODES.includes(project.viewer_mode as ProjectViewerMode)) {
+    return project.viewer_mode as ProjectViewerMode;
+  }
+  if (project.link_url) return "live_n8n";
+  if (project.svg_url) return "svg_only";
+  if (project.image_url) return "image_only";
+  return DEFAULT_PROJECT_VIEWER_MODE;
+}
 
 export default function Admin() {
   const [authed, setAuthed] = useState(false);
@@ -75,6 +93,7 @@ export default function Admin() {
   const [editClient, setEditClient] = useState(emptyClient);
   const [editingClientId, setEditingClientId] = useState<string | null>(null);
   const [savingClient, setSavingClient] = useState(false);
+  const [projectFormError, setProjectFormError] = useState("");
 
   const uploadImage = async (file: File): Promise<string> => {
     setImageUploading(true);
@@ -106,10 +125,18 @@ export default function Admin() {
     setLoading(true);
     if (tab === "projects") {
       // Exclude heavy base64 fields from list — load them only when editing
-      const { data } = await supabase.from("projects")
-        .select("id, title, description, client_name, tools, status, created_at")
+      let { data, error } = await supabase.from("projects")
+        .select("id, title, description, client_name, tools, status, image_url, link_url, svg_url, viewer_mode, created_at")
         .order("created_at", { ascending: false });
-      setProjects(data || []);
+      if (error && error.message?.includes("viewer_mode")) {
+        ({ data, error } = await supabase.from("projects")
+          .select("id, title, description, client_name, tools, status, image_url, link_url, svg_url, created_at")
+          .order("created_at", { ascending: false }));
+      }
+      setProjects((data || []).map((project: any) => ({
+        ...project,
+        viewer_mode: inferViewerMode(project),
+      })));
     } else if (tab === "clients") {
       const { data } = await supabase.from("clients").select("*").order("created_at", { ascending: false });
       setClients(data || []);
@@ -122,6 +149,17 @@ export default function Admin() {
 
   const saveProject = async () => {
     if (!editProject.title) return alert("اكتب عنوان المشروع أولاً");
+    if (editProject.viewer_mode === "live_n8n") {
+      if (!editProject.link_url.trim()) {
+        setProjectFormError("أضف رابط public read-only للعرض الحي قبل الحفظ.");
+        return;
+      }
+      if (!isAllowedN8nPreviewUrl(editProject.link_url, import.meta.env.VITE_N8N_PREVIEW_ALLOWED_HOSTS)) {
+        setProjectFormError("رابط العرض الحي لازم يكون على domain مسموح لعرض n8n.");
+        return;
+      }
+    }
+    setProjectFormError("");
     setSaving(true);
     
     // Build data object — exclude svg_url if column doesn't exist yet
@@ -133,6 +171,7 @@ export default function Admin() {
       status: editProject.status,
       image_url: editProject.image_url,
       link_url: editProject.link_url,
+      viewer_mode: editProject.viewer_mode,
     };
     
     // Try adding svg_url — if column doesn't exist in DB it will cause error
@@ -151,8 +190,9 @@ export default function Admin() {
     
     if (error) {
       // Maybe svg_url column doesn't exist — try without it
-      if (error.message?.includes("svg_url")) {
+      if (error.message?.includes("svg_url") || error.message?.includes("viewer_mode")) {
         delete projectData.svg_url;
+        delete projectData.viewer_mode;
         const { error: error2 } = editingId
           ? await supabase.from("projects").update(projectData).eq("id", editingId)
           : await supabase.from("projects").insert([projectData]);
@@ -160,7 +200,7 @@ export default function Admin() {
           alert("خطأ في الحفظ: " + error2.message);
           return;
         }
-        alert("⚠️ تم الحفظ بدون svg_url — أضف الـ column في Supabase أولاً");
+        alert("⚠️ تم الحفظ بدون بعض حقول العرض الجديدة. أضف viewer_mode و svg_url في Supabase أولاً.");
       } else {
         alert("خطأ في الحفظ: " + error.message);
         return;
@@ -215,7 +255,13 @@ export default function Admin() {
   const startEdit = async (p: any) => {
     // Fetch full project data including heavy fields for editing
     const { data } = await supabase.from("projects").select("*").eq("id", p.id).single();
-    setEditProject({ ...(data || p) });
+    const project = data || p;
+    setEditProject({
+      ...emptyProject,
+      ...project,
+      viewer_mode: inferViewerMode(project),
+    });
+    setProjectFormError("");
     setEditingId(p.id);
     setShowForm(true);
   };
@@ -354,7 +400,7 @@ export default function Admin() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold">المشاريع</h2>
               <button
-                onClick={() => { setShowForm(true); setEditProject(emptyProject); setEditingId(null); }}
+                onClick={() => { setShowForm(true); setEditProject(emptyProject); setEditingId(null); setProjectFormError(""); }}
                 className="flex items-center gap-2 px-4 py-2 bg-[#0066ff] hover:bg-[#0055ee] rounded-xl text-sm font-semibold transition-colors"
               >
                 <Plus className="w-4 h-4" />
@@ -367,10 +413,16 @@ export default function Admin() {
               <div className="hud-panel rounded-2xl p-6 mb-6">
                 <div className="flex items-center justify-between mb-5">
                   <h3 className="font-bold text-lg">{editingId ? "تعديل مشروع" : "إضافة مشروع جديد"}</h3>
-                  <button onClick={() => setShowForm(false)} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
+                  <button onClick={() => { setShowForm(false); setProjectFormError(""); }} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
                     <X className="w-4 h-4" />
                   </button>
                 </div>
+
+                {projectFormError && (
+                  <div className="mb-4 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                    {projectFormError}
+                  </div>
+                )}
 
                   <div className="grid md:grid-cols-2 gap-4">
                   {[
@@ -398,6 +450,46 @@ export default function Admin() {
                       placeholder="n8n Gmail Sheets OpenAI Telegram"
                       className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/25 outline-none focus:border-[#0066ff] transition-colors text-sm"
                     />
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-4 mt-4">
+                    <div>
+                      <label className="block text-sm text-white/50 mb-1.5">نوع العرض</label>
+                      <select
+                        value={editProject.viewer_mode}
+                        onChange={(e) => {
+                          const nextMode = e.target.value as ProjectViewerMode;
+                          setProjectFormError("");
+                          setEditProject((p) => ({
+                            ...p,
+                            viewer_mode: nextMode,
+                            link_url: nextMode === "live_n8n" ? p.link_url : p.link_url,
+                          }));
+                        }}
+                        className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-[#0066ff] transition-colors text-sm"
+                      >
+                        <option value="live_n8n">Live n8n mirror</option>
+                        <option value="image_only">Image only</option>
+                        <option value="svg_only">SVG legacy viewer</option>
+                        <option value="none">No dedicated viewer</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm text-white/50 mb-1.5">رابط العرض الحي</label>
+                      <input
+                        value={editProject.link_url}
+                        onChange={(e) => {
+                          setProjectFormError("");
+                          setEditProject((p) => ({ ...p, link_url: e.target.value }));
+                        }}
+                        placeholder="https://your-n8n-preview-url"
+                        className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/25 outline-none focus:border-[#0066ff] transition-colors text-sm"
+                      />
+                      <p className="mt-2 text-xs text-white/35">
+                        يستخدم فقط مع Live n8n mirror ولازم يكون public read-only.
+                      </p>
+                    </div>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4 mt-4">
@@ -580,7 +672,7 @@ export default function Admin() {
                     {saving ? "جاري الحفظ..." : "حفظ"}
                   </button>
                   <button
-                    onClick={() => setShowForm(false)}
+                    onClick={() => { setShowForm(false); setProjectFormError(""); }}
                     className="px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm transition-colors"
                   >
                     إلغاء
@@ -625,7 +717,12 @@ export default function Admin() {
                         <button onClick={() => deleteProject(p.id)} className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 rounded-lg text-xs text-red-400 transition-colors">
                           <Trash2 className="w-3 h-3" /> حذف
                         </button>
-                        {p.svg_url && (
+                        {inferViewerMode(p) === "live_n8n" && p.link_url && (
+                          <span className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-xs text-emerald-300 mr-auto">
+                            Live mirror ready
+                          </span>
+                        )}
+                        {inferViewerMode(p) !== "live_n8n" && p.svg_url && (
                           <span className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0066ff]/10 border border-[#0066ff]/20 rounded-lg text-xs text-[#0066ff] mr-auto">
                             ✅ SVG موجود
                           </span>
