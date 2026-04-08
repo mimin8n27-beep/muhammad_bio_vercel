@@ -171,16 +171,16 @@ export default function HomePremium() {
 
       <main>
         <section className="relative overflow-hidden px-4 pb-12 pt-8 md:pb-20">
-          <SceneBackdrop intensity="high" />
+          <SceneBackdrop intensity="medium" />
           <div className="hero-card container relative overflow-hidden px-6 py-10 md:px-10 md:py-14">
             <HeroAccent intensity="high" />
             <div className="relative z-10 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
-              <MotionReveal variant="beam-sweep" intensity="high" distance={42}>
+              <MotionReveal variant="beam-sweep" intensity="medium" distance={28}>
                 <span className="section-eyebrow">Cinematic system interface</span>
-                <h1 className="mb-5 max-w-3xl bg-[linear-gradient(135deg,#ffffff_0%,#9ad8ff_48%,#6dffd3_100%)] bg-clip-text text-[clamp(3rem,6vw,5.6rem)] font-bold leading-[0.95] text-transparent drop-shadow-[0_0_28px_rgba(73,166,255,0.22)]">
+                <h1 className="mb-5 max-w-[13ch] bg-[linear-gradient(135deg,#ffffff_0%,#9ad8ff_48%,#6dffd3_100%)] bg-clip-text text-[clamp(2.6rem,5.2vw,4.8rem)] font-bold leading-[0.96] text-transparent drop-shadow-[0_0_22px_rgba(73,166,255,0.18)]">
                   Automation systems with a sci-fi pulse and cinematic precision.
                 </h1>
-                <p className="mb-8 max-w-2xl text-lg leading-8 text-muted-foreground">
+                <p className="mb-8 max-w-2xl text-[1.02rem] leading-8 text-muted-foreground">
                   We turn operations into something that feels intelligent on the surface and reliable underneath:
                   sharper lead flow, calmer execution, clearer reporting, and a visual identity that feels like it came
                   from a near-future control room.
@@ -213,7 +213,7 @@ export default function HomePremium() {
                   ))}
                 </div>
 
-                <div className="grid gap-3 sm:grid-cols-3">
+                <div className="mt-1 grid gap-3 sm:grid-cols-3">
                   {[
                     "Reactive interface overlays",
                     "Layered motion with ambient depth",
@@ -222,10 +222,10 @@ export default function HomePremium() {
                     <MotionReveal
                       key={signal}
                       delay={0.12 + index * 0.06}
-                      intensity="high"
+                      intensity="soft"
                       variant="dock-slide"
                     >
-                      <div className="rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/74 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur">
+                      <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white/74 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur">
                         {signal}
                       </div>
                     </MotionReveal>
@@ -233,7 +233,7 @@ export default function HomePremium() {
                 </div>
               </MotionReveal>
 
-              <MotionReveal delay={0.08} variant="parallax" intensity="high" parallaxRange={34}>
+              <MotionReveal delay={0.08} variant="parallax" intensity="medium" parallaxRange={14}>
                 <div className="surface-card-glow overflow-hidden rounded-[2rem] p-3">
                   <div className="relative aspect-[4/4.6] overflow-hidden rounded-[1.6rem] border border-white/20">
                     <img
