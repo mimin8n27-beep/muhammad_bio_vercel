@@ -47,6 +47,7 @@ export default function SharedHeaderPremium() {
   return (
     <header className="sticky top-0 z-50 px-4 pt-4">
       <motion.div
+        dir="ltr"
         initial={reduceMotion ? false : { opacity: 0, y: -18 }}
         animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -67,7 +68,7 @@ export default function SharedHeaderPremium() {
             </div>
           </button>
 
-          <nav className="hidden items-center gap-7 md:flex">
+          <nav className="hidden items-center gap-7 md:flex" dir="ltr">
             {navigation.map((item) => {
               const active = location === item.href;
               return (
@@ -116,7 +117,7 @@ export default function SharedHeaderPremium() {
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               className="hud-panel overflow-hidden rounded-[1.2rem] border-white/12 md:hidden"
             >
-              <div className="grid gap-2 border-t border-white/10 p-3">
+              <div className="grid gap-2 border-t border-white/10 p-3" dir="ltr">
                 {navigation.map((item) => (
                   <a
                     key={item.href}

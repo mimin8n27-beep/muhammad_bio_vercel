@@ -1,3 +1,4 @@
+import { MotionReveal } from "@/components/site/MotionReveal";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import SharedHeaderPremium from "@/components/SharedHeaderPremium";
@@ -77,15 +78,15 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
   return (
     <div
       onClick={() => setOpen(!open)}
-      className={`border rounded-xl overflow-hidden cursor-pointer transition-all duration-200 group
-        ${open ? "border-primary shadow-sm shadow-primary/10" : "border-border hover:border-primary/40"}`}
+      className={`surface-card card-tilt overflow-hidden rounded-xl cursor-pointer transition-all duration-300 group
+        ${open ? "border-primary/40 shadow-[0_20px_50px_rgba(31,122,255,0.16)]" : "hover:border-primary/40"}`}
     >
       <div className="flex items-center justify-between p-5 gap-4">
-        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors text-sm">{question}</h3>
-        <span className={`text-primary font-bold text-xl flex-shrink-0 transition-transform duration-200 ${open ? "rotate-45" : ""}`}>+</span>
+        <h3 className="text-sm font-semibold text-white group-hover:text-primary transition-colors">{question}</h3>
+        <span className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-xl font-bold text-primary transition-transform duration-300 ${open ? "rotate-45" : ""}`}>+</span>
       </div>
       {open && (
-        <div className="px-5 pb-5 text-muted-foreground text-sm leading-relaxed border-t border-border/50 pt-3">
+        <div className="border-t border-border/50 px-5 pb-5 pt-3 text-sm leading-relaxed text-muted-foreground">
           {answer}
         </div>
       )}
@@ -146,14 +147,15 @@ export default function Pricing() {
         <div className="container">
           <div className="grid md:grid-cols-4 gap-6 items-start">
             {plans.map((plan, i) => (
-              <div key={i} className={`relative rounded-2xl border-2 flex flex-col transition-all duration-300 group
+              <MotionReveal key={plan.name} variant="scale-in" delay={i * 0.07}>
+              <div className={`card-tilt relative rounded-2xl border-2 flex flex-col transition-all duration-500 group
                 ${plan.popular
                   ? "surface-card border-primary shadow-2xl shadow-primary/15"
-                  : "surface-card border-border hover:border-primary/50 hover:shadow-lg hover:-translate-y-1"}`}>
+                  : "surface-card border-border hover:border-primary/50 hover:shadow-[0_22px_70px_rgba(0,0,0,0.26)] hover:-translate-y-2"}`}>
 
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                    <span className="bg-primary text-white text-xs font-bold px-4 py-1.5 rounded-full flex items-center gap-1 shadow-lg">
+                    <span className="animate-pulse bg-primary text-white text-xs font-bold px-4 py-1.5 rounded-full flex items-center gap-1 shadow-lg">
                       ⭐ Most Popular
                     </span>
                   </div>
@@ -161,13 +163,13 @@ export default function Pricing() {
 
                 <div className="p-6 flex flex-col flex-1">
                   {/* Name */}
-                  <h3 className="text-2xl font-bold text-foreground mb-1">{plan.name}</h3>
+                  <h3 className="text-2xl font-bold text-white mb-1">{plan.name}</h3>
                   <p className="text-sm text-muted-foreground mb-5">{plan.desc}</p>
 
                   {/* Hours */}
                   <div className="mb-5">
                     <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-1">Estimated Time</p>
-                    <p className="text-xl font-bold text-foreground">{plan.hours}</p>
+                    <p className="text-xl font-bold text-white">{plan.hours}</p>
                   </div>
 
                   {/* Features */}
@@ -175,7 +177,7 @@ export default function Pricing() {
                     <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-3">Features</p>
                     <ul className="space-y-2">
                       {plan.features.map((f, j) => (
-                        <li key={j} className="flex items-start gap-2 text-sm text-foreground">
+                        <li key={j} className="flex items-start gap-2 text-sm text-white/92">
                           <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
                           {f}
                         </li>
@@ -196,7 +198,7 @@ export default function Pricing() {
                       {plan.premiumOptions.map((opt, j) => (
                         <li key={j} className="flex items-center justify-between text-xs text-muted-foreground">
                           <span>{opt.label}</span>
-                          <span className="font-semibold text-foreground">{opt.price}</span>
+                          <span className="font-semibold text-white">{opt.price}</span>
                         </li>
                       ))}
                     </ul>
@@ -210,15 +212,16 @@ export default function Pricing() {
 
                   {/* CTA */}
                   <a href="#contact-section"
-                    className={`w-full py-3 rounded-xl font-semibold text-sm transition-all duration-200 text-center flex items-center justify-center gap-2
+                    className={`sci-fi-button w-full py-3 rounded-xl font-semibold text-sm transition-all duration-200 text-center flex items-center justify-center gap-2
                       ${plan.popular
                         ? "bg-primary text-white hover:bg-primary/90 shadow-md hover:shadow-lg hover:shadow-primary/30"
-                        : "border-2 border-border text-foreground hover:border-primary hover:text-primary"}`}>
+                        : "border-2 border-border text-white hover:border-primary hover:text-primary"}`}>
                     Contact Me
                     <ArrowRight className="w-4 h-4" />
                   </a>
                 </div>
               </div>
+              </MotionReveal>
             ))}
           </div>
         </div>
@@ -328,7 +331,9 @@ export default function Pricing() {
           </h2>
           <div className="space-y-4">
             {faqs.map((faq, i) => (
-              <FaqItem key={i} question={faq.q} answer={faq.a} />
+              <MotionReveal key={faq.q} variant="scale-in" delay={i * 0.06}>
+                <FaqItem question={faq.q} answer={faq.a} />
+              </MotionReveal>
             ))}
           </div>
         </div>
