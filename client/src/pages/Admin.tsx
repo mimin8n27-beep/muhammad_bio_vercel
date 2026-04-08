@@ -9,7 +9,7 @@ import {
 import {
   LogOut, Plus, Trash2, Edit2, Save, X, Loader2,
   MessageSquare, Users, FolderOpen, Eye, EyeOff,
-  Sun, Moon, ExternalLink, Upload
+  Sun, Moon, ExternalLink, Upload, Gauge, ShieldCheck, Sparkles, Activity
 } from "lucide-react";
 
 // ===== تغيير الباسورد هنا =====
@@ -272,7 +272,7 @@ export default function Admin() {
       <div className="page-shell dark min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4 text-white" dir="rtl">
         <div className="w-full max-w-sm">
           <div className="text-center mb-8">
-            <div className="w-14 h-14 bg-[#0066ff] rounded-2xl flex items-center justify-center font-bold text-xl mx-auto mb-4">
+            <div className="admin-orbit-badge mx-auto mb-4 h-14 w-14 text-xl">
               M
             </div>
             <h1 className="text-2xl font-bold text-white">لوحة التحكم</h1>
@@ -305,7 +305,7 @@ export default function Admin() {
 
             <button
               onClick={handleLogin}
-              className="w-full py-3 bg-[#0066ff] hover:bg-[#0055ee] rounded-xl font-semibold text-white transition-colors"
+              className="admin-primary-action w-full"
             >
               دخول
             </button>
@@ -322,14 +322,50 @@ export default function Admin() {
     { key: "messages", label: "الرسائل", icon: MessageSquare, count: messages.length },
   ];
 
+  const dashboardStats = [
+    {
+      label: "المشاريع النشطة",
+      value: projects.filter((project) => project.status === "active").length,
+      hint: "Live showcase inventory",
+      icon: FolderOpen,
+    },
+    {
+      label: "العملاء",
+      value: clients.length,
+      hint: "Pipeline tracking",
+      icon: Users,
+    },
+    {
+      label: "الرسائل الواردة",
+      value: messages.length,
+      hint: "Inbound signal",
+      icon: MessageSquare,
+    },
+    {
+      label: "أنظمة Live mirror",
+      value: projects.filter((project) => inferViewerMode(project) === "live_n8n" && project.link_url).length,
+      hint: "Read-only n8n windows",
+      icon: Gauge,
+    },
+  ];
+
   return (
-    <div className={`page-shell ${darkMode ? "dark bg-[#0a0a0a] text-white" : "bg-gray-50 text-gray-900"} min-h-screen`} dir="rtl">
+    <div className={`page-shell ${darkMode ? "dark bg-[#020814] text-white" : "bg-gray-50 text-gray-900"} min-h-screen`} dir="rtl">
       {/* Header */}
-      <header className={`sticky top-0 z-50 backdrop-blur border-b ${darkMode ? "bg-[#0a0a0a]/90 border-white/10" : "bg-white/90 border-gray-200"}`}>
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <header className="sticky top-0 z-50 border-b border-white/8 bg-[#020814]/88 backdrop-blur-xl">
+        <div className="container flex flex-col gap-5 px-6 py-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-[#0066ff] rounded-lg flex items-center justify-center font-bold text-sm text-white">
+            <div className="admin-orbit-badge">
               M
+            </div>
+            <div className="hidden md:block">
+              <div className="section-eyebrow mb-3 border-white/10 bg-white/5 text-[#9cd8ff]">
+                <Sparkles className="h-3.5 w-3.5" />
+                Mission control
+              </div>
+              <p className="max-w-2xl text-sm leading-7 text-white/55">
+                Space-grade dashboard styling with the same premium visual language as the home page.
+              </p>
             </div>
             <span className="font-bold">لوحة التحكم</span>
           </div>
@@ -340,8 +376,7 @@ export default function Admin() {
               href="/"
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg border transition-colors
-                ${darkMode ? "border-white/10 text-white/50 hover:text-white hover:border-white/30" : "border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-400"}`}
+              className="admin-command-button"
             >
               <ExternalLink className="w-4 h-4" />
               الموقع
@@ -350,8 +385,7 @@ export default function Admin() {
             {/* زرار Dark/Light */}
             <button
               onClick={() => setDarkMode(!darkMode)}
-              className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg border transition-colors
-                ${darkMode ? "border-white/10 text-white/50 hover:text-white hover:border-white/30" : "border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-400"}`}
+              className="admin-command-button"
             >
               {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               {darkMode ? "Light" : "Dark"}
@@ -360,8 +394,7 @@ export default function Admin() {
             {/* خروج */}
             <button
               onClick={() => setAuthed(false)}
-              className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg border transition-colors
-                ${darkMode ? "border-white/10 text-white/50 hover:text-white hover:border-white/30" : "border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-400"}`}
+              className="admin-command-button admin-command-button-danger"
             >
               <LogOut className="w-4 h-4" />
               خروج
@@ -370,24 +403,82 @@ export default function Admin() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-6 py-8">
+      <div className="container px-6 py-8">
+        <section className="admin-hero-grid mb-8">
+          <div className="hero-card overflow-hidden px-6 py-6 md:px-8 md:py-8">
+            <div className="hero-accent hero-accent-medium">
+              <div className="hero-accent-grid" />
+              <div className="hero-accent-beam" />
+              <div className="hero-accent-beam hero-accent-beam-secondary" />
+              <div className="hero-accent-ring hero-accent-ring-primary" />
+              <div className="hero-accent-ring hero-accent-ring-secondary" />
+              <div className="hero-accent-scanline" />
+            </div>
+            <div className="relative z-10">
+              <div className="mb-5 flex items-center gap-3 text-[#9cd8ff]">
+                <ShieldCheck className="h-5 w-5" />
+                <span className="text-sm font-semibold uppercase tracking-[0.24em]">Systems visibility</span>
+              </div>
+              <div className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+                <div>
+                  <h2 className="max-w-3xl text-3xl font-bold leading-tight text-white md:text-4xl">
+                    Dashboard بطابع محطة فضائية مع HUD واضح، خطوط إشارات، ولمعة تقنية متناسقة مع الصفحة الرئيسية.
+                  </h2>
+                  <p className="mt-4 max-w-2xl text-sm leading-8 text-white/62">
+                    الفكرة هنا إن الـ admin يبقى غرفة تحكم، مش مجرد فورمات فوق بعض. رؤية أوضح، ألوان أهدى، وإيقاع واجهة أشبه بلوحة قيادة.
+                  </p>
+                </div>
+
+                <div className="admin-signal-panel">
+                  <div className="admin-signal-line">
+                    <Activity className="h-4 w-4 text-[#7bf1d3]" />
+                    <span>Control stream</span>
+                    <span className="admin-signal-value">{tab}</span>
+                  </div>
+                  <div className="admin-signal-line">
+                    <Gauge className="h-4 w-4 text-primary" />
+                    <span>Display mode</span>
+                    <span className="admin-signal-value">{darkMode ? "Cinematic dark" : "Bright fallback"}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {dashboardStats.map((item) => (
+              <div key={item.label} className="admin-stat-card">
+                <div className="mb-5 flex items-start justify-between gap-4">
+                  <div className="admin-stat-icon">
+                    <item.icon className="h-5 w-5" />
+                  </div>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
+                    signal
+                  </span>
+                </div>
+                <p className="mb-2 text-3xl font-bold text-white">{item.value}</p>
+                <p className="text-sm font-semibold text-white/82">{item.label}</p>
+                <p className="mt-2 text-xs uppercase tracking-[0.18em] text-[#8fd7ff]/70">{item.hint}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* Tabs */}
-        <div className="flex gap-3 mb-8">
+        <div className="mb-8 flex flex-wrap gap-3">
           {tabs.map(({ key, label, icon: Icon, count }) => (
             <button
               key={key}
               onClick={() => { setTab(key); setShowForm(false); }}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+              className={`admin-tab-pill ${
                 tab === key
-                  ? "bg-[#0066ff] text-white"
-                  : darkMode
-                    ? "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white border border-white/10"
-                    : "bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-900 border border-gray-200"
+                  ? "admin-tab-pill-active"
+                  : "admin-tab-pill-idle"
               }`}
             >
-              <Icon className="w-4 h-4" />
+              <Icon className="h-4 w-4" />
               {label}
-              <span className={`px-2 py-0.5 rounded-full text-xs ${tab === key ? "bg-white/20" : "bg-white/10"}`}>
+              <span className={`rounded-full px-2.5 py-0.5 text-xs ${tab === key ? "bg-white/16 text-white" : "bg-white/8 text-white/58"}`}>
                 {count}
               </span>
             </button>
@@ -401,7 +492,7 @@ export default function Admin() {
               <h2 className="text-xl font-bold">المشاريع</h2>
               <button
                 onClick={() => { setShowForm(true); setEditProject(emptyProject); setEditingId(null); setProjectFormError(""); }}
-                className="flex items-center gap-2 px-4 py-2 bg-[#0066ff] hover:bg-[#0055ee] rounded-xl text-sm font-semibold transition-colors"
+                className="admin-primary-action"
               >
                 <Plus className="w-4 h-4" />
                 مشروع جديد
@@ -410,7 +501,7 @@ export default function Admin() {
 
             {/* Form */}
             {showForm && (
-              <div className="hud-panel rounded-2xl p-6 mb-6">
+              <div className="admin-panel-shell rounded-[1.8rem] p-6 mb-6">
                 <div className="flex items-center justify-between mb-5">
                   <h3 className="font-bold text-lg">{editingId ? "تعديل مشروع" : "إضافة مشروع جديد"}</h3>
                   <button onClick={() => { setShowForm(false); setProjectFormError(""); }} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
@@ -666,7 +757,7 @@ export default function Admin() {
                   <button
                     onClick={saveProject}
                     disabled={saving || !editProject.title}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-[#0066ff] hover:bg-[#0055ee] disabled:opacity-50 rounded-xl text-sm font-semibold transition-colors"
+                    className="admin-primary-action disabled:opacity-50"
                   >
                     {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                     {saving ? "جاري الحفظ..." : "حفظ"}
@@ -689,7 +780,7 @@ export default function Admin() {
             ) : (
               <div className="grid md:grid-cols-2 gap-4">
                 {projects.map((p: any) => (
-                  <div key={p.id} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all">
+                  <div key={p.id} className="admin-panel-shell overflow-hidden rounded-[1.6rem] transition-all hover:-translate-y-1 hover:border-primary/30">
                     {p.image_url && (
                       <div className="aspect-video overflow-hidden">
                         <img src={p.image_url} alt={p.title} className="w-full h-full object-cover" />
@@ -742,14 +833,14 @@ export default function Admin() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold">العملاء</h2>
               <button onClick={() => { setEditClient(emptyClient); setEditingClientId(null); setShowClientForm(true); }}
-                className="flex items-center gap-2 px-4 py-2 bg-[#0066ff] hover:bg-[#0055dd] rounded-xl text-sm font-semibold transition-colors">
+                className="admin-primary-action">
                 <Plus className="w-4 h-4" /> إضافة عميل
               </button>
             </div>
 
             {/* Client Form */}
             {showClientForm && (
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-6">
+              <div className="admin-panel-shell rounded-[1.8rem] p-6 mb-6">
                 <div className="flex items-center justify-between mb-5">
                   <h3 className="font-bold text-lg">{editingClientId ? "تعديل عميل" : "إضافة عميل جديد"}</h3>
                   <button onClick={() => setShowClientForm(false)} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
@@ -818,7 +909,7 @@ export default function Admin() {
                 </div>
 
                 <button onClick={saveClient} disabled={savingClient}
-                  className="flex items-center gap-2 px-6 py-2.5 bg-[#0066ff] hover:bg-[#0055dd] disabled:opacity-50 rounded-xl font-semibold text-sm transition-colors">
+                  className="admin-primary-action disabled:opacity-50">
                   {savingClient ? <><Loader2 className="w-4 h-4 animate-spin" /> جاري الحفظ...</> : <><Save className="w-4 h-4" /> حفظ العميل</>}
                 </button>
               </div>
@@ -831,7 +922,7 @@ export default function Admin() {
             ) : (
               <div className="grid md:grid-cols-2 gap-4">
                 {clients.map((c) => (
-                  <div key={c.id} className="bg-white/5 border border-white/10 rounded-2xl p-5 hover:border-white/20 transition-all">
+                  <div key={c.id} className="admin-panel-shell rounded-[1.6rem] p-5 transition-all hover:-translate-y-1 hover:border-primary/30">
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <h3 className="font-bold text-lg">{c.name}</h3>
@@ -892,7 +983,7 @@ export default function Admin() {
             ) : (
               <div className="flex flex-col gap-4">
                 {messages.map((m) => (
-                  <div key={m.id} className="bg-white/5 border border-white/10 rounded-2xl p-5 hover:border-white/20 transition-all">
+                  <div key={m.id} className="admin-panel-shell rounded-[1.6rem] p-5 transition-all hover:-translate-y-1 hover:border-primary/30">
                     <div className="flex items-start justify-between gap-4 mb-3">
                       <div>
                         <h3 className="font-bold">{m.name}</h3>
