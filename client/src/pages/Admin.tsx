@@ -396,15 +396,12 @@ export default function Admin() {
               M
             </div>
             <div className="hidden md:block">
-              <div className="section-eyebrow mb-3 border-white/10 bg-white/5 text-[#9cd8ff]">
+              <div className="section-eyebrow mb-0 border-white/10 bg-white/5 text-[#9cd8ff]">
                 <Sparkles className="h-3.5 w-3.5" />
-                Mission control
+                Admin panel
               </div>
-              <p className="max-w-2xl text-sm leading-7 text-white/55">
-                Space-grade dashboard styling with the same premium visual language as the home page.
-              </p>
             </div>
-            <span className="font-bold">لوحة التحكم</span>
+            <span className="font-bold">Admin dashboard</span>
           </div>
 
           <div className="flex items-center gap-3">
@@ -457,16 +454,13 @@ export default function Admin() {
             <div className="relative z-10">
               <div className="mb-5 flex items-center gap-3 text-[#9cd8ff]">
                 <ShieldCheck className="h-5 w-5" />
-                <span className="text-sm font-semibold uppercase tracking-[0.24em]">Systems visibility</span>
+                <span className="text-sm font-semibold uppercase tracking-[0.24em]">Admin overview</span>
               </div>
               <div className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
                 <div>
                   <h2 className="max-w-3xl text-3xl font-bold leading-tight text-white md:text-4xl">
-                    Dashboard بطابع محطة فضائية مع HUD واضح، خطوط إشارات، ولمعة تقنية متناسقة مع الصفحة الرئيسية.
+                    Control center
                   </h2>
-                  <p className="mt-4 max-w-2xl text-sm leading-8 text-white/62">
-                    الفكرة هنا إن الـ admin يبقى غرفة تحكم، مش مجرد فورمات فوق بعض. رؤية أوضح، ألوان أهدى، وإيقاع واجهة أشبه بلوحة قيادة.
-                  </p>
                 </div>
 
                 <div className="admin-signal-panel admin-signal-panel-live">
