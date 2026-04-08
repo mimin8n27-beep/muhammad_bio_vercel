@@ -289,15 +289,6 @@ export default function Admin() {
   if (!authed) {
     return (
       <div className="page-shell admin-space-shell dark min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4 text-white" dir="rtl">
-        <div className="admin-space-backdrop" aria-hidden="true">
-          <div className="admin-nebula admin-nebula-a" />
-          <div className="admin-nebula admin-nebula-b" />
-          <div className="admin-starfield" />
-          <div className="admin-flight-path admin-flight-path-a" />
-          <div className="admin-flight-path admin-flight-path-b" />
-          <div className="admin-led-strip admin-led-strip-top" />
-          <div className="admin-led-strip admin-led-strip-bottom" />
-        </div>
         <div className="w-full max-w-sm">
           <div className="text-center mb-8">
             <div className="admin-orbit-badge mx-auto mb-4 h-14 w-14 text-xl">
@@ -379,15 +370,6 @@ export default function Admin() {
 
   return (
     <div className={`page-shell admin-space-shell ${darkMode ? "dark bg-[#020814] text-white" : "bg-gray-50 text-gray-900"} min-h-screen`} dir="rtl">
-      <div className="admin-space-backdrop" aria-hidden="true">
-        <div className="admin-nebula admin-nebula-a" />
-        <div className="admin-nebula admin-nebula-b" />
-        <div className="admin-starfield" />
-        <div className="admin-flight-path admin-flight-path-a" />
-        <div className="admin-flight-path admin-flight-path-b" />
-        <div className="admin-led-strip admin-led-strip-top" />
-        <div className="admin-led-strip admin-led-strip-bottom" />
-      </div>
       {/* Header */}
       <header className="admin-command-header sticky top-0 z-50 border-b border-white/8 bg-[#020814]/88 backdrop-blur-xl">
         <div className="container flex flex-col gap-5 px-6 py-5 lg:flex-row lg:items-center lg:justify-between">

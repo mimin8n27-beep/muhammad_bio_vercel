@@ -33,7 +33,20 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <div className="site-app-shell">
+            <div className="admin-space-backdrop site-admin-background" aria-hidden="true">
+              <div className="admin-nebula admin-nebula-a" />
+              <div className="admin-nebula admin-nebula-b" />
+              <div className="admin-starfield" />
+              <div className="admin-flight-path admin-flight-path-a" />
+              <div className="admin-flight-path admin-flight-path-b" />
+              <div className="admin-led-strip admin-led-strip-top" />
+              <div className="admin-led-strip admin-led-strip-bottom" />
+            </div>
+            <div className="site-app-content">
+              <Router />
+            </div>
+          </div>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
