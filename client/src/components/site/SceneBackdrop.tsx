@@ -18,6 +18,17 @@ export function SceneBackdrop({
         className,
       )}
     >
+      <span className="scene-deep-space" />
+      <span className="scene-nebula scene-nebula-a" />
+      <span className="scene-nebula scene-nebula-b" />
+      <span className="scene-starfield scene-starfield-far" />
+      <span className="scene-starfield scene-starfield-mid" />
+      <span className="scene-starfield scene-starfield-near" />
+      <span className="scene-meteor scene-meteor-a" />
+      <span className="scene-meteor scene-meteor-b" />
+      <span className="scene-meteor scene-meteor-c" />
+      <span className="scene-asteroid scene-asteroid-a" />
+      <span className="scene-asteroid scene-asteroid-b" />
       <span className="scene-orb scene-orb-a" />
       <span className="scene-orb scene-orb-b" />
       <span className="scene-orb scene-orb-c" />

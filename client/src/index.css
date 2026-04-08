@@ -231,8 +231,14 @@
     pointer-events: none;
     z-index: 0;
     opacity: 0.55;
+    transform-style: preserve-3d;
   }
 
+  .scene-deep-space,
+  .scene-nebula,
+  .scene-starfield,
+  .scene-meteor,
+  .scene-asteroid,
   .scene-orb,
   .scene-grid,
   .scene-beam,
@@ -245,6 +251,142 @@
   .scene-backdrop::after {
     pointer-events: none;
   }
+
+  .scene-deep-space,
+  .scene-nebula,
+  .scene-starfield,
+  .scene-meteor,
+  .scene-asteroid {
+    position: absolute;
+    inset: 0;
+  }
+
+  .scene-deep-space {
+    background:
+      radial-gradient(circle at 50% 50%, rgba(8, 18, 36, 0.2), transparent 54%),
+      radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.045), transparent 0.35%),
+      radial-gradient(circle at 88% 74%, rgba(255, 255, 255, 0.035), transparent 0.28%);
+    opacity: 0.9;
+  }
+
+  .scene-nebula {
+    filter: blur(36px);
+    opacity: 0.2;
+    animation: cosmicDrift 26s ease-in-out infinite;
+  }
+
+  .scene-nebula-a {
+    inset: 8% auto auto 8%;
+    width: 26rem;
+    height: 18rem;
+    background: radial-gradient(circle, rgba(61, 113, 255, 0.16), transparent 66%);
+  }
+
+  .scene-nebula-b {
+    inset: auto 10% 10% auto;
+    width: 22rem;
+    height: 16rem;
+    background: radial-gradient(circle, rgba(102, 224, 212, 0.1), transparent 68%);
+    animation-delay: -9s;
+  }
+
+  .scene-starfield {
+    opacity: 0.45;
+  }
+
+  .scene-starfield-far {
+    background-image:
+      radial-gradient(circle at 6% 14%, rgba(255, 255, 255, 0.75) 0 0.7px, transparent 1px),
+      radial-gradient(circle at 18% 72%, rgba(255, 255, 255, 0.55) 0 0.65px, transparent 1px),
+      radial-gradient(circle at 31% 24%, rgba(168, 215, 255, 0.55) 0 0.7px, transparent 1px),
+      radial-gradient(circle at 44% 58%, rgba(255, 255, 255, 0.68) 0 0.75px, transparent 1px),
+      radial-gradient(circle at 56% 18%, rgba(255, 255, 255, 0.52) 0 0.65px, transparent 1px),
+      radial-gradient(circle at 68% 78%, rgba(255, 255, 255, 0.6) 0 0.7px, transparent 1px),
+      radial-gradient(circle at 79% 36%, rgba(181, 229, 255, 0.5) 0 0.75px, transparent 1px),
+      radial-gradient(circle at 92% 16%, rgba(255, 255, 255, 0.72) 0 0.7px, transparent 1px);
+    animation: starDriftFar 90s linear infinite;
+  }
+
+  .scene-starfield-mid {
+    background-image:
+      radial-gradient(circle at 12% 42%, rgba(255, 255, 255, 0.88) 0 0.95px, transparent 1.25px),
+      radial-gradient(circle at 26% 12%, rgba(193, 231, 255, 0.82) 0 0.95px, transparent 1.2px),
+      radial-gradient(circle at 38% 82%, rgba(255, 255, 255, 0.76) 0 0.92px, transparent 1.2px),
+      radial-gradient(circle at 52% 32%, rgba(255, 255, 255, 0.9) 0 1px, transparent 1.28px),
+      radial-gradient(circle at 64% 64%, rgba(154, 215, 255, 0.82) 0 0.95px, transparent 1.2px),
+      radial-gradient(circle at 76% 22%, rgba(255, 255, 255, 0.82) 0 0.95px, transparent 1.2px),
+      radial-gradient(circle at 88% 56%, rgba(255, 255, 255, 0.72) 0 0.92px, transparent 1.18px);
+    animation: starDriftMid 64s linear infinite;
+  }
+
+  .scene-starfield-near {
+    background-image:
+      radial-gradient(circle at 9% 28%, rgba(255, 255, 255, 0.95) 0 1.2px, transparent 1.5px),
+      radial-gradient(circle at 22% 86%, rgba(207, 239, 255, 0.86) 0 1.2px, transparent 1.5px),
+      radial-gradient(circle at 41% 18%, rgba(255, 255, 255, 0.92) 0 1.15px, transparent 1.45px),
+      radial-gradient(circle at 59% 76%, rgba(255, 255, 255, 0.92) 0 1.18px, transparent 1.45px),
+      radial-gradient(circle at 83% 26%, rgba(197, 234, 255, 0.84) 0 1.15px, transparent 1.45px);
+    opacity: 0.38;
+    animation: twinkleField 11s ease-in-out infinite;
+  }
+
+  .scene-meteor {
+    inset: auto;
+    width: 8rem;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(198, 235, 255, 0.95), rgba(255, 255, 255, 0));
+    box-shadow: 0 0 10px rgba(189, 231, 255, 0.35);
+    opacity: 0;
+    filter: blur(0.2px);
+  }
+
+  .scene-meteor-a {
+    top: 20%;
+    left: 14%;
+    transform: rotate(-18deg);
+    animation: meteorFly 14s linear infinite;
+  }
+
+  .scene-meteor-b {
+    top: 42%;
+    right: 18%;
+    width: 6rem;
+    transform: rotate(-26deg);
+    animation: meteorFly 18s linear infinite -7s;
+  }
+
+  .scene-meteor-c {
+    top: 68%;
+    left: 58%;
+    width: 5rem;
+    transform: rotate(-14deg);
+    animation: meteorFly 20s linear infinite -11s;
+  }
+
+  .scene-asteroid {
+    inset: auto;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 999px;
+    background: radial-gradient(circle at 30% 30%, rgba(217, 228, 241, 0.9), rgba(109, 129, 151, 0.72) 62%, rgba(19, 28, 40, 0.1));
+    box-shadow: 0 0 8px rgba(214, 231, 255, 0.14);
+    opacity: 0.35;
+  }
+
+  .scene-asteroid-a {
+    top: 28%;
+    right: 11%;
+    animation: asteroidDrift 34s linear infinite;
+  }
+
+  .scene-asteroid-b {
+    bottom: 18%;
+    left: 16%;
+    width: 0.32rem;
+    height: 0.32rem;
+    animation: asteroidDrift 42s linear infinite -12s;
+  }
+
 
   .scene-backdrop::before,
   .scene-backdrop::after {
@@ -261,7 +403,8 @@
       linear-gradient(90deg, transparent, rgba(109, 255, 211, 0.88), transparent);
     background-size: 220% 100%;
     filter: drop-shadow(0 0 10px rgba(109, 255, 211, 0.32));
-    animation: ledSweep 9s linear infinite;
+    animation: ledSweep 18s linear infinite;
+    opacity: 0.18;
   }
 
   .scene-backdrop::after {
@@ -272,7 +415,8 @@
       radial-gradient(circle at 20% 50%, rgba(73, 166, 255, 0.18), transparent 22%),
       radial-gradient(circle at 80% 50%, rgba(109, 255, 211, 0.16), transparent 20%);
     filter: blur(4px);
-    animation: starPulse 7s ease-in-out infinite;
+    animation: starPulse 12s ease-in-out infinite;
+    opacity: 0.18;
   }
 
   .scene-orb {
@@ -317,8 +461,8 @@
       linear-gradient(90deg, rgba(123, 170, 255, 0.1) 1px, transparent 1px);
     background-size: 62px 62px;
     mask-image: radial-gradient(circle at center, black 30%, transparent 82%);
-    opacity: 0.24;
-    animation: gridShift 30s linear infinite;
+    opacity: 0.12;
+    animation: gridShift 42s linear infinite;
   }
 
   .scene-beam {
@@ -328,8 +472,8 @@
     height: 170%;
     background: linear-gradient(180deg, transparent, rgba(167, 225, 255, 0.22), transparent);
     filter: blur(8px);
-    opacity: 0.34;
-    animation: flightTrail 18s linear infinite;
+    opacity: 0.12;
+    animation: flightTrail 28s linear infinite;
   }
 
   .scene-beam-a {
@@ -350,8 +494,8 @@
     height: 22%;
     background: linear-gradient(180deg, transparent, rgba(109, 255, 211, 0.08), transparent);
     filter: blur(18px);
-    opacity: 0.3;
-    animation: scanline 16s ease-in-out infinite;
+    opacity: 0.12;
+    animation: scanline 22s ease-in-out infinite;
   }
 
   .scene-noise {
@@ -360,13 +504,13 @@
     background-image: radial-gradient(rgba(255, 255, 255, 0.15) 0.7px, transparent 0.8px);
     background-size: 16px 16px;
     mix-blend-mode: soft-light;
-    opacity: 0.08;
+    opacity: 0.03;
   }
 
   .scene-particles {
     position: absolute;
     inset: 0;
-    opacity: 0.28;
+    opacity: 0.14;
   }
 
   .scene-particles-a {
@@ -416,15 +560,15 @@
   .scene-backdrop-medium .scene-beam,
   .scene-backdrop-medium .scene-scanline,
   .scene-backdrop-medium .scene-hud {
-    opacity: 0.42;
+    opacity: 0.22;
   }
 
   .scene-backdrop-high .scene-orb {
-    opacity: 0.42;
+    opacity: 0.26;
   }
 
   .scene-backdrop-high .scene-particles {
-    opacity: 0.34;
+    opacity: 0.18;
   }
 
   .site-section {
@@ -487,6 +631,7 @@
     overflow: hidden;
     border-radius: 1.6rem;
     border: 1px solid var(--border);
+    transform-style: preserve-3d;
     background:
       radial-gradient(circle at top right, rgba(73, 166, 255, 0.18), transparent 24%),
       radial-gradient(circle at bottom left, rgba(109, 255, 211, 0.08), transparent 28%),
@@ -499,6 +644,7 @@
       border-color var(--motion-soft) ease,
       box-shadow var(--motion-soft) ease,
       background-color var(--motion-soft) ease;
+    animation: cardFloat 9s ease-in-out infinite;
   }
 
   .surface-card::after {
@@ -530,7 +676,7 @@
   }
 
   .surface-card:hover {
-    transform: translateY(-6px);
+    transform: translate3d(0, -10px, 0) rotateX(4deg) rotateY(-4deg);
     border-color: rgba(73, 166, 255, 0.4);
     box-shadow: var(--shadow-strong);
   }
@@ -550,10 +696,17 @@
     box-shadow: var(--shadow-glow);
   }
 
+  .surface-card-glow,
+  .hero-card,
+  .section-frame {
+    transform: translateZ(0);
+  }
+
   .hero-card {
     position: relative;
     border-radius: 2rem;
     border: 1px solid rgba(97, 148, 236, 0.24);
+    transform-style: preserve-3d;
     background:
       radial-gradient(circle at 70% 20%, rgba(73, 166, 255, 0.16), transparent 22%),
       radial-gradient(circle at 14% 84%, rgba(109, 255, 211, 0.1), transparent 24%),
@@ -561,6 +714,7 @@
       linear-gradient(135deg, rgba(73, 166, 255, 0.1), transparent 45%, rgba(109, 255, 211, 0.1));
     box-shadow: var(--shadow-strong);
     backdrop-filter: blur(24px);
+    animation: heroFloat 12s ease-in-out infinite;
   }
 
   .hero-card::after {
@@ -804,6 +958,7 @@
     overflow: hidden;
     border-radius: 2rem;
     border: 1px solid rgba(97, 148, 236, 0.22);
+    transform-style: preserve-3d;
     background:
       radial-gradient(circle at 50% 0%, rgba(73, 166, 255, 0.12), transparent 34%),
       radial-gradient(circle at 85% 15%, rgba(109, 255, 211, 0.08), transparent 20%),
@@ -812,6 +967,7 @@
       0 30px 80px rgba(2, 8, 20, 0.26),
       inset 0 1px 0 rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(18px);
+    animation: frameFloat 14s ease-in-out infinite;
   }
 
   .section-frame .section-title,
@@ -2130,6 +2286,94 @@
   }
   50% {
     transform: translate3d(1.5rem, -1rem, 0) scale(1.05);
+  }
+}
+
+@keyframes starDriftFar {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-1.2rem, 1.8rem, 0);
+  }
+}
+
+@keyframes starDriftMid {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-2rem, 2.4rem, 0);
+  }
+}
+
+@keyframes twinkleField {
+  0%,
+  100% {
+    opacity: 0.26;
+  }
+  50% {
+    opacity: 0.46;
+  }
+}
+
+@keyframes meteorFly {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(-18deg) scaleX(0.75);
+  }
+  8% {
+    opacity: 0.8;
+  }
+  24% {
+    opacity: 0;
+    transform: translate3d(12rem, 8rem, 0) rotate(-18deg) scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(12rem, 8rem, 0) rotate(-18deg) scaleX(1);
+  }
+}
+
+@keyframes asteroidDrift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0.8rem, -0.4rem, 0);
+  }
+  100% {
+    transform: translate3d(1.6rem, -0.8rem, 0);
+  }
+}
+
+@keyframes cardFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg);
+  }
+  50% {
+    transform: translate3d(0, -4px, 0) rotateX(1.4deg) rotateY(-1.6deg);
+  }
+}
+
+@keyframes heroFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotateX(0deg);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0) rotateX(1deg);
+  }
+}
+
+@keyframes frameFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotateX(0deg);
+  }
+  50% {
+    transform: translate3d(0, -5px, 0) rotateX(0.8deg);
   }
 }
 
