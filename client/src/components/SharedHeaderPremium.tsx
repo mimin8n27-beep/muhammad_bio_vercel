@@ -1,3 +1,4 @@
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Menu, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
@@ -12,6 +13,7 @@ export default function SharedHeaderPremium() {
   const [location, setLocation] = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -44,11 +46,14 @@ export default function SharedHeaderPremium() {
 
   return (
     <header className="sticky top-0 z-50 px-4 pt-4">
-      <div
+      <motion.div
+        initial={reduceMotion ? false : { opacity: 0, y: -18 }}
+        animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         className={`mx-auto max-w-7xl rounded-[1.4rem] border px-4 py-3 transition-all duration-300 md:px-6 ${
           scrolled
-            ? "border-white/30 bg-white/72 shadow-[0_20px_60px_rgba(10,28,59,0.14)] backdrop-blur-2xl dark:border-white/10 dark:bg-[#09101d]/78"
-            : "border-white/20 bg-white/52 backdrop-blur-xl dark:border-white/8 dark:bg-[#09101d]/56"
+            ? "hud-panel border-primary/25 bg-[rgba(4,11,24,0.86)] shadow-[0_24px_80px_rgba(0,0,0,0.44)] backdrop-blur-2xl"
+            : "border-white/10 bg-[rgba(6,14,27,0.56)] shadow-[0_12px_40px_rgba(0,0,0,0.24)] backdrop-blur-xl"
         }`}
       >
         <div className="flex items-center justify-between gap-4">
@@ -57,8 +62,8 @@ export default function SharedHeaderPremium() {
               M
             </div>
             <div>
-              <p className="font-[var(--font-family-heading)] text-lg font-bold">Muhammad Bio</p>
-              <p className="text-xs text-muted-foreground">Premium automation systems</p>
+              <p className="font-[var(--font-family-heading)] text-lg font-bold text-white">Muhammad Bio</p>
+              <p className="text-xs text-white/55">Cinematic automation systems</p>
             </div>
           </button>
 
@@ -69,17 +74,24 @@ export default function SharedHeaderPremium() {
                 <a
                   key={item.href}
                   href={item.href}
-                  className={`text-sm font-medium transition-colors ${
-                    active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                  className={`relative px-1 py-2 text-sm font-medium transition-colors ${
+                    active ? "text-white" : "text-white/62 hover:text-white"
                   }`}
                 >
                   {item.label}
+                  {active ? (
+                    <motion.span
+                      layoutId="header-nav-indicator"
+                      className="absolute inset-x-0 -bottom-1 h-px bg-[linear-gradient(90deg,transparent,#6dffd3,transparent)]"
+                      transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                    />
+                  ) : null}
                 </a>
               );
             })}
             <button
               onClick={goToContact}
-              className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary transition-all hover:-translate-y-0.5 hover:bg-primary hover:text-primary-foreground"
+              className="sci-fi-button inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/15 px-4 py-2 text-sm font-semibold text-[#c8eeff] transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/25"
             >
               <Sparkles className="h-4 w-4" />
               Let's Talk
@@ -87,7 +99,7 @@ export default function SharedHeaderPremium() {
           </nav>
 
           <button
-            className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/20 bg-white/50 text-foreground md:hidden dark:bg-white/5"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-white/6 text-white md:hidden"
             onClick={() => setMenuOpen((value) => !value)}
             aria-label="Toggle menu"
           >
@@ -95,26 +107,36 @@ export default function SharedHeaderPremium() {
           </button>
         </div>
 
-        {menuOpen ? (
-          <div className="mt-4 grid gap-2 border-t border-white/15 pt-4 md:hidden">
-            {navigation.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="rounded-2xl px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-primary/8"
-              >
-                {item.label}
-              </a>
-            ))}
-            <button
-              onClick={goToContact}
-              className="rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground"
+        <AnimatePresence initial={false}>
+          {menuOpen ? (
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, height: 0, marginTop: 0 }}
+              animate={reduceMotion ? undefined : { opacity: 1, height: "auto", marginTop: 16 }}
+              exit={reduceMotion ? undefined : { opacity: 0, height: 0, marginTop: 0 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="hud-panel overflow-hidden rounded-[1.2rem] border-white/12 md:hidden"
             >
-              Contact
-            </button>
-          </div>
-        ) : null}
-      </div>
+              <div className="grid gap-2 border-t border-white/10 p-3">
+                {navigation.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="rounded-2xl px-4 py-3 text-sm font-medium text-white/75 transition-colors hover:bg-primary/10 hover:text-white"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+                <button
+                  onClick={goToContact}
+                  className="sci-fi-button rounded-2xl bg-primary/90 px-4 py-3 text-sm font-semibold text-primary-foreground"
+                >
+                  Contact
+                </button>
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      </motion.div>
     </header>
   );
 }

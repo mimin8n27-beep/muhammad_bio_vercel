@@ -1,18 +1,52 @@
 import type { ReactNode } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 
 interface MotionRevealProps {
   children: ReactNode;
   className?: string;
   delay?: number;
-  y?: number;
+  distance?: number;
+  once?: boolean;
+  variant?: "fade-up" | "blur-in" | "scale-in" | "stagger";
 }
+
+const revealVariants: Record<NonNullable<MotionRevealProps["variant"]>, Variants> = {
+  "fade-up": {
+    hidden: (distance: number) => ({ opacity: 0, y: distance }),
+    visible: { opacity: 1, y: 0 },
+  },
+  "blur-in": {
+    hidden: (distance: number) => ({
+      opacity: 0,
+      y: distance,
+      filter: "blur(14px)",
+    }),
+    visible: { opacity: 1, y: 0, filter: "blur(0px)" },
+  },
+  "scale-in": {
+    hidden: { opacity: 0, scale: 0.94, y: 18 },
+    visible: { opacity: 1, scale: 1, y: 0 },
+  },
+  stagger: {
+    hidden: { opacity: 0, y: 18 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.04,
+      },
+    },
+  },
+};
 
 export function MotionReveal({
   children,
   className,
   delay = 0,
-  y = 28,
+  distance = 28,
+  once = true,
+  variant = "fade-up",
 }: MotionRevealProps) {
   const reduceMotion = useReducedMotion();
 
@@ -23,10 +57,12 @@ export function MotionReveal({
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-10% 0px" }}
-      transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay }}
+      custom={distance}
+      variants={revealVariants[variant]}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once, margin: "-10% 0px" }}
+      transition={{ duration: 0.82, ease: [0.16, 1, 0.3, 1], delay }}
     >
       {children}
     </motion.div>

@@ -93,13 +93,13 @@ function FaqCard({ question, answer }: { question: string; answer: string }) {
 
   return (
     <SurfaceCard
-      className={`cursor-pointer p-5 transition-all duration-300 ${open ? "border-primary/30" : ""}`}
+      className={`card-tilt cursor-pointer p-5 transition-all duration-300 ${open ? "border-primary/30 shadow-[0_22px_60px_rgba(73,166,255,0.18)]" : ""}`}
       onClick={() => setOpen((value) => !value)}
     >
       <div className="flex items-start justify-between gap-4">
         <h3 className="text-lg font-semibold">{question}</h3>
         <span
-          className={`mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full border border-primary/15 text-primary transition-transform duration-300 ${
+          className={`mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary transition-transform duration-300 ${
             open ? "rotate-45" : ""
           }`}
         >
@@ -171,30 +171,30 @@ export default function HomePremium() {
       <main>
         <section className="relative overflow-hidden px-4 pb-12 pt-8 md:pb-20">
           <div className="hero-card container relative overflow-hidden px-6 py-10 md:px-10 md:py-14">
-            <HeroAccent />
+            <HeroAccent intensity="high" />
             <div className="relative z-10 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
-              <MotionReveal>
+              <MotionReveal variant="blur-in" distance={36}>
                 <span className="section-eyebrow">Premium Tech direction</span>
                 <h1 className="mb-5 max-w-3xl text-[clamp(3rem,6vw,5.6rem)] font-bold leading-[0.95]">
-                  Smoother automation systems with a sharper visual story.
+                  Automation systems with a sci-fi pulse and cinematic precision.
                 </h1>
                 <p className="mb-8 max-w-2xl text-lg leading-8 text-muted-foreground">
-                  I design automation experiences that feel clear before they feel complex:
-                  better lead flow, calmer operations, stronger reporting, and fewer fragile steps
-                  hidden in the background.
+                  We turn operations into something that feels intelligent on the surface and reliable underneath:
+                  sharper lead flow, calmer execution, clearer reporting, and a visual identity that feels like it came
+                  from a near-future control room.
                 </p>
 
                 <div className="mb-8 flex flex-col gap-3 sm:flex-row">
                   <a
                     href="#contact-section"
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:-translate-y-0.5 hover:bg-primary/90"
+                    className="sci-fi-button inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_18px_48px_rgba(73,166,255,0.32)] transition-all hover:-translate-y-0.5 hover:bg-primary/90"
                   >
                     Start a project
                     <ArrowRight className="h-4 w-4" />
                   </a>
                   <a
                     href="/portfolio"
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-white/60 px-6 py-3 text-sm font-semibold text-foreground transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:text-primary"
+                    className="sci-fi-button inline-flex items-center justify-center gap-2 rounded-full border border-primary/18 bg-white/6 px-6 py-3 text-sm font-semibold text-foreground transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:text-primary"
                   >
                     View selected work
                   </a>
@@ -202,7 +202,7 @@ export default function HomePremium() {
 
                 <div className="grid gap-3 sm:grid-cols-3">
                   {metrics.map((metric) => (
-                    <div key={metric.label} className="metric-card">
+                    <div key={metric.label} className="metric-card card-tilt">
                       <metric.icon className="mb-3 h-5 w-5 text-primary" />
                       <p className="mb-1 text-2xl font-bold">{metric.value}</p>
                       <p className="text-sm text-muted-foreground">{metric.label}</p>
@@ -211,7 +211,7 @@ export default function HomePremium() {
                 </div>
               </MotionReveal>
 
-              <MotionReveal delay={0.08}>
+              <MotionReveal delay={0.08} variant="scale-in">
                 <div className="surface-card-glow overflow-hidden rounded-[2rem] p-3">
                   <div className="relative aspect-[4/4.6] overflow-hidden rounded-[1.6rem] border border-white/20">
                     <img
@@ -220,10 +220,11 @@ export default function HomePremium() {
                       loading="eager"
                       className="h-full w-full object-cover"
                     />
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#08111f] via-[#08111f]/45 to-transparent p-5 text-white">
-                      <p className="mb-1 text-sm text-white/60">Automation architect</p>
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#040912] via-[#040912]/54 to-transparent p-5 text-white">
+                      <p className="mb-1 text-sm uppercase tracking-[0.22em] text-[#8fd7ff]">Automation architect</p>
                       <p className="text-xl font-semibold">Strategy, systems, delivery</p>
                     </div>
+                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(109,255,211,0.14),transparent_38%)]" />
                   </div>
                 </div>
               </MotionReveal>
@@ -233,7 +234,7 @@ export default function HomePremium() {
 
         <section className="site-section">
           <div className="container">
-            <MotionReveal>
+            <MotionReveal variant="blur-in">
               <SectionIntro
                 eyebrow="What I optimize"
                 title="A calmer system underneath the work your team already does"
@@ -243,8 +244,8 @@ export default function HomePremium() {
 
             <div className="feature-grid md:grid-cols-3">
               {expertise.map((item, index) => (
-                <MotionReveal key={item.title} delay={index * 0.08}>
-                  <SurfaceCard className="h-full p-6">
+                <MotionReveal key={item.title} delay={index * 0.08} variant="scale-in">
+                  <SurfaceCard className="card-tilt h-full p-6">
                     <div className="feature-icon mb-5">
                       <item.icon className="h-5 w-5" />
                     </div>
@@ -260,7 +261,7 @@ export default function HomePremium() {
         <section className="site-section">
           <div className="container">
             <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-              <MotionReveal>
+              <MotionReveal variant="blur-in">
                 <SectionIntro
                   eyebrow="Core outcomes"
                   title="Less manual follow-up. More confidence in what happens next."
@@ -270,8 +271,8 @@ export default function HomePremium() {
 
               <div className="feature-grid">
                 {pillars.map((pillar, index) => (
-                  <MotionReveal key={pillar.title} delay={index * 0.08}>
-                    <SurfaceCard className="flex h-full gap-4 p-6">
+                  <MotionReveal key={pillar.title} delay={index * 0.08} variant="scale-in">
+                    <SurfaceCard className="card-tilt flex h-full gap-4 p-6">
                       <div className="feature-icon shrink-0">
                         <pillar.icon className="h-5 w-5" />
                       </div>
@@ -289,7 +290,7 @@ export default function HomePremium() {
 
         <section className="site-section">
           <div className="container">
-            <MotionReveal>
+            <MotionReveal variant="blur-in">
               <SectionIntro
                 eyebrow="Recent work"
                 title="Selected systems and workflow builds"
@@ -311,10 +312,10 @@ export default function HomePremium() {
             ) : (
               <div className="grid gap-5 md:grid-cols-3">
                 {projects.map((project, index) => (
-                  <MotionReveal key={project.id} delay={index * 0.08}>
+                  <MotionReveal key={project.id} delay={index * 0.08} variant="scale-in">
                     <a href={`/portfolio?open=${project.id}`} className="block">
-                      <SurfaceCard className="h-full p-4">
-                        <div className="mb-4 overflow-hidden rounded-[1.3rem] border border-white/15">
+                      <SurfaceCard className="card-tilt h-full p-4">
+                        <div className="light-sweep mb-4 overflow-hidden rounded-[1.3rem] border border-white/15">
                           {project.image_url ? (
                             <img
                               src={project.image_url}
@@ -354,18 +355,18 @@ export default function HomePremium() {
                       Delivery rhythm
                     </span>
                     <h2 className="mb-3 text-3xl font-bold text-white md:text-4xl">
-                      Discovery, architecture, implementation, then calmer handoff.
+                      Discovery, architecture, implementation, then a cinematic handoff.
                     </h2>
                     <p className="max-w-2xl text-white/70">
-                      The new visual system is only one layer. Underneath it, the same project rhythm stays:
-                      diagnose, design, build, test, then hand over something your team can actually use.
+                      The atmosphere feels futuristic, but the delivery remains grounded: diagnose, design, build,
+                      test, then ship a system your team can trust in the real world.
                     </p>
                   </div>
                   <a
                     href={whatsappLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#0b1730] transition-transform hover:-translate-y-0.5"
+                    className="sci-fi-button inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#0b1730] transition-transform hover:-translate-y-0.5"
                   >
                     Chat on WhatsApp
                     <ArrowRight className="h-4 w-4" />
@@ -378,7 +379,7 @@ export default function HomePremium() {
 
         <section className="site-section">
           <div className="container">
-            <MotionReveal>
+            <MotionReveal variant="blur-in">
               <SectionIntro
                 eyebrow="FAQ"
                 title="Questions teams usually ask before they automate"
@@ -389,7 +390,7 @@ export default function HomePremium() {
 
             <div className="mx-auto grid max-w-3xl gap-4">
               {faqs.map((faq, index) => (
-                <MotionReveal key={faq.q} delay={index * 0.06}>
+                <MotionReveal key={faq.q} delay={index * 0.06} variant="scale-in">
                   <FaqCard question={faq.q} answer={faq.a} />
                 </MotionReveal>
               ))}
@@ -399,7 +400,7 @@ export default function HomePremium() {
 
         <section id="contact-section" className="site-section">
           <div className="container">
-            <MotionReveal>
+            <MotionReveal variant="blur-in">
               <SectionIntro
                 eyebrow="Contact"
                 title="Bring the messy workflow. We&apos;ll turn it into something calmer."
@@ -407,7 +408,7 @@ export default function HomePremium() {
                 align="center"
               />
             </MotionReveal>
-            <MotionReveal delay={0.08}>
+            <MotionReveal delay={0.08} variant="scale-in">
               <ContactFormPremium
                 whatsappNumber={WHATSAPP_NUMBER}
                 email={EMAIL}
@@ -419,11 +420,11 @@ export default function HomePremium() {
       </main>
 
       <footer className="px-4 pb-8 pt-2">
-        <div className="container rounded-[1.6rem] border border-white/15 bg-[rgba(10,17,31,0.92)] px-6 py-6 text-white">
+        <div className="container hud-panel rounded-[1.6rem] border-white/12 px-6 py-6 text-white">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="font-[var(--font-family-heading)] text-lg font-bold">Muhammad Bio</p>
-              <p className="text-sm text-white/55">Automation systems that look sharp and behave safely.</p>
+              <p className="text-sm text-white/55">Automation systems that look cinematic and behave safely.</p>
             </div>
             <div className="flex flex-wrap gap-3 text-sm text-white/60">
               <span className="inline-flex items-center gap-2">
